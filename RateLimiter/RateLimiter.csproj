@@ -40,7 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ApiResponse.cs" />
+    <Compile Include="Models\ClientCallLog.cs" />
+    <Compile Include="Models\RequestsPerTimeSpanRule.cs" />
+    <Compile Include="Models\TimeSinceLastCallRule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Models\RateLimitRule.cs" />
+    <Compile Include="RateLimitService.cs" />
+    <Compile Include="SampleApi.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
