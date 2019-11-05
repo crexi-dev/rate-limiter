@@ -40,7 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\RateLimiterParameters.cs" />
+    <Compile Include="Model\ResourceRequestModel.cs" />
+    <Compile Include="Model\ResourceRuleModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RateLimiter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
