@@ -40,7 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateTimeProvider.cs" />
+    <Compile Include="Interfaces\IDateTimeProvider.cs" />
+    <Compile Include="Interfaces\IRateLimitManager.cs" />
+    <Compile Include="Interfaces\IResourceDatabase.cs" />
+    <Compile Include="Interfaces\IRule.cs" />
+    <Compile Include="Interfaces\IRulesManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RateLimitManager.cs" />
+    <Compile Include="ResourceAccess.cs" />
+    <Compile Include="ResourceDatabase.cs" />
+    <Compile Include="RulesManager.cs" />
+    <Compile Include="Rules\RequestsPerTimespanRule.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
