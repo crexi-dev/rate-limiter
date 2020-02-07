@@ -31,7 +31,7 @@ namespace RateLimiter.Api.Validators
                 }
                 catch (Exception)
                 {
-                    Debug.WriteLine($"Simulatioin failed for the rule {RuleTypes.FrequencyLimiting}");
+                    Debug.WriteLine($"Validation failed for the rule {RuleTypes.FrequencyLimiting}");
 
                     return false;
                 }
@@ -44,7 +44,7 @@ namespace RateLimiter.Api.Validators
                 }
                 catch (Exception)
                 {
-                    Debug.WriteLine($"Simulatioin failed for the rule {RuleTypes.FrequencyLimiting}");
+                    Debug.WriteLine($"Validation failed for the rule {RuleTypes.FrequencyLimiting}");
 
                     return false;
                 }
@@ -57,7 +57,7 @@ namespace RateLimiter.Api.Validators
                 }
                 catch (Exception)
                 {
-                    Debug.WriteLine($"Simulatioin failed for the rule {RuleTypes.TimeSpanLimiting}");
+                    Debug.WriteLine($"Validation failed for the rule {RuleTypes.TimeSpanLimiting}");
 
                     return false;
                 }
