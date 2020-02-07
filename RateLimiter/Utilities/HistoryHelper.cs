@@ -1,5 +1,4 @@
-﻿using RateLimiter.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace RateLimiter.Utilities
