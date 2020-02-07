@@ -41,7 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\SeedData.cs" />
+    <Compile Include="Enums\RuleTypes.cs" />
+    <Compile Include="Utilities\HistoryHelper.cs" />
+    <Compile Include="Models\BaseRule.cs" />
+    <Compile Include="Models\FrequencyLimitRule.cs" />
+    <Compile Include="Models\TimeSpanLimitRule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\RuleValidator.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
