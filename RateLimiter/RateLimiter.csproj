@@ -41,7 +41,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RateLimiterException.cs" />
+    <Compile Include="RequestInfo.cs" />
+    <Compile Include="Rules\AndRule.cs" />
+    <Compile Include="Rules\ChainHelper.cs" />
+    <Compile Include="Rules\IRule.cs" />
+    <Compile Include="Rules\IRuleNode.cs" />
+    <Compile Include="Rules\OrRule.cs" />
+    <Compile Include="Rules\RequestElapsedTime.cs" />
+    <Compile Include="Rules\RequestFromCountry.cs" />
+    <Compile Include="Rules\RequestPerElapsedTime.cs" />
+    <Compile Include="Rules\RuleEval.cs" />
+    <Compile Include="Rules\RuleExecuteNode.cs" />
+    <Compile Include="Rules\RulesHelper.cs" />
+    <Compile Include="Rules\RulesVisitor.cs" />
+    <Compile Include="State\InMemoryRuleState.cs" />
+    <Compile Include="State\IRulePersist.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
