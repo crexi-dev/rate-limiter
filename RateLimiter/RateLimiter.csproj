@@ -42,6 +42,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\RequestThisHour.cs" />
+    <Compile Include="Resources\IResource.cs" />
+    <Compile Include="Resources\Resource1.cs" />
+    <Compile Include="Resources\ResourceEU.cs" />
+    <Compile Include="Resources\ResourseUS.cs" />
+    <Compile Include="Rules\RuleRequetsPerHour.cs" />
+    <Compile Include="Rules\RuleResult.cs" />
+    <Compile Include="Rules\RuleTimespanPassedSinceLastCall.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\RuleEngine\RuleEngine.csproj">
+      <Project>{C30902CE-E317-4CB5-ABE0-3DC39983399B}</Project>
+      <Name>RuleEngine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
