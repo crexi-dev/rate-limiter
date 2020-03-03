@@ -4,6 +4,10 @@ using System.Text;
 
 namespace RuleEngine
 {
+    /// <summary>
+    /// RulesEngine class will maintain rules needed to be executed for a resource.
+    /// It will be inject in resource constructor. 
+    /// </summary>
     public class RulesEngine : IRulesEngine
     {
         public RulesEngine()
