@@ -20,9 +20,11 @@ namespace RateLimiter.Tests
                 .Returns(new TokenInfo()
                     {Location = "US", NoOfTimesCalledInLastHour = 89, LastRequestTime = DateTime.Now.AddHours(-3)});
 
+            #region "RuleEngineFactory can setup rule engine"
             IRulesEngine ruleEngine = new RulesEngine();
             ruleEngine.AddRule(new RuleRequetsPerHour());
             ruleEngine.AddRule(new Rule10MinPassedSinceLastCall());
+            #endregion
             IResource resource1 = new Resource1("tkn",ruleEngine,retrieveTokenInfoMock.Object);
             
             var result = resource1.CanContinue();

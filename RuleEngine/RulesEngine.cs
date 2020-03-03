@@ -6,7 +6,7 @@ namespace RuleEngine
 {
     /// <summary>
     /// RulesEngine class will maintain rules needed to be executed for a resource.
-    /// It will be inject in resource constructor. 
+    /// It will be inject in resource constructor. or a RuleEngineFactory class can return ruleEngine instance based on Resource.
     /// </summary>
     public class RulesEngine : IRulesEngine
     {
