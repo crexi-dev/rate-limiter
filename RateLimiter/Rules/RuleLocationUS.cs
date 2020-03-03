@@ -1,13 +1,16 @@
-﻿using RuleEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using RateLimiter.Model;
+using RuleEngine;
 
 namespace RateLimiter.Rules
 {
-    public class RuleRequetsPerHour : IRule
+    public class RuleLocationUS : IRule
     {
-        public string Name => "RuleRequetsPerHour";
-
-        private const int hitLimit = 100;
+        public string Name => "RuleLocationUS";
 
         public void Execute(IRuleEnvironment environment)
         {
@@ -16,10 +19,10 @@ namespace RateLimiter.Rules
                 return;
             TokenInfo tokenInfo = environment.GetFact<TokenInfo>("tokenInfo");
 
-            if (tokenInfo.NoOfTimesCalledInLastHour >= hitLimit)
+            if (tokenInfo.Location.ToLower() != "us")
             {
                 result.Allow = false;
-                result.Message = "X requests per hour reached.";
+                result.Message = "Requests not from US.";
             }
         }
     }

@@ -8,7 +8,7 @@ namespace RateLimiter.Resources
 {
     public interface IResource
     {
-        bool Validate();
+        bool CanContinue();
 
         void DoWork();
     }

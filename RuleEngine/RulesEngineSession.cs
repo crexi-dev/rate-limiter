@@ -11,6 +11,7 @@ namespace RuleEngine
         public RulesEngineSession(IList<IRule> rules)
         {
             _rules = rules;
+            _facts = new Dictionary<string, object>();
 
         }
         public void InsertFact<T>(string name, T fact)

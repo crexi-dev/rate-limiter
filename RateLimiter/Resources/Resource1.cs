@@ -1,39 +1,26 @@
-﻿using RateLimiter.Rules;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RateLimiter;
+using RateLimiter.Repository;
+using RuleEngine;
 
 namespace RateLimiter.Resources
 {
-    public class Resource1 : IResource
+    public class Resource1 : ResourceBase
     {
-        public Resource1(RuleEngine.IRulesEngine rulesEngine, Repository.IRequestThisHour requestThisHour)
+
+        public Resource1(string token, RuleEngine.IRulesEngine rulesEngine, IRetrieveTokenInfo retrieveTokenInfo) :base(token, rulesEngine, retrieveTokenInfo)
         {
-            _rulesEngine = rulesEngine;
-            _requestThisHour = requestThisHour;
         }
-        public void DoWork()
+
+        public override void DoWork()
         {
-            if (!Validate())
+            if (!CanContinue())
                 Console.WriteLine("Failed Validation.");
+
+            Console.WriteLine("Process Request.");
         }
-
-        public bool Validate()
-        {
-            var rulesSession = _rulesEngine.NewSession();
-
-            var rulesResult = new RuleResult { Allow = true };
-            rulesSession.InsertFact("result", rulesResult);
-            rulesSession.InsertFact<int>("requestThisHour", _requestThisHour.GetRequestThisHour());
-            rulesSession.Execute();
-
-            return rulesResult.Allow;
-        }
-
-        private readonly RuleEngine.IRulesEngine _rulesEngine;
-        private readonly Repository.IRequestThisHour _requestThisHour;
     }
 }
