@@ -4,14 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{36F4BDC6-D3DA-403A-8DB7-0C79F94B938F}</ProjectGuid>
+    <ProjectGuid>{D353D8B2-8898-45E8-962E-EE25975E72E5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RateLimiter</RootNamespace>
-    <AssemblyName>RateLimiter</AssemblyName>
+    <RootNamespace>RateLimiter.RulesEngine.Client</RootNamespace>
+    <AssemblyName>RateLimiter.RulesEngine.Client</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,31 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientRequestData.cs" />
-    <Compile Include="enum\RateLimitLevel.cs" />
-    <Compile Include="enum\RateLimitType.cs" />
-    <Compile Include="IRateLimiter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RateLimiter.cs" />
-    <Compile Include="RateLimiter.Implementation\Interface\ITimespanPassedRateLimiter.cs" />
-    <Compile Include="RateLimiter.Implementation\Interface\ITokenBucketRateLimiter.cs" />
-    <Compile Include="RateLimiter.Implementation\RateLimitSettings.cs" />
-    <Compile Include="RateLimiter.Implementation\TimespanPassedSinceLastCallRateLimiter.cs" />
-    <Compile Include="RateLimiter.Implementation\TokenBucketRateLimiter.cs" />
-    <Compile Include="RateLimiter.Repository\ClientRepository.cs" />
-    <Compile Include="RateLimiter.Repository\Interface\IClientRepository.cs" />
-    <Compile Include="RateLimiter.RulesEngine.Client\Interface\IRulesEngineClient.cs" />
-    <Compile Include="RateLimiter.RulesEngine.Client\Interface\IRulesEngineProxy.cs" />
-    <Compile Include="RateLimiter.RulesEngine.Client\RulesEngineClient.cs" />
-    <Compile Include="RateLimiter.RulesEngine.Client\RulesEngineProxy.cs" />
-    <Compile Include="RateLimiter.RulesEngine\Interface\IRulesEngine.cs" />
-    <Compile Include="RateLimiter.RulesEngine\RateLimiter.RulesEngine.Repository\Interface\IRuleRepository.cs" />
-    <Compile Include="RateLimiter.RulesEngine\RateLimiter.RulesEngine.Repository\RuleRepository.cs" />
-    <Compile Include="RateLimiter.RulesEngine\RegionRule.cs" />
-    <Compile Include="RateLimiter.RulesEngine\Rule.cs" />
-    <Compile Include="RateLimiter.RulesEngine\RulesEngine.cs" />
-    <Compile Include="RateLimiter.RulesEngine\RuleType.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\RateLimiter\RateLimiter.csproj">
+      <Project>{36f4bdc6-d3da-403a-8db7-0c79f94b938f}</Project>
+      <Name>RateLimiter</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interface\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
