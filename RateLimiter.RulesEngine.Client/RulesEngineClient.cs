@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using RateLimiter.RulesEngine;
 
-namespace RateLimiter.RulesEngine
+namespace RateLimiter.RulesEngine.Client
 {
     public class RulesEngineClient : IRulesEngineClient {
         private IRulesEngineProxy rulesEngineProxy;

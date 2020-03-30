@@ -3,7 +3,7 @@ using RateLimiter.RulesEngine.Repository;
 
 namespace RateLimiter.RulesEngine
 {
-    internal class RulesEngine : IRulesEngine {
+    public class RulesEngine : IRulesEngine {
         private IRuleRepository ruleRepository;
 
         public RulesEngine(IRuleRepository ruleRepository) {

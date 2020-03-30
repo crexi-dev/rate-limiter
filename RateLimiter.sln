@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Client", "RateLimiter.Client\RateLimiter.Client.csproj", "{5AA4E56D-A87F-4B47-BB16-514C1E09BAC1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.RulesEngine", "RateLimiter.RulesEngine\RateLimiter.RulesEngine.csproj", "{509D63A6-439C-4F23-8C1C-3A74E33D59E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.RulesEngine.Client", "RateLimiter.RulesEngine.Client\RateLimiter.RulesEngine.Client.csproj", "{D6F4433C-FD38-4B27-A020-4F0F5DC12E42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +36,14 @@ Global
 		{5AA4E56D-A87F-4B47-BB16-514C1E09BAC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AA4E56D-A87F-4B47-BB16-514C1E09BAC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AA4E56D-A87F-4B47-BB16-514C1E09BAC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{509D63A6-439C-4F23-8C1C-3A74E33D59E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{509D63A6-439C-4F23-8C1C-3A74E33D59E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{509D63A6-439C-4F23-8C1C-3A74E33D59E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{509D63A6-439C-4F23-8C1C-3A74E33D59E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6F4433C-FD38-4B27-A020-4F0F5DC12E42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6F4433C-FD38-4B27-A020-4F0F5DC12E42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6F4433C-FD38-4B27-A020-4F0F5DC12E42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6F4433C-FD38-4B27-A020-4F0F5DC12E42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,6 @@
 ﻿using System;
 using RateLimiter.Client;
 using RateLimiter.Repository;
-using RateLimiter.RulesEngine;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -19,7 +18,6 @@ namespace RateLimiter.Tests
             var requestDate = new DateTime(2020, 1, 1, 0, 0, 0, 500);   // 1/1/2020 12:00:05AM
             var lastUpdateDate = new DateTime(2020, 1, 1, 0, 0, 0, 0);   // 1/1/2020 12:00:00AM
 
-            var fakeRulesEngineClient = Substitute.For<IRulesEngineClient>();
             var fakeClientRepository = Substitute.For<IClientRepository>();
 
             var rateLimiterProxy = Substitute.For<IRateLimiterProxy>();
@@ -42,7 +40,6 @@ namespace RateLimiter.Tests
             var requestDate = new DateTime(2020, 1, 1, 0, 0, 0, 500);   // 1/1/2020 12:00:05AM
             var lastUpdateDate = new DateTime(2020, 1, 1, 0, 0, 0, 0);   // 1/1/2020 12:00:00AM
 
-            var fakeRulesEngineClient = Substitute.For<IRulesEngineClient>();
             var fakeClientRepository = Substitute.For<IClientRepository>();
 
             var rateLimiterProxy = Substitute.For<IRateLimiterProxy>();
