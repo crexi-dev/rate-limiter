@@ -1,5 +1,6 @@
 ﻿using System;
-using RateLimiter.Implementation;
+using RateLimiter.Library;
+using RateLimiter.Library.Algorithms;
 using RateLimiter.Client;
 using NUnit.Framework;
 

@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using RateLimiter.RulesEngine.Repository;
+﻿using RateLimiter.RulesEngine.Library;
 
 namespace RateLimiter.RulesEngine.Client
 {
-    public interface IRulesEngineProxy {
-        IEnumerable<Rule> GetRules(string serverIP);
+    public interface IRulesEngineProxy : IRulesEngine
+    {
     }
 }

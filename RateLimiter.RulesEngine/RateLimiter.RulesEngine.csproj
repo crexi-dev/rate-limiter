@@ -41,17 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="enum\RateLimitLevel.cs" />
-    <Compile Include="enum\RateLimitType.cs" />
-    <Compile Include="Interface\IRulesEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RateLimiter.RulesEngine.Repository\Interface\IRuleRepository.cs" />
-    <Compile Include="RateLimiter.RulesEngine.Repository\RuleRepository.cs" />
-    <Compile Include="RateLimitSettings.cs" />
-    <Compile Include="RegionRule.cs" />
-    <Compile Include="Rule.cs" />
     <Compile Include="RulesEngine.cs" />
-    <Compile Include="RuleType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RateLimiter.RulesEngine.Library\RateLimiter.RulesEngine.Library.csproj">
+      <Project>{4509a5c1-81d7-4d8b-87f9-29189b801e6c}</Project>
+      <Name>RateLimiter.RulesEngine.Library</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -41,20 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientRequestData.cs" />
-    <Compile Include="enum\RateLimitLevel.cs" />
-    <Compile Include="enum\RateLimitType.cs" />
-    <Compile Include="IRateLimiter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RateLimiter.cs" />
-    <Compile Include="RateLimiter.Implementation\Interface\ITimespanPassedRateLimiter.cs" />
-    <Compile Include="RateLimiter.Implementation\Interface\ITokenBucketRateLimiter.cs" />
-    <Compile Include="RateLimiter.Implementation\RateLimitSettings.cs" />
-    <Compile Include="RateLimiter.Implementation\TimespanPassedSinceLastCallRateLimiter.cs" />
-    <Compile Include="RateLimiter.Implementation\TokenBucketRateLimiter.cs" />
-    <Compile Include="RateLimiter.Repository\ClientRepository.cs" />
-    <Compile Include="RateLimiter.Repository\Interface\IClientRepository.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\RateLimiter.Library\RateLimiter.Library.csproj">
+      <Project>{5a1dd60d-91f3-4ce9-9de9-e94982cf7291}</Project>
+      <Name>RateLimiter.Library</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

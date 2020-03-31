@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using RateLimiter.Implementation;
-using RateLimiter.Repository;
+using RateLimiter.Library;
+using RateLimiter.Library.Repository;
 
 namespace RateLimiter
 {
@@ -15,11 +12,27 @@ namespace RateLimiter
             this.clientRepository = clientRepository;
         }
 
-        public bool Verify(string token, DateTime requestDate, string serverIP) {
-            // get rule based on client request data
+        public bool Verify(RateLimitType rateLimitType, RequestsPerTimespanSettings requestsPerTimespanSettings = null, TimespanPassedSinceLastCallSettings timespan = null)
+        {
+            var isAllowed = true;
 
-            // get rate limit settings
+            if ((rateLimitType & RateLimitType.RequestsPerTimespan) != 0)
+            {
 
+            }
+
+            if ((rateLimitType & RateLimitType.TimespanPassedSinceLastCall) != 0)
+            {
+
+            }
+
+            // if call is allowed, update client count
+
+            return false;
+        }
+
+        public bool VerifyTokenBucket(string token, DateTime requestDate, int count, int maxAmount, int refillAmount, int refillTime, DateTime lastUpdateDate)
+        {
             // retrieve client data
             var clientData = this.clientRepository.GetClientData(token);
 
@@ -35,6 +48,11 @@ namespace RateLimiter
 
                 return true;
             }
+        }
+
+        public bool VerifyTimespanPassedSinceLastCall(string token, DateTime requestDate, TimeSpan timeSpanLimit)
+        {
+            return false;
         }
     }
 }

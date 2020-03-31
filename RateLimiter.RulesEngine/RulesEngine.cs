@@ -1,5 +1,7 @@
 using System.Collections.Generic;
-using RateLimiter.RulesEngine.Repository;
+using RateLimiter.RulesEngine.Library;
+using RateLimiter.RulesEngine.Library.Rules;
+using RateLimiter.RulesEngine.Library.Repository;
 
 namespace RateLimiter.RulesEngine
 {
