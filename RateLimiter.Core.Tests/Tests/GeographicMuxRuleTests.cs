@@ -110,49 +110,49 @@ namespace RateLimiter.Core.Tests.Tests
 
                 yield return new object[]
                 {
-                1000,
-                5,
-                2,
-                new[]
-                {
-                    new RequestTimeline(0, true, EUAuthToken),
-                    new RequestTimeline(100, false, EUAuthToken),
-                    new RequestTimeline(400, false, EUAuthToken),
-                    new RequestTimeline(300, false, EUAuthToken),
-                    new RequestTimeline(600, true, EUAuthToken),
-                }
+                    1000,
+                    5,
+                    2,
+                    new[]
+                    {
+                        new RequestTimeline(0, true, EUAuthToken),
+                        new RequestTimeline(100, false, EUAuthToken),
+                        new RequestTimeline(400, false, EUAuthToken),
+                        new RequestTimeline(300, false, EUAuthToken),
+                        new RequestTimeline(600, true, EUAuthToken),
+                    }
                 };
 
                 yield return new object[]
                 {
-                500,
-                5,
-                2,
-                new[]
-                {
-                    new RequestTimeline(0, true, EUAuthToken),
-                    new RequestTimeline(100, false, EUAuthToken),
-                    new RequestTimeline(200, false, EUAuthToken),
-                    new RequestTimeline(100, false, EUAuthToken),
-                    new RequestTimeline(200, true, EUAuthToken),
-                }
+                    500,
+                    5,
+                    2,
+                    new[]
+                    {
+                        new RequestTimeline(0, true, EUAuthToken),
+                        new RequestTimeline(100, false, EUAuthToken),
+                        new RequestTimeline(200, false, EUAuthToken),
+                        new RequestTimeline(100, false, EUAuthToken),
+                        new RequestTimeline(200, true, EUAuthToken),
+                    }
                 };
 
                 yield return new object[]
                 {
-                100,
-                5,
-                2,
-                new[]
-                {
-                    new RequestTimeline(0, true, EUAuthToken),
-                    new RequestTimeline(50, false, EUAuthToken),
-                    new RequestTimeline(10, false, EUAuthToken),
-                    new RequestTimeline(10, false, EUAuthToken),
-                    new RequestTimeline(40, true, EUAuthToken),
-                    new RequestTimeline(50, false, EUAuthToken),
-                    new RequestTimeline(60, true, EUAuthToken),
-                }
+                    100,
+                    5,
+                    2,
+                    new[]
+                    {
+                        new RequestTimeline(0, true, EUAuthToken),
+                        new RequestTimeline(50, false, EUAuthToken),
+                        new RequestTimeline(10, false, EUAuthToken),
+                        new RequestTimeline(10, false, EUAuthToken),
+                        new RequestTimeline(40, true, EUAuthToken),
+                        new RequestTimeline(50, false, EUAuthToken),
+                        new RequestTimeline(60, true, EUAuthToken),
+                    }
                 };
 
                 yield return new object[]
