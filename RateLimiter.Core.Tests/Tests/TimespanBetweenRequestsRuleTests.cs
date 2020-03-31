@@ -55,43 +55,43 @@ namespace RateLimiter.Core.Tests.Tests
             {
                 yield return new object[]
                 {
-                1000,
-                new[]
-                {
-                    new RequestTimeline(0, true, AuthToken),
-                    new RequestTimeline(100, false, AuthToken),
-                    new RequestTimeline(400, false, AuthToken),
-                    new RequestTimeline(300, false, AuthToken),
-                    new RequestTimeline(600, true, AuthToken),
-                }
+                    1000,
+                    new[]
+                    {
+                        new RequestTimeline(0, true, AuthToken),
+                        new RequestTimeline(100, false, AuthToken),
+                        new RequestTimeline(400, false, AuthToken),
+                        new RequestTimeline(300, false, AuthToken),
+                        new RequestTimeline(600, true, AuthToken),
+                    }
                 };
 
                 yield return new object[]
                 {
-                500,
-                new[]
-                {
-                    new RequestTimeline(0, true, AuthToken),
-                    new RequestTimeline(100, false, AuthToken),
-                    new RequestTimeline(200, false, AuthToken),
-                    new RequestTimeline(100, false, AuthToken),
-                    new RequestTimeline(200, true, AuthToken),
-                }
+                    500,
+                    new[]
+                    {
+                        new RequestTimeline(0, true, AuthToken),
+                        new RequestTimeline(100, false, AuthToken),
+                        new RequestTimeline(200, false, AuthToken),
+                        new RequestTimeline(100, false, AuthToken),
+                        new RequestTimeline(200, true, AuthToken),
+                    }
                 };
 
                 yield return new object[]
                 {
-                100,
-                new[]
-                {
-                    new RequestTimeline(0, true, AuthToken),
-                    new RequestTimeline(50, false, AuthToken),
-                    new RequestTimeline(10, false, AuthToken),
-                    new RequestTimeline(10, false, AuthToken),
-                    new RequestTimeline(40, true, AuthToken),
-                    new RequestTimeline(50, false, AuthToken),
-                    new RequestTimeline(60, true, AuthToken),
-                }
+                    100,
+                    new[]
+                    {
+                        new RequestTimeline(0, true, AuthToken),
+                        new RequestTimeline(50, false, AuthToken),
+                        new RequestTimeline(10, false, AuthToken),
+                        new RequestTimeline(10, false, AuthToken),
+                        new RequestTimeline(40, true, AuthToken),
+                        new RequestTimeline(50, false, AuthToken),
+                        new RequestTimeline(60, true, AuthToken),
+                    }
                 };
 
                 yield return new object[]
