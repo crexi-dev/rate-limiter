@@ -44,14 +44,12 @@
     <Compile Include="enum\RateLimitLevel.cs" />
     <Compile Include="enum\RateLimitType.cs" />
     <Compile Include="Interface\IRuleRepository.cs" />
-    <Compile Include="Interface\IRulesEngine.cs" />
+    <Compile Include="Interface\IRulesEvaluator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RateLimitSettings.cs" />
     <Compile Include="RuleRepository.cs" />
-    <Compile Include="Rules\RegionRule.cs" />
-    <Compile Include="Rules\ResourceRule.cs" />
     <Compile Include="Rules\Rule.cs" />
-    <Compile Include="Rules\RuleType.cs" />
+    <Compile Include="enum\RuleType.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,34 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using RateLimiter.RulesEngine.Library.Rules;
+﻿using RateLimiter.RulesEngine.Library.Rules;
 using RateLimiter.RulesEngine.Library;
 using NSubstitute;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace RateLimiter.RulesEngine.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class RulesEngineTest
     {
-        [TestMethod]
-        public void GetRules_USRule_()
+        [Test]
+        public void GetRule_USRule_ResourceId_And_IPAddressMatchesUSRule()
         {
             // arrange
+            var resource = "/api/resource1";
             var serverIP = "183.49.25.23";
-            var rules = new List<Rule>()
-            {
-                new RegionRule(1, "US", RateLimitType.RequestsPerTimespan, RateLimitLevel.Default)
-            };
+            var rule = new Rule("US", RateLimitType.RequestsPerTimespan, RateLimitLevel.Default);
 
             var fakeRulesRepository = Substitute.For<IRuleRepository>();
-            fakeRulesRepository.GetRules(serverIP).Returns(rules);
-            var rulesEngine = new RulesEngine(fakeRulesRepository);
+            fakeRulesRepository.GetRule(resource, serverIP).Returns(rule);
+            var rulesEngine = new RulesEngine(fakeRulesRepository, null);
 
             // assert
-            var result = rulesEngine.GetRules("fsd");
+            var result = rulesEngine.GetRule(resource, serverIP);
 
             // assert
-            Assert.AreEqual(1, 1);
+            Assert.AreEqual(result, rule);
         }
     }
 }

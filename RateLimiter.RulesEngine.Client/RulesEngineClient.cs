@@ -11,13 +11,23 @@ namespace RateLimiter.RulesEngine.Client
             this.rulesEngineProxy = rulesEngineProxy;
         }
 
-        public int Create(Rule rule)
+        public int AddRule(Rule rule)
         {
             return 1;
         }
 
-        public IEnumerable<Rule> GetRules(string serverIP) {
-            return this.rulesEngineProxy.GetRules(serverIP);
+        public Rule GetRule(string resource, string serverIP) {
+            return this.rulesEngineProxy.GetRule(resource, serverIP);
+        }
+
+        public bool EvaluateResourceRule()
+        {
+            return false;
+        }
+
+        public bool EvaluateIPRule()
+        {
+            return false;
         }
     }
 }

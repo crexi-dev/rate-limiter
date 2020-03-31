@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Concurrent;
-using RateLimiter.Library.Repository;
 
 namespace RateLimiter.Library.Repository
 {
@@ -10,8 +10,15 @@ namespace RateLimiter.Library.Repository
             clientRequestHistory = new ConcurrentDictionary<string, ClientRequestData>();
         }
 
-        public dynamic GetClientData(string token) {
+        public ClientRequestData GetClientData(string token) {
             return this.clientRequestHistory[token];
+        }
+
+        public void UpdateClient(string token, ClientRequestData clientData)
+        {
+            Func<string, ClientRequestData> addValue = (key) => { return clientData; };
+            Func<string, ClientRequestData, ClientRequestData> updateValue = (key, clientRequestData) => { return clientData; };
+            clientRequestHistory.AddOrUpdate(token, addValue, updateValue);
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 namespace RateLimiter.Library.Repository
 {
     public interface IClientRepository {
-        dynamic GetClientData(string token);
+        ClientRequestData GetClientData(string token);
+        void UpdateClient(string token, ClientRequestData clientRequestData);
     }    
 }

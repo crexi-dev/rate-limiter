@@ -4,6 +4,7 @@ using RateLimiter.RulesEngine.Library.Rules;
 namespace RateLimiter.RulesEngine.Library
 {
     public interface IRuleRepository {
-        IEnumerable<Rule> GetRules(string serverIP);
+        int AddRule(Rule rule);
+        Rule GetRule(string resource, string serverIP);
     }
 }

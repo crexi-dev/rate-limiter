@@ -1,6 +1,6 @@
 ﻿using System;
-using RateLimiter;
 using RateLimiter.Client;
+using RateLimiter.Library;
 using RateLimiter.Library.Repository;
 using NSubstitute;
 using NUnit.Framework;
@@ -22,11 +22,17 @@ namespace RateLimiter.Tests
             var fakeClientRepository = Substitute.For<IClientRepository>();
 
             var rateLimiterProxy = Substitute.For<IRateLimiterProxy>();
-            rateLimiterProxy.VerifyTimespanPassedSinceLastCall(clientToken, requestDate, new TimeSpan(0, 0, 10)).Returns(true);
+            var rateLimitSettingsConfig = new RateLimitSettingsConfig();
+            var rateLimitSettings = new RequestsPerTimespanSettings()
+            {
+                MaxAmount = 5
+            };
+
+            rateLimiterProxy.Verify(clientToken, requestDate).Returns(true);
             var rateLimiterClient = new RateLimiterClient(rateLimiterProxy);
 
             // act
-            var result = rateLimiterClient.VerifyTimespanPassedSinceLastCall(clientToken, requestDate, new TimeSpan(0, 0, 10));
+            var result = rateLimiterClient.Verify(clientToken, requestDate);
 
             // assert
             Assert.AreEqual(result, true);
@@ -44,11 +50,11 @@ namespace RateLimiter.Tests
             var fakeClientRepository = Substitute.For<IClientRepository>();
 
             var rateLimiterProxy = Substitute.For<IRateLimiterProxy>();
-            rateLimiterProxy.VerifyTimespanPassedSinceLastCall(clientToken, requestDate, new TimeSpan(0, 0, 10)).Returns(false);
+            rateLimiterProxy.Verify(clientToken, requestDate, new RateLimitSettingsConfig()).Returns(false);
             var rateLimiterClient = new RateLimiterClient(rateLimiterProxy);
 
             // act
-            var result = rateLimiterClient.VerifyTimespanPassedSinceLastCall(clientToken, requestDate, new TimeSpan(0, 0, 10));
+            var result = rateLimiterClient.Verify(clientToken, requestDate, new RateLimitSettingsConfig());
 
             // assert
             Assert.AreEqual(result, false);

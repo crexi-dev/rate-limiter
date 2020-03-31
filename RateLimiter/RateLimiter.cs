@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using RateLimiter.Library;
 using RateLimiter.Library.Repository;
 
@@ -7,52 +8,83 @@ namespace RateLimiter
     public class RateLimiter : IRateLimiter
     {
         private IClientRepository clientRepository;
+        private IRateLimiterAlgorithm rateLimiterAlgorithm;
+        private RateLimitSettingsConfig rateLimitSettingsConfig;
 
-        public RateLimiter(IClientRepository clientRepository) {
+        #region const
+        private const int TOKEN_BUCKET_MAX_AMOUNT_DEFAULT = 5;
+        private const int TOKEN_BUCKET_REFILL_TIME_DEFAULT = 60;
+        private const int TOKEN_BUCKET_REFILL_AMOUNT_DEFAULT = 5;
+        private const int TIMESPAN_PASSED_MINUTES_DEFAULT = 1;
+        #endregion
+
+        public RateLimiter(IClientRepository clientRepository,
+            IRateLimiterAlgorithm rateLimiterAlgorithm) {
             this.clientRepository = clientRepository;
+            this.rateLimiterAlgorithm = rateLimiterAlgorithm;
         }
 
-        public bool Verify(RateLimitType rateLimitType, RequestsPerTimespanSettings requestsPerTimespanSettings = null, TimespanPassedSinceLastCallSettings timespan = null)
+        private void InitializeDefaultRateLimitSettings()
+        {
+            var defaultSettings = new Dictionary<RateLimitType, RateLimitSettingsBase>();
+
+            var requestsPerTimespanSettings = new RequestsPerTimespanSettings()
+            {
+                MaxAmount = TOKEN_BUCKET_MAX_AMOUNT_DEFAULT,
+                RefillAmount = TOKEN_BUCKET_REFILL_AMOUNT_DEFAULT,
+                RefillTime = TOKEN_BUCKET_REFILL_TIME_DEFAULT
+            };
+
+            var timespanPassedSinceLastCallSettings = new TimespanPassedSinceLastCallSettings()
+            {
+                TimespanLimit = new TimeSpan(0, TIMESPAN_PASSED_MINUTES_DEFAULT, 0)
+            };
+
+            defaultSettings[RateLimitType.RequestsPerTimespan] = requestsPerTimespanSettings;
+            defaultSettings[RateLimitType.TimespanPassedSinceLastCall] = timespanPassedSinceLastCallSettings;
+
+            rateLimitSettingsConfig.RateLimitSettings = defaultSettings;
+        }
+
+        public bool Verify(string token, DateTime requestDate, RateLimitSettingsConfig rateLimitSettingsConfig = null)
         {
             var isAllowed = true;
+            ClientRequestData clientData = new ClientRequestData(-1, DateTime.MinValue, DateTime.MinValue);
 
-            if ((rateLimitType & RateLimitType.RequestsPerTimespan) != 0)
-            {
+            // check requests per timespan rule
+            if (rateLimitSettingsConfig.RateLimitSettings.ContainsKey(RateLimitType.RequestsPerTimespan)) {
+                var rateLimitSettings = rateLimitSettingsConfig != null 
+                    ? (RequestsPerTimespanSettings) this.rateLimitSettingsConfig.RateLimitSettings[RateLimitType.RequestsPerTimespan]
+                    : (RequestsPerTimespanSettings) rateLimitSettingsConfig.RateLimitSettings[RateLimitType.RequestsPerTimespan];
 
+                clientData = this.clientRepository.GetClientData(token);
+                isAllowed = this.rateLimiterAlgorithm.VerifyRequestsPerTimeSpan(clientData.Count, rateLimitSettings.MaxAmount, rateLimitSettings.RefillAmount, rateLimitSettings.RefillTime, requestDate, clientData.LastUpdateDate);
             }
-
-            if ((rateLimitType & RateLimitType.TimespanPassedSinceLastCall) != 0)
-            {
-
-            }
-
-            // if call is allowed, update client count
-
-            return false;
-        }
-
-        public bool VerifyTokenBucket(string token, DateTime requestDate, int count, int maxAmount, int refillAmount, int refillTime, DateTime lastUpdateDate)
-        {
-            // retrieve client data
-            var clientData = this.clientRepository.GetClientData(token);
-
-            // verify w/in rate limits (invoke appropriate rate limiter methods)
-
-            var isAllowed = false;
 
             if (!isAllowed)
                 return false;
-            
-            else {
-                // update client data
 
-                return true;
+            // check timespan passed
+            if (rateLimitSettingsConfig.RateLimitSettings.ContainsKey(RateLimitType.TimespanPassedSinceLastCall))
+            {
+                var rateLimitSettings = rateLimitSettingsConfig != null
+                    ? (TimespanPassedSinceLastCallSettings) this.rateLimitSettingsConfig.RateLimitSettings[RateLimitType.TimespanPassedSinceLastCall]
+                    : (TimespanPassedSinceLastCallSettings) rateLimitSettingsConfig.RateLimitSettings[RateLimitType.RequestsPerTimespan];
+
+                if (clientData.Count != -1)
+                    clientData = this.clientRepository.GetClientData(token);
+
+                isAllowed = this.rateLimiterAlgorithm.VerifyTimespanPassedSinceLastCall(requestDate, rateLimitSettings.TimespanLimit, clientData.LastUpdateDate);
             }
-        }
 
-        public bool VerifyTimespanPassedSinceLastCall(string token, DateTime requestDate, TimeSpan timeSpanLimit)
-        {
-            return false;
+            if (!isAllowed)
+                return false;
+
+            // update client data
+            clientData.LastUpdateDate = DateTime.Now;
+            this.clientRepository.UpdateClient(token, clientData);
+
+            return true;
         }
     }
 }

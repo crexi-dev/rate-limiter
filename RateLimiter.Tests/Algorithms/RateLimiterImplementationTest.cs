@@ -1,7 +1,5 @@
 ﻿using System;
-using RateLimiter.Library;
 using RateLimiter.Library.Algorithms;
-using RateLimiter.Client;
 using NUnit.Framework;
 
 namespace RateLimiter.Tests
@@ -17,7 +15,7 @@ namespace RateLimiter.Tests
             var requestDate = new DateTime(2020, 1, 1, 0, 0, 0, 500);   // 1/1/2020 12:00:05AM
 
             var tokenBucketRuleRateLimiter = new TokenBucketRateLimiter();
-            var isAllowed = tokenBucketRuleRateLimiter.Verify(5, 5, 1, 60, requestDate, lastUpdateDate);
+            var isAllowed = tokenBucketRuleRateLimiter.VerifyRequestsPerTimeSpan(5, 5, 1, 60, requestDate, lastUpdateDate);
 
             Assert.AreEqual(isAllowed, true);
         }
@@ -29,9 +27,9 @@ namespace RateLimiter.Tests
             var lastUpdateDate = new DateTime(2020, 1, 1, 0, 0, 0, 0);   // 1/1/2020 12:00:00AM
             var requestDate = new DateTime(2020, 1, 1, 0, 0, 0, 500);   // 1/1/2020 12:00:05AM
 
-            var timespanPassedSinceLastCallRateLimiter = new TimespanPassedRateLimiter();
+            var timespanPassedSinceLastCallRateLimiter = new TimespanPassedSinceLastCallRateLimiter();
 
-            var isAllowed = timespanPassedSinceLastCallRateLimiter.Verify(requestDate, new TimeSpan(0, 0, 1), lastUpdateDate);
+            var isAllowed = timespanPassedSinceLastCallRateLimiter.VerifyTimespanPassedSinceLastCall(requestDate, new TimeSpan(0, 0, 1), lastUpdateDate);
 
             Assert.AreEqual(isAllowed, true);
         }

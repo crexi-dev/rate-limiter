@@ -2,16 +2,8 @@ using System;
 
 namespace RateLimiter.Library.Algorithms
 {
-    public class TokenBucketRateLimiter {
-
-        //public bool Verify(ClientRequestData clientData,
-        //                    RequestsPerTimespanSettings rateLimitSettings) {
-
-        //    var isAllowed = this.Verify(clientData.Count, rateLimitSettings.MaxAmount, rateLimitSettings.RefillAmount, rateLimitSettings.RefillTime, clientData.RequestDate, clientData.LastUpdateDate);
-        //    return false;
-        //}
-
-        public bool Verify(int count, int maxAmount, int refillAmount, int refillTime, DateTime requestDate, DateTime lastUpdateDate) {
+    public class TokenBucketRateLimiter : IRequestsPerTimeSpanRateLimiter {
+        public bool VerifyRequestsPerTimeSpan(int count, int maxAmount, int refillAmount, int refillTime, DateTime requestDate, DateTime lastUpdateDate) {
             // refill
             var refillCount = (int) Math.Floor((double)(requestDate - lastUpdateDate).TotalSeconds / refillTime);
 

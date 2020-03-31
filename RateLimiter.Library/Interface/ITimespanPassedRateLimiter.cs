@@ -2,8 +2,8 @@ using System;
 
 namespace RateLimiter.Library
 {
-    public interface ITimespanPassedRateLimiter
+    public interface ITimespanPassedSinceLastCallRateLimiter
     {
-        bool Verify(DateTime requestDate, TimeSpan timeSpanLimit, DateTime lastUpdateDate);
+        bool VerifyTimespanPassedSinceLastCall(DateTime requestDate, TimeSpan timeSpanLimit, DateTime lastUpdateDate);
     }
 }

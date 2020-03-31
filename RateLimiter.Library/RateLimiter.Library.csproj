@@ -43,15 +43,17 @@
   <ItemGroup>
     <Compile Include="ClientRepository.cs" />
     <Compile Include="ClientRequestData.cs" />
+    <Compile Include="Config\RateLimitLevel.cs" />
     <Compile Include="Interface\IClientRepository.cs" />
-    <Compile Include="Interface\IRateLimiter.cs" />
+    <Compile Include="Interface\IRateLimiterAlgorithm.cs" />
     <Compile Include="Interface\ITimespanPassedRateLimiter.cs" />
-    <Compile Include="Interface\ITokenBucketRateLimiter.cs" />
+    <Compile Include="Interface\IRequestsPerTimespanRateLimiter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Algorithms\TimespanPassedSinceLastCallRateLimiter.cs" />
     <Compile Include="Algorithms\TokenBucketRateLimiter.cs" />
-    <Compile Include="RateLimitSettings.cs" />
-    <Compile Include="RateLimitType.cs" />
+    <Compile Include="RateLimiterAlgorithm.cs" />
+    <Compile Include="Config\RateLimitSettings.cs" />
+    <Compile Include="Config\RateLimitType.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

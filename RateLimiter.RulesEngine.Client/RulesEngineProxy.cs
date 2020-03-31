@@ -6,17 +6,30 @@ using RateLimiter.RulesEngine.Library.Rules;
 namespace RateLimiter.RulesEngine.Client
 {
     public class RulesEngineProxy : IRulesEngine {
+        private RulesEngine rulesEngine;
 
-        public int Create(Rule rule)
+        public RulesEngineProxy()
+        {
+            var rulesRepository = new RuleRepository();
+        }
+
+        public int AddRule(Rule rule)
         {
             return 1;
         }
 
-        public IEnumerable<Rule> GetRules(string serverIP) {
-            var ruleRepository = new RuleRepository();
-            var rulesEngine = new RulesEngine(ruleRepository);
+        public Rule GetRule(string resource, string serverIP) {
+            return rulesEngine.GetRule(resource, serverIP);
+        }
 
-            return rulesEngine.GetRules(serverIP);
+        public bool EvaluateResourceRule()
+        {
+            return false;
+        }
+
+        public bool EvaluateIPRule()
+        {
+            return false;
         }
     }
 }

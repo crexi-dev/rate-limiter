@@ -1,4 +1,5 @@
 using System;
+using RateLimiter.Library;
 
 namespace RateLimiter.Client
 {
@@ -9,13 +10,9 @@ namespace RateLimiter.Client
             this.rateLimiterProxy = rateLimiterProxy;
         }
 
-        public bool VerifyTokenBucket(string token, DateTime requestDate, int count, int maxAmount, int refillAmount, int refillTime, DateTime lastUpdateDate) {
-            return this.rateLimiterProxy.VerifyTokenBucket(token, requestDate, count, maxAmount, refillAmount, refillTime, lastUpdateDate);
-        }
-
-        public bool VerifyTimespanPassedSinceLastCall(string token, DateTime requestDate, TimeSpan timeSpanLimit)
+        public bool Verify(string token, DateTime requestDate, RateLimitSettingsConfig rateLimitSettings = null)
         {
-            return false;
+            return this.rateLimiterProxy.Verify(token, requestDate, rateLimitSettings);
         }
     }
 }
