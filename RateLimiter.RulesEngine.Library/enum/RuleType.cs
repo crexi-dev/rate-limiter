@@ -1,8 +1,12 @@
-namespace RateLimiter.RulesEngine.Library.Rules
+﻿using System;
+
+namespace RateLimiter.RulesEngine.Library
 {
-    public enum RuleType {
-        RateLimitType,
-        Resource,
-        IPAddress
+    [Flags]
+    public enum RuleType
+    {
+        Resource = 0,
+        Region = 1,
+        Whitelist = 2
     }
 }

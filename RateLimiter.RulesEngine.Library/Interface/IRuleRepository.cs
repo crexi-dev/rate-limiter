@@ -1,10 +1,12 @@
-using System.Collections.Generic;
 using RateLimiter.RulesEngine.Library.Rules;
 
 namespace RateLimiter.RulesEngine.Library
 {
     public interface IRuleRepository {
-        int AddRule(Rule rule);
-        Rule GetRule(string resource, string serverIP);
+        void AddResourceRule(ResourceRule rule);
+        void AddRegionRule(RegionRule rule);
+        ResourceRule GetResourceRule(string resource);
+        RegionRule GetRegionRule(Region region);
+        ResourceRegionRule GetResourceRegionRule(string resource, Region region);
     }
 }

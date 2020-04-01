@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using RateLimiter.RulesEngine.Library;
+using RateLimiter.Library;
 using RateLimiter.RulesEngine.Library.Repository;
 using RateLimiter.RulesEngine.Library.Rules;
 
@@ -13,23 +12,18 @@ namespace RateLimiter.RulesEngine.Client
             var rulesRepository = new RuleRepository();
         }
 
-        public int AddRule(Rule rule)
+        public void AddResourceRule(ResourceRule rule)
         {
-            return 1;
         }
 
-        public Rule GetRule(string resource, string serverIP) {
-            return rulesEngine.GetRule(resource, serverIP);
+        public void AddRegionRule(RegionRule rule)
+        {
         }
 
-        public bool EvaluateResourceRule()
-        {
-            return false;
-        }
 
-        public bool EvaluateIPRule()
+        public RateLimitSettingsConfig Evaluate(string resource, string IPAddress)
         {
-            return false;
+            return new RateLimitSettingsConfig();
         }
     }
 }

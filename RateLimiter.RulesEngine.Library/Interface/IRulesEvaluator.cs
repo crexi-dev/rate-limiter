@@ -1,8 +1,9 @@
-﻿namespace RateLimiter.RulesEngine.Library
+﻿using RateLimiter.Library;
+
+namespace RateLimiter.RulesEngine.Library
 {
     public interface IRulesEvaluator
     {
-        bool EvaluateResourceRule(string resourceName);
-        bool EvaluateIPAddressRule(string ipAddress);
+        RateLimitSettingsConfig Evaluate(string resourceName, string IPAddress);
     }
 }

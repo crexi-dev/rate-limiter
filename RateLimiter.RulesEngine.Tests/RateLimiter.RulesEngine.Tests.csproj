@@ -72,6 +72,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RateLimiter.Library\RateLimiter.Library.csproj">
+      <Project>{5a1dd60d-91f3-4ce9-9de9-e94982cf7291}</Project>
+      <Name>RateLimiter.Library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RateLimiter.RulesEngine.Library\RateLimiter.RulesEngine.Library.csproj">
       <Project>{4509a5c1-81d7-4d8b-87f9-29189b801e6c}</Project>
       <Name>RateLimiter.RulesEngine.Library</Name>
