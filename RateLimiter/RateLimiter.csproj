@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Classes\ClientRequest.cs" />
     <Compile Include="Classes\RateLimiter.cs" />
+    <Compile Include="Controller\Controller.cs" />
     <Compile Include="Interfaces\IClientRequest.cs" />
     <Compile Include="Interfaces\IRateLimiter.cs" />
     <Compile Include="Interfaces\IRule.cs" />
