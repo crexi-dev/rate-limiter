@@ -19,16 +19,14 @@ namespace RateLimiter.Tests
             var requestDate = new DateTime(2020, 1, 1, 0, 0, 0, 500);   // 1/1/2020 12:00:05AM
             var lastUpdateDate = new DateTime(2020, 1, 1, 0, 0, 0, 0);   // 1/1/2020 12:00:00AM
 
-            var fakeClientRepository = Substitute.For<IClientRepository>();
-
             var rateLimiterProxy = Substitute.For<IRateLimiterProxy>();
             var rateLimitSettingsConfig = new RateLimitSettingsConfig();
-            var rateLimitSettings = new RequestsPerTimespanSettings()
+            var rateLimitSettings = new TokenBucketSettings()
             {
                 MaxAmount = 5
             };
 
-            rateLimiterProxy.Verify(clientToken, requestDate).Returns(true);
+            rateLimiterProxy.Verify(clientToken, requestDate, rateLimitSettingsConfig).Returns(true);
             var rateLimiterClient = new RateLimiterClient(rateLimiterProxy);
 
             // act

@@ -18,6 +18,16 @@ namespace RateLimiter.RulesEngine.Client
         {
         }
 
+        public void UpdateResourceRule(ResourceRule rule)
+        {
+
+        }
+
+        public void UpdateRegionRule(RegionRule rule)
+        {
+
+        }
+
         public RateLimitSettingsConfig Evaluate(string resource, string IPAddress)
         {
             return new RateLimitSettingsConfig();

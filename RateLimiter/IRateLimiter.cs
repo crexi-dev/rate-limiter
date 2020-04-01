@@ -5,6 +5,6 @@ namespace RateLimiter
 {
     public interface IRateLimiter
     {
-        bool Verify(string token, DateTime requestDate, RateLimitSettingsConfig rateLimitSettingsConfig = null);
+        bool Verify(string token, DateTime requestDate, RateLimitSettingsConfig rateLimitSettingsConfig);
     }
 }

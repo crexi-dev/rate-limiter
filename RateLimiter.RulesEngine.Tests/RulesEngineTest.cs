@@ -14,27 +14,33 @@ namespace RateLimiter.RulesEngine.Tests
         {
             // arrange
             var resource = "/api/resource1";
-            var serverIP = "183.49.25.23";
-            var rule = new ResourceRule("/api/resource1 requests per timespan default", resource, RateLimitType.RequestsPerTimespan, RateLimitLevel.Default);
+            var serverIP = "172.39.67.32";
+            var rule = new ResourceRule("/api/resource1 : all regions : requests per timespan : default settings",
+                resource,
+                Region.All,
+                RateLimitType.RequestsPerTimespan,
+                RateLimitLevel.Default);
+
             var expected = new RateLimitSettingsConfig();
-            expected[RateLimitType.RequestsPerTimespan] = new RequestsPerTimespanSettings()
+            expected[RateLimitType.RequestsPerTimespan] = new TokenBucketSettings()
             {
                 MaxAmount = 5,
                 RefillAmount = 5,
                 RefillTime = 60
             };
 
-            var expectedSettings = (RequestsPerTimespanSettings) expected[RateLimitType.RequestsPerTimespan];
+            var expectedSettings = (TokenBucketSettings) expected[RateLimitType.RequestsPerTimespan];
 
             var fakeRepository = Substitute.For<IRuleRepository>();
-            fakeRepository.GetResourceRule(resource).Returns(rule);
+            var fakeCache = Substitute.For<IRuleCache>();
+            fakeCache["/api/resource1All"].Returns(rule);
 
             var fakeRulesEvaluator = Substitute.For<IRulesEvaluator>();
-            var rulesEngine = new RulesEngine(fakeRepository, fakeRulesEvaluator);
+            var rulesEngine = new RulesEngine(fakeRepository, fakeCache, fakeRulesEvaluator);
 
             // assert
             var result = rulesEngine.Evaluate(resource, serverIP);
-            var resultSettings = (RequestsPerTimespanSettings) result[RateLimitType.RequestsPerTimespan];
+            var resultSettings = (TokenBucketSettings) result[RateLimitType.RequestsPerTimespan];
 
             // assert
             Assert.AreEqual(resultSettings.MaxAmount, expectedSettings.MaxAmount);

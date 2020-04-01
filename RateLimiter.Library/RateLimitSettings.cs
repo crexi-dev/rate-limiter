@@ -29,7 +29,7 @@ namespace RateLimiter.Library
         }
     }
 
-    public class RequestsPerTimespanSettings : RateLimitSettingsBase {
+    public class TokenBucketSettings : RateLimitSettingsBase {
         public int MaxAmount { get; set; }
         public int RefillAmount { get; set; }
         public int RefillTime { get; set; }

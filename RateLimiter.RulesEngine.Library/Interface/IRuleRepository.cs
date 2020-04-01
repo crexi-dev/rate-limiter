@@ -5,8 +5,9 @@ namespace RateLimiter.RulesEngine.Library
     public interface IRuleRepository {
         void AddResourceRule(ResourceRule rule);
         void AddRegionRule(RegionRule rule);
-        ResourceRule GetResourceRule(string resource);
-        RegionRule GetRegionRule(Region region);
-        ResourceRegionRule GetResourceRegionRule(string resource, Region region);
+        void UpdateResourceRule(ResourceRule rule);
+        void UpdateRegionRule(RegionRule rule);
+        ResourceRule GetResourceRule(int id);
+        RegionRule GetRegionRule(int id);
     }
 }

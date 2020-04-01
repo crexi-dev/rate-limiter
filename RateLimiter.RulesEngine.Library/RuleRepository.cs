@@ -6,57 +6,54 @@ using RateLimiter.RulesEngine.Library.Rules;
 namespace RateLimiter.RulesEngine.Library.Repository
 {
     public class RuleRepository : IRuleRepository {
-        private Dictionary<string, ResourceRule> resourceRules;
-        private Dictionary<Region, RegionRule> regionRules;
-        private Dictionary<Tuple<string, Region>, ResourceRegionRule> resourceRegionRules;
+        private Dictionary<int, ResourceRule> resourceRules;
+        private Dictionary<int, RegionRule> regionRules;
         private Dictionary<RateLimitLevel, Dictionary<RateLimitType, RateLimitSettingsBase>> rateLimitSettings;
 
         public RuleRepository() {
             // read rule data from db, file, etc.
-            resourceRules = new Dictionary<string, ResourceRule>();
-            regionRules = new Dictionary<Region, RegionRule>();
-            resourceRegionRules = new Dictionary<Tuple<string, Region>, ResourceRegionRule>();
+            resourceRules = new Dictionary<int, ResourceRule>();
+            regionRules = new Dictionary<int, RegionRule>();
             rateLimitSettings = new Dictionary<RateLimitLevel, Dictionary<RateLimitType, RateLimitSettingsBase>>();
             this.InitializeFakeRepository();
         }
 
-        public ResourceRule GetResourceRule(string resource)
+        public ResourceRule GetResourceRule(int resourceId)
         {
-            return this.resourceRules.ContainsKey(resource) ? this.resourceRules[resource] : null;
+            return this.resourceRules.ContainsKey(resourceId) ? this.resourceRules[resourceId] : null;
         }
 
-        public RegionRule GetRegionRule(Region region)
+        public RegionRule GetRegionRule(int id)
         {
-            return this.regionRules.ContainsKey(region) ? this.regionRules[region] : null;
-        }
-
-        public ResourceRegionRule GetResourceRegionRule(string resource, Region region)
-        {
-            var key = new Tuple<string, Region>(resource, region);
-            return this.resourceRegionRules.ContainsKey(key)
-                ? this.resourceRegionRules[key]
-                : null;
+            return this.regionRules.ContainsKey(id) ? this.regionRules[id] : null;
         }
 
         public void AddResourceRule(ResourceRule rule) {
-            resourceRules.Add(rule.ResourceName, rule);
+            resourceRules.Add(this.regionRules.Count + 1, rule);
         }
 
-        public void AddRegionRule(RegionRule rule)
+        public void AddRegionRule(RegionRule rule) {            
+            this.regionRules.Add(this.regionRules.Count + 1, rule);
+        }
+
+        public void UpdateResourceRule(ResourceRule rule)
         {
-            regionRules.Add(rule.Region, rule);
+            this.resourceRules[rule.Id] = rule;
+        }
+
+        public void UpdateRegionRule(RegionRule rule)
+        {
+            this.regionRules[rule.Id] = rule;
         }
 
         private void InitializeFakeRepository() {
             // create rules
             var ruleUS = new RegionRule("US", Region.US, RateLimitType.RequestsPerTimespan, RateLimitLevel.Default);
             var ruleEU = new RegionRule("EU", Region.EU, RateLimitType.TimespanPassedSinceLastCall, RateLimitLevel.Default);
-            var ruleCombo = new ResourceRegionRule("Combo rule", "/api/resource1", Region.US, RateLimitType.RequestsPerTimespan | RateLimitType.TimespanPassedSinceLastCall, RateLimitLevel.Default);
 
-            regionRules[Region.US] = ruleUS;
-            regionRules[Region.EU] = ruleEU;
+            this.AddRegionRule(ruleUS);
+            this.AddRegionRule(ruleEU);
             var resourceRegionKey = new Tuple<string, Region>("/api/resource1", Region.US);
-            resourceRegionRules[resourceRegionKey] = ruleCombo;
         }
     }
 }
