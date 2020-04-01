@@ -9,6 +9,6 @@ namespace RateLimiter.Interfaces
     // giving more extensibility by implementing Rules as classes
     public interface IRule
     {
-        bool Validate(IClientRequest request, IRateLimiter rate_limiter);
+        bool Validate(IClientRequest request, IRateLimiterManager rate_limiter);
     }
 }

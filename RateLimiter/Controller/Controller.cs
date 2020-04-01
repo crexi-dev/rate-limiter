@@ -9,9 +9,9 @@ namespace RateLimiter.Controller
 {
     internal class Controller
     {
-        private readonly IRateLimiter _rate_limiter_service;
+        private readonly IRateLimiterManager _rate_limiter_service;
 
-        public Controller(IRateLimiter rate_limiter_service)
+        public Controller(IRateLimiterManager rate_limiter_service)
         {
             _rate_limiter_service = rate_limiter_service;
         }

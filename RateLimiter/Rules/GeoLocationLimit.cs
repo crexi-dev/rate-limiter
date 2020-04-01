@@ -10,7 +10,7 @@ namespace RateLimiter.Rules
 {
     public class GeoLocationLimit : IRule
     {
-        public bool Validate(IClientRequest request, IRateLimiter rate_limiter)
+        public bool Validate(IClientRequest request, IRateLimiterManager rate_limiter)
         {
             return request.GeoLocation == GeoLocation.US ?
                 new RequestsPerTimespanLimit().Validate(request, rate_limiter) :

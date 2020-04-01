@@ -7,34 +7,48 @@ using System.Threading.Tasks;
 
 namespace RateLimiter.Classes
 {
-    public class RateLimiter : IRateLimiter
+    public class RateLimiterManager : IRateLimiterManager
     {
         // map API_Function_Name to a list of Rules 
-        public Dictionary<string, List<IRule>> ApiAndRulesMap
-            = new Dictionary<string, List<IRule>>();
+        public Dictionary<string, List<IRule>> ApiAndRulesMap = new Dictionary<string, List<IRule>>();
 
         public List<IClientRequest> RequestsLog { get; } = new List<IClientRequest>();
 
         public void AddRule(string apiName, IRule rule)
         {
-            if (ApiAndRulesMap.ContainsKey(apiName))
-                ApiAndRulesMap[apiName].Add(rule);
-            else
-                ApiAndRulesMap.Add(apiName, new List<IRule>() { rule });
+            try
+            {
+                if (ApiAndRulesMap.ContainsKey(apiName))
+                    ApiAndRulesMap[apiName].Add(rule);
+                else
+                    ApiAndRulesMap.Add(apiName, new List<IRule>() { rule });
+            }
+            catch (Exception ex)
+            {
+                // Log/Manage exception 
+            }
         }
 
         public bool Validate(string ApiName, IClientRequest request)
         {
-            RequestsLog.Add(request);
-
-            var rulesToApply = ApiAndRulesMap[ApiName];
-            foreach (var rule in rulesToApply)
+            try
             {
-                if (!rule.Validate(request, this))
-                    return false;
-            }
+                RequestsLog.Add(request);
 
-            return true;
+                var rulesToApply = ApiAndRulesMap[ApiName];
+                foreach (var rule in rulesToApply)
+                {
+                    if (!rule.Validate(request, this))
+                        return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex) 
+            {
+                return false;
+                // Log/Manage exception 
+            }
         }
     }
 }

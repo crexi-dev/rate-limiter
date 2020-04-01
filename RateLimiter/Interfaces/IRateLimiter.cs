@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RateLimiter.Interfaces
 {
-    public interface IRateLimiter
+    public interface IRateLimiterManager
     {
         bool Validate(string ApiName, IClientRequest request);
 
