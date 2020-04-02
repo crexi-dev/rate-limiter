@@ -4,6 +4,6 @@ namespace RateLimiter.Library.Repository
 {
     public interface IClientRepository {
         ClientRequestData GetClientData(string token);
-        void UpdateClient(string token, ClientRequestData clientRequestData);
+        void AddOrUpdate(string token, ClientRequestData clientData);
     }    
 }

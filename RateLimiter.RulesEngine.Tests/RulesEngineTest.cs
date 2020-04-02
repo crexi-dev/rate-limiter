@@ -10,7 +10,7 @@ namespace RateLimiter.RulesEngine.Tests
     public class RulesEngineTest
     {
         [Test]
-        public void Evaluate_GetsExpectedConfigSettings_ForResource()
+        public void Evaluate_GetsExpectedConfigSettings_ForResource1()
         {
             // arrange
             var resource = "/api/resource1";
@@ -38,7 +38,7 @@ namespace RateLimiter.RulesEngine.Tests
             var fakeRulesEvaluator = Substitute.For<IRulesEvaluator>();
             var rulesEngine = new RulesEngine(fakeRepository, fakeCache, fakeRulesEvaluator);
 
-            // assert
+            // act
             var result = rulesEngine.Evaluate(resource, serverIP);
             var resultSettings = (TokenBucketSettings) result[RateLimitType.RequestsPerTimespan];
 

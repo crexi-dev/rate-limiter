@@ -14,7 +14,7 @@ namespace RateLimiter.Library.Repository
             return this.clientRequestHistory[token];
         }
 
-        public void UpdateClient(string token, ClientRequestData clientData)
+        public void AddOrUpdate(string token, ClientRequestData clientData)
         {
             Func<string, ClientRequestData> addValue = (key) => { return clientData; };
             Func<string, ClientRequestData, ClientRequestData> updateValue = (key, clientRequestData) => { return clientData; };

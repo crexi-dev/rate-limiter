@@ -19,7 +19,7 @@ namespace RateLimiter
         public bool Verify(string token, DateTime requestDate, RateLimitSettingsConfig rateLimitSettingsConfig)
         {
             var isAllowed = true;
-            ClientRequestData clientData = new ClientRequestData(-1, DateTime.MinValue, DateTime.MinValue);
+            ClientRequestData clientData = new ClientRequestData(-1, DateTime.MinValue);
 
             // check requests per timespan rule
             if (rateLimitSettingsConfig[RateLimitType.RequestsPerTimespan] != null) {
@@ -35,9 +35,9 @@ namespace RateLimiter
             // check timespan passed
             if (rateLimitSettingsConfig[RateLimitType.TimespanPassedSinceLastCall] != null)
             {
-                var rateLimitSettings = (TimespanPassedSinceLastCallSettings) rateLimitSettingsConfig[RateLimitType.RequestsPerTimespan];
+                var rateLimitSettings = (TimespanPassedSinceLastCallSettings) rateLimitSettingsConfig[RateLimitType.TimespanPassedSinceLastCall];
 
-                if (clientData.Count != -1)
+                if (clientData.Count == -1)
                     clientData = this.clientRepository.GetClientData(token);
 
                 isAllowed = this.rateLimiterAlgorithm.VerifyTimespanPassedSinceLastCall(requestDate, rateLimitSettings.TimespanLimit, clientData.LastUpdateDate);
@@ -48,7 +48,7 @@ namespace RateLimiter
 
             // update client data
             clientData.LastUpdateDate = DateTime.Now;
-            this.clientRepository.UpdateClient(token, clientData);
+            this.clientRepository.AddOrUpdate(token, clientData);
 
             return true;
         }

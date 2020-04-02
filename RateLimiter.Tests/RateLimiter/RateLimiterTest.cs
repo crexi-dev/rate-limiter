@@ -10,49 +10,71 @@ namespace RateLimiter.Tests
     [TestFixture]
     public class RateLimiterTest
     {
+        private RateLimitSettingsConfig defaultSettingsConfig;
+
+        [SetUp]
+        public void Setup()
+        {
+            defaultSettingsConfig = new RateLimitSettingsConfig();
+
+            defaultSettingsConfig[RateLimitType.RequestsPerTimespan] = new TokenBucketSettings()
+            {
+                MaxAmount = 5,
+                RefillAmount = 5,
+                RefillTime = 60
+            };
+
+            defaultSettingsConfig[RateLimitType.TimespanPassedSinceLastCall] = new TimespanPassedSinceLastCallSettings()
+            {
+                TimespanLimit = new TimeSpan(0, 1, 0)
+            };
+        }
+
         [Test]
-        public void Verify_True_WithinRatelimit()
+        public void Verify_True_RequestsPerTimespanPassAndTimespanPassedSinceLastCallPass()
         {
             // arrange 
             var clientToken = "abc123";
-            var serverIP = "183.28.89.21";
-            var requestDate = new DateTime(2020, 1, 1, 0, 0, 0, 500);   // 1/1/2020 12:00:05AM
-            var lastUpdateDate = new DateTime(2020, 1, 1, 0, 0, 0, 0);   // 1/1/2020 12:00:00AM
+            var requestDate = new DateTime(2020, 1, 1, 0, 0, 1);   // 1/1/2020 12:01AM
+            var lastUpdateDate = new DateTime(2020, 1, 1, 0, 0, 0);   // 1/1/2020 12:00:00AM
+            var lastClientRequest = new ClientRequestData(0, lastUpdateDate);
 
-            var rateLimiterProxy = Substitute.For<IRateLimiterProxy>();
-            var rateLimitSettingsConfig = new RateLimitSettingsConfig();
-            var rateLimitSettings = new TokenBucketSettings()
-            {
-                MaxAmount = 5
-            };
+            var fakeRepository = Substitute.For<IClientRepository>();
+            fakeRepository.GetClientData(clientToken).Returns(lastClientRequest);
 
-            rateLimiterProxy.Verify(clientToken, requestDate, rateLimitSettingsConfig).Returns(true);
-            var rateLimiterClient = new RateLimiterClient(rateLimiterProxy);
+            var fakeRateLimiterAlgorithm = Substitute.For<IRateLimiterAlgorithm>();
+            fakeRateLimiterAlgorithm.VerifyRequestsPerTimeSpan(0, 5, 5, 60, requestDate, requestDate).ReturnsForAnyArgs(true);
+            fakeRateLimiterAlgorithm.VerifyTimespanPassedSinceLastCall(requestDate, new TimeSpan(0, 1, 0), requestDate).ReturnsForAnyArgs(true);
+
+            var rateLimiter = new RateLimiter(fakeRepository, fakeRateLimiterAlgorithm);
 
             // act
-            var result = rateLimiterClient.Verify(clientToken, requestDate);
+            var result = rateLimiter.Verify(clientToken, requestDate, defaultSettingsConfig);
 
             // assert
             Assert.AreEqual(result, true);
         }
 
         [Test]
-        public void Verify_False_ExceedRatelimit()
+        public void Verify_False_RequestsPerTimespanFailAndTimespanPassedSinceLastCallPass()
         {
             // arrange 
             var clientToken = "abc123";
-            var serverIP = "183.28.89.21";
-            var requestDate = new DateTime(2020, 1, 1, 0, 0, 0, 500);   // 1/1/2020 12:00:05AM
-            var lastUpdateDate = new DateTime(2020, 1, 1, 0, 0, 0, 0);   // 1/1/2020 12:00:00AM
+            var requestDate = new DateTime(2020, 1, 1, 0, 1, 0);   // 1/1/2020 12:01AM
+            var lastUpdateDate = new DateTime(2020, 1, 1, 0, 0, 0);   // 1/1/2020 12:00AM
+            var lastClientRequest = new ClientRequestData(0, lastUpdateDate);
 
-            var fakeClientRepository = Substitute.For<IClientRepository>();
+            var fakeRepository = Substitute.For<IClientRepository>();
+            fakeRepository.GetClientData(clientToken).Returns(lastClientRequest);
 
-            var rateLimiterProxy = Substitute.For<IRateLimiterProxy>();
-            rateLimiterProxy.Verify(clientToken, requestDate, new RateLimitSettingsConfig()).Returns(false);
-            var rateLimiterClient = new RateLimiterClient(rateLimiterProxy);
+            var fakeRateLimiterAlgorithm = Substitute.For<IRateLimiterAlgorithm>();
+            fakeRateLimiterAlgorithm.VerifyRequestsPerTimeSpan(0, 5, 5, 60, requestDate, requestDate).ReturnsForAnyArgs(false);
+            fakeRateLimiterAlgorithm.VerifyTimespanPassedSinceLastCall(requestDate, new TimeSpan(0, 1, 0), requestDate).ReturnsForAnyArgs(true);
+
+            var rateLimiter = new RateLimiter(fakeRepository, fakeRateLimiterAlgorithm);
 
             // act
-            var result = rateLimiterClient.Verify(clientToken, requestDate, new RateLimitSettingsConfig());
+            var result = rateLimiter.Verify(clientToken, requestDate, defaultSettingsConfig);
 
             // assert
             Assert.AreEqual(result, false);

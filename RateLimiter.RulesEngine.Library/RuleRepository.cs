@@ -53,7 +53,6 @@ namespace RateLimiter.RulesEngine.Library.Repository
 
             this.AddRegionRule(ruleUS);
             this.AddRegionRule(ruleEU);
-            var resourceRegionKey = new Tuple<string, Region>("/api/resource1", Region.US);
         }
     }
 }

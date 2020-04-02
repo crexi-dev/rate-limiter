@@ -6,12 +6,10 @@ namespace RateLimiter.Library
     {
         public int Count;
         public DateTime LastUpdateDate;
-        public DateTime RequestDate;
 
-        public ClientRequestData(int count, DateTime lastUpdateDate, DateTime requestDate) {
+        public ClientRequestData(int count, DateTime lastUpdateDate) {
             Count = count;
             LastUpdateDate = lastUpdateDate;
-            RequestDate = requestDate;
         }
     }
 }
