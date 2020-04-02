@@ -48,8 +48,8 @@ namespace RateLimiter.RulesEngine.Library.Repository
 
         private void InitializeFakeRepository() {
             // create rules
-            var ruleUS = new RegionRule("US", Region.US, RateLimitType.RequestsPerTimespan, RateLimitLevel.Default);
-            var ruleEU = new RegionRule("EU", Region.EU, RateLimitType.TimespanPassedSinceLastCall, RateLimitLevel.Default);
+            var ruleUS = new RegionRule("US", RateLimitType.RequestsPerTimespan, RateLimitLevel.Default);
+            var ruleEU = new RegionRule("EU", RateLimitType.TimespanPassedSinceLastCall, RateLimitLevel.Default);
 
             this.AddRegionRule(ruleUS);
             this.AddRegionRule(ruleEU);

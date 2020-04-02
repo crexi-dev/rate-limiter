@@ -10,16 +10,21 @@ namespace RateLimiter.RulesEngine.Tests
     public class RulesEngineTest
     {
         [Test]
-        public void Evaluate_GetsExpectedConfigSettings_ForResource1()
+        public void Evaluate_GetsExpectedConfigSettings_ForGlobalResourceRule()
         {
             // arrange
             var resource = "/api/resource1";
             var serverIP = "172.39.67.32";
-            var rule = new ResourceRule("/api/resource1 : all regions : requests per timespan : default settings",
+
+            var resourceRule = new ResourceRule("/api/resource1 : all regions : requests per timespan : default settings",
                 resource,
                 Region.All,
                 RateLimitType.RequestsPerTimespan,
                 RateLimitLevel.Default);
+
+            var regionRule = new RegionRule("US",
+                RateLimitType.TimespanPassedSinceLastCall,
+                RateLimitLevel.Low);
 
             var expected = new RateLimitSettingsConfig();
             expected[RateLimitType.RequestsPerTimespan] = new TokenBucketSettings()
@@ -33,10 +38,10 @@ namespace RateLimiter.RulesEngine.Tests
 
             var fakeRepository = Substitute.For<IRuleRepository>();
             var fakeCache = Substitute.For<IRuleCache>();
-            fakeCache["/api/resource1All"].Returns(rule);
+            fakeCache["/api/resource1All"].Returns(resourceRule);
+            fakeCache["US"].Returns(regionRule);
 
-            var fakeRulesEvaluator = Substitute.For<IRulesEvaluator>();
-            var rulesEngine = new RulesEngine(fakeRepository, fakeCache, fakeRulesEvaluator);
+            var rulesEngine = new RulesEngine(fakeRepository, fakeCache);
 
             // act
             var result = rulesEngine.Evaluate(resource, serverIP);

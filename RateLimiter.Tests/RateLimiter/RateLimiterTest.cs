@@ -1,5 +1,4 @@
 ﻿using System;
-using RateLimiter.Client;
 using RateLimiter.Library;
 using RateLimiter.Library.Repository;
 using NSubstitute;

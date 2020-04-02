@@ -10,12 +10,10 @@ namespace RateLimiter.RulesEngine
         private Dictionary<string, ResourceRule> activeRegionRules;
         private IRuleRepository ruleRepository;
         private IRuleCache ruleCache;
-        private IRulesEvaluator rulesEvaluator;
 
-        public RulesEngine(IRuleRepository ruleRepository, IRuleCache ruleCache, IRulesEvaluator rulesEvaluator) {
+        public RulesEngine(IRuleRepository ruleRepository, IRuleCache ruleCache) {
             this.ruleCache = ruleCache;
             this.ruleRepository = ruleRepository;
-            this.rulesEvaluator = rulesEvaluator;
         }
 
         public void AddRegionRule(RegionRule rule) {
@@ -93,7 +91,28 @@ namespace RateLimiter.RulesEngine
 
                         };
 
-                    break;
+                        rateLimitSettingsConfig[RateLimitType.TimespanPassedSinceLastCall] = new TimespanPassedSinceLastCallSettings()
+                        {
+                            TimespanLimit = new TimeSpan(0, 30, 0)
+                        };
+
+                        break;
+
+                    case RateLimitLevel.High:
+                        rateLimitSettingsConfig[RateLimitType.RequestsPerTimespan] = new TokenBucketSettings()
+                        {
+                            MaxAmount = 20,
+                            RefillAmount = 10,
+                            RefillTime = 30
+
+                        };
+
+                        rateLimitSettingsConfig[RateLimitType.TimespanPassedSinceLastCall] = new TimespanPassedSinceLastCallSettings()
+                        {
+                            TimespanLimit = new TimeSpan(0, 0, 30)
+                        };
+
+                        break;
                 }
 
                 return rateLimitSettingsConfig;

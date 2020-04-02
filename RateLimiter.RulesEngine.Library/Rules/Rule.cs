@@ -36,11 +36,8 @@ namespace RateLimiter.RulesEngine.Library.Rules
 
     public class RegionRule : Rule
     {
-        public Region Region { get; private set; }
-
-        public RegionRule(string name, Region region, RateLimitType rateLimitType, RateLimitLevel rateLimitLevel) : base(name, rateLimitType, rateLimitLevel)
+        public RegionRule(string name, RateLimitType rateLimitType, RateLimitLevel rateLimitLevel) : base(name, rateLimitType, rateLimitLevel)
         {
-            this.Region = region;
         }
 
         public bool Match(string test)
