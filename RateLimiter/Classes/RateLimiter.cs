@@ -11,8 +11,17 @@ namespace RateLimiter.Classes
     {
         // map API_Function_Name to a list of Rules 
         public Dictionary<string, List<IRule>> ApiAndRulesMap = new Dictionary<string, List<IRule>>();
+        private List<IClientRequest> _requestsLog = new List<IClientRequest>();
+        private object _readlock  = new object();
+        private object _writelock = new object();
 
-        public List<IClientRequest> RequestsLog { get; } = new List<IClientRequest>();
+        public List<IClientRequest> RequestsLog
+        {
+            get
+            {
+                lock (_readlock) { return _requestsLog; }
+            }
+        }
 
         public void AddRule(string apiName, IRule rule)
         {
@@ -33,7 +42,10 @@ namespace RateLimiter.Classes
         {
             try
             {
-                RequestsLog.Add(request);
+                lock (_writelock)
+                {
+                    _requestsLog.Add(request);
+                }
 
                 var rulesToApply = ApiAndRulesMap[ApiName];
                 foreach (var rule in rulesToApply)
