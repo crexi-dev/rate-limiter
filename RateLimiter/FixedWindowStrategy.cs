@@ -8,7 +8,7 @@ namespace RateLimiter
 {
     public class FixedWindowStrategy : IRateLimiterStrategy
     {
-        public bool ApplyStrategy()
+        public bool ApplyStrategy(int userId, int requestId)
         {
             throw new NotImplementedException();
         }

@@ -8,6 +8,6 @@ namespace RateLimiter
 {
     public interface IRateLimiterStrategy
     {
-        bool ApplyStrategy();
+        bool ApplyStrategy(int userId, int requestId);
     }
 }

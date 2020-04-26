@@ -22,47 +22,47 @@ namespace RateLimiter
         }
 
 
-        public bool ValidateRuleList(List<RateLimiterRule> rules, List<IRateLimiterFilter> targetFilters, EnumFilterMatchMode filterMatchMode = EnumFilterMatchMode.Any)
+        public bool ValidateRuleList(int userId, int requestId, List<RateLimiterRule> rules, List<IRateLimiterFilter> targetFilters, EnumFilterMatchMode filterMatchMode = EnumFilterMatchMode.Any)
         {
             if (rules == null)
                 return true;
 
             foreach (var rule in rules)
-                return ValidateRule(rule, targetFilters, filterMatchMode);
+                return ValidateRule(userId, requestId, rule, targetFilters, filterMatchMode);
 
             return false;
         }
 
-        public bool ValidatedRuleList(List<RateLimiterRule> rules, IRateLimiterFilter targetFilter = null)
+        public bool ValidatedRuleList(int userId, int requestId, List<RateLimiterRule> rules, IRateLimiterFilter targetFilter = null)
         {
             if (rules == null)
                 return true;
             List<IRateLimiterFilter> targetFilters = targetFilter != null ? new List<IRateLimiterFilter>() { targetFilter } : null;
             foreach (var rule in rules)
-                return ValidateRule(rule, targetFilters);
+                return ValidateRule(userId, requestId, rule, targetFilters);
 
             return false;
         }
 
-        public bool ValidateRule(RateLimiterRule rule,  List<IRateLimiterFilter> targetFilters, EnumFilterMatchMode filterMatchMode = EnumFilterMatchMode.Any)
+        public bool ValidateRule(int userId,int requestId, RateLimiterRule rule,  List<IRateLimiterFilter> targetFilters, EnumFilterMatchMode filterMatchMode = EnumFilterMatchMode.Any)
         {
             if (rule == null)
                 return true;
 
             if (rule.FiltersMatched(targetFilters, filterMatchMode))
-                    return rule.Strategy.ApplyStrategy();
+                    return rule.Strategy.ApplyStrategy(userId,requestId);
             
             return false;
         }
 
 
-        public bool ValidateRule(RateLimiterRule rule, IRateLimiterFilter targetFilter = null)
+        public bool ValidateRule(int userId, int requestId, RateLimiterRule rule, IRateLimiterFilter targetFilter = null)
         {
             if (rule == null)
                 return true;
             List<IRateLimiterFilter> targetFilters = targetFilter != null ? new List<IRateLimiterFilter>() { targetFilter } : null;
             if (rule.FiltersMatched(targetFilters))
-                return rule.Strategy.ApplyStrategy();
+                return rule.Strategy.ApplyStrategy(userId,requestId);
 
             return false;
         }

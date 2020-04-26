@@ -15,7 +15,8 @@ namespace RateLimiter
             var rateLimiter = RateLimiter.Instance;
             User user = AuthenticateUser(authToken);
 
-            if (rateLimiter.ValidateRuleList(rules, new List<IRateLimiterFilter>() { new LocationBasedFilter() { CountryCode = user.CountryCode } }))
+            int requestId=123;
+            if (rateLimiter.ValidateRuleList(user.Id, requestId, rules, new List<IRateLimiterFilter>() { new LocationBasedFilter() { CountryCode = user.CountryCode } }))
                 return DoGetCall(user);
             else
                 throw new TimeoutException("Rate limit exceeded. Please retry later."); // Can be further implemented as RateLimiter option (HardLimit or SoftLimit).
@@ -30,7 +31,7 @@ namespace RateLimiter
 
         public User AuthenticateUser(string authToken)
         {
-            return new User { CountryCode = "US", Name = "Dana Sherman", UserIP = "127.0.0.1" };
+            return new User { Id = 100, CountryCode = "US", Name = "Dana Sherman", UserIP = "127.0.0.1" };
         }
     }
 

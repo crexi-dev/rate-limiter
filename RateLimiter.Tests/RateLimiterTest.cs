@@ -14,7 +14,7 @@ namespace RateLimiter.Tests
 
         public RateLimiterTest()
         {
-            API api = new API();
+            api = new API();
         }
 
         [Test]
@@ -30,7 +30,9 @@ namespace RateLimiter.Tests
 
             RateLimiterRule rule = new RateLimiterRule(new LeakyBucketStrategy(requestQuota,maximumRequestQuota,restoreRateAmount,restoreRateTimeAmount,restoreRateTimePeriod));
 
-            if (rateLimiter.ValidateRule(rule))
+            int requestId = 123;
+
+            if (rateLimiter.ValidateRule(user.Id, requestId, rule))
                 getCallActualOutput = api.DoGetCall(user);
          
             Assert.AreEqual(getCallExpectedOutput,getCallActualOutput);
