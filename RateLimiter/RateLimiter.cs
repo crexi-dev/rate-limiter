@@ -50,7 +50,7 @@ namespace RateLimiter
                 return true;
 
             if (rule.FiltersMatched(targetFilters, filterMatchMode))
-                    return rule.Strategy.ApplyStrategy(userId,requestId);
+                    return rule.Strategy.IsAllowed(userId,requestId);
             
             return false;
         }
@@ -62,7 +62,7 @@ namespace RateLimiter
                 return true;
             List<IRateLimiterFilter> targetFilters = targetFilter != null ? new List<IRateLimiterFilter>() { targetFilter } : null;
             if (rule.FiltersMatched(targetFilters))
-                return rule.Strategy.ApplyStrategy(userId,requestId);
+                return rule.Strategy.IsAllowed(userId,requestId);
 
             return false;
         }

@@ -37,7 +37,7 @@ namespace RateLimiter
             buckets = new ConcurrentDictionary<int, Bucket>();
         }
 
-        public bool ApplyStrategy(int userId, int requestId)
+        public bool IsAllowed(int userId, int requestId)
         {
             bool result = false;
 
@@ -84,43 +84,45 @@ namespace RateLimiter
 
         }
 
-    }
-
-    class Bucket
-    {
-        public int Id { get; private set; }
-        private ConcurrentQueue<int> requestsQueue;
-        public DateTime LastQueueUpdate { get; set; }
-        public int RequestQuota { get; set; }
-
-        public int MaximumRequestQuota { get; private set; }
-
-        public Bucket(int id, int maximumRequestQuota)
+        class Bucket
         {
-            Id = id;
-            MaximumRequestQuota = maximumRequestQuota;
-            RequestQuota = maximumRequestQuota;
-            requestsQueue = new ConcurrentQueue<int>();
-            LastQueueUpdate = DateTime.UtcNow;
-        }
+            public int Id { get; private set; }
+            private ConcurrentQueue<int> requestsQueue;
+            public DateTime LastQueueUpdate { get; set; }
+            public int RequestQuota { get; set; }
 
-        public void Add(int requestId)
-        {
-            requestsQueue.Enqueue(requestId);
-            RequestQuota--;
-            LastQueueUpdate = DateTime.UtcNow;
-        }
+            public int MaximumRequestQuota { get; private set; }
 
-        public void Remove(int amount)
-        {
-            int removeAmount = RequestQuota + amount > MaximumRequestQuota ? MaximumRequestQuota : amount;
-
-            for (int i = 0; i < removeAmount; i++)
+            public Bucket(int id, int maximumRequestQuota)
             {
-                requestsQueue.TryDequeue(out _);
-                RequestQuota++;
-             }
-            LastQueueUpdate = DateTime.UtcNow;
+                Id = id;
+                MaximumRequestQuota = maximumRequestQuota;
+                RequestQuota = maximumRequestQuota;
+                requestsQueue = new ConcurrentQueue<int>();
+                LastQueueUpdate = DateTime.UtcNow;
+            }
+
+            public void Add(int requestId)
+            {
+                requestsQueue.Enqueue(requestId);
+                RequestQuota--;
+                LastQueueUpdate = DateTime.UtcNow;
+            }
+
+            public void Remove(int amount)
+            {
+                int removeAmount = RequestQuota + amount > MaximumRequestQuota ? MaximumRequestQuota : amount;
+
+                for (int i = 0; i < removeAmount; i++)
+                {
+                    requestsQueue.TryDequeue(out _);
+                    RequestQuota++;
+                }
+                LastQueueUpdate = DateTime.UtcNow;
+            }
         }
+
     }
+
+   
 }

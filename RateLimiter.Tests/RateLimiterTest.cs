@@ -41,14 +41,12 @@ namespace RateLimiter.Tests
         {
             user = api.AuthenticateUser("test auth token");
 
-            int maximumRequestQuota = 10;
-            int restoreRateAmount = 1;
-            int restoreRateTimeAmount = 2;
-            EnumRestoreRateTimePeriod restoreRateTimePeriod = EnumRestoreRateTimePeriod.Seconds;
+            int fixedWindowMaxRequestsPerSescond = 2;
+            int fixedWindowTimeWindowInSeconds = 10;
 
             int requestId = 123;
-            RateLimiterRule rule = new RateLimiterRule(new FixedWindowStrategy(), new LocationBasedFilter { CountryCode = "US" });
-            if (rateLimiter.ValidateRule(user.Id, requestId, rule, new LocationBasedFilter { CountryCode = user.CountryCode })) ;
+            RateLimiterRule rule = new RateLimiterRule(new FixedWindowStrategy(fixedWindowMaxRequestsPerSescond, fixedWindowTimeWindowInSeconds), new LocationBasedFilter { CountryCode = "US" });
+            if (rateLimiter.ValidateRule(user.Id, requestId, rule, new LocationBasedFilter { CountryCode = user.CountryCode })) 
                 getCallActualOutput = api.DoGetCall(user);
 
             Assert.AreEqual(getCallExpectedOutput, getCallActualOutput);
@@ -65,10 +63,12 @@ namespace RateLimiter.Tests
             int restoreRateTimeAmount = 2;
             EnumRestoreRateTimePeriod restoreRateTimePeriod = EnumRestoreRateTimePeriod.Seconds;
 
+            int fixedWindowMaxRequestsPerSescond = 2;
+            int fixedWindowTimeWindowInSeconds = 10;
             int requestId = 123;
 
             List<RateLimiterRule> rules = new List<RateLimiterRule> { 
-                new RateLimiterRule(new FixedWindowStrategy(), new LocationBasedFilter { CountryCode = "US" }),
+                new RateLimiterRule(new FixedWindowStrategy(fixedWindowMaxRequestsPerSescond,fixedWindowTimeWindowInSeconds), new LocationBasedFilter { CountryCode = "US" }),
                 new RateLimiterRule(new LeakyBucketStrategy(maximumRequestQuota, restoreRateAmount, restoreRateTimeAmount, restoreRateTimePeriod))
             };
             if (rateLimiter.ValidatedRuleList(user.Id, requestId, rules, new LocationBasedFilter { CountryCode = user.CountryCode }))

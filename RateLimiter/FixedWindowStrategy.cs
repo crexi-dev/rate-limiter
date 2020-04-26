@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,65 @@ namespace RateLimiter
 {
     public class FixedWindowStrategy : IRateLimiterStrategy
     {
-        public bool ApplyStrategy(int userId, int requestId)
+        public int MaximumRequestQuota { get; private set; }
+        public int TimeWindowInSeconds { get; private set; }
+
+        private ConcurrentDictionary<int, Bucket> buckets;
+        public FixedWindowStrategy(int maxRequestPerSecond, int timeWindowInSeconds)
         {
-            throw new NotImplementedException();
+            MaximumRequestQuota = maxRequestPerSecond;
+            TimeWindowInSeconds = timeWindowInSeconds;
+            buckets = new ConcurrentDictionary<int, Bucket>();
+        }
+
+        public bool IsAllowed(int userId, int requestId)
+        {
+            bool result = false;
+            Bucket bucket = buckets.GetOrAdd(userId, new Bucket(userId, MaximumRequestQuota));
+
+            long currentTime = DateTime.UtcNow.Ticks;
+            long ticksFromLastUpdate = currentTime - bucket.LastCountUpdateDT.Ticks;
+            long secondsFromLastUpdate = ticksFromLastUpdate / TimeSpan.TicksPerSecond;
+
+            if (secondsFromLastUpdate >= TimeWindowInSeconds)
+            {
+                bucket.RequestsCount = 0;
+                result = true;
+            }
+            else
+            {
+                if (bucket.RequestsCount < MaximumRequestQuota)
+                {
+                    bucket.RequestsCount++;
+                    result = true;
+                }
+                else
+                    result = false;
+            }
+
+            return result;
+        }
+
+        class Bucket
+        {
+            public int Id { get; private set; }
+           
+
+            public int RequestsCount { get; set; }
+            public DateTime LastCountUpdateDT { get; set; }
+            public int MaximumRequestQuota { get; private set; }
+
+            public Bucket(int id, int maximumRequestQuota)
+            {
+                Id = id;
+                MaximumRequestQuota = maximumRequestQuota;
+                LastCountUpdateDT = DateTime.UtcNow;
+                RequestsCount = 0;
+            }
+
+
         }
     }
+
+
 }
