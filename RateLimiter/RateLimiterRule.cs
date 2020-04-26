@@ -18,6 +18,12 @@ namespace RateLimiter
             Filters = filters;
         }
 
+        public RateLimiterRule(IRateLimiterStrategy strategy, IRateLimiterFilter filter)
+        {
+            Strategy = strategy;
+            Filters = new List<IRateLimiterFilter> { filter };
+        }
+
 
         public bool FiltersMatched(List<IRateLimiterFilter> targetFilters, EnumFilterMatchMode matchMode = EnumFilterMatchMode.Any)
         {

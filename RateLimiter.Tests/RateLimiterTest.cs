@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using RateLimiter;
+using System.Collections.Generic;
 
 namespace RateLimiter.Tests
 {
@@ -22,20 +23,58 @@ namespace RateLimiter.Tests
         {
             user = api.AuthenticateUser("test auth token");
 
-            int requestQuota = 0;
             int maximumRequestQuota = 10;
             int restoreRateAmount = 1;
             int restoreRateTimeAmount = 2;
             EnumRestoreRateTimePeriod restoreRateTimePeriod = EnumRestoreRateTimePeriod.Seconds;
 
-            RateLimiterRule rule = new RateLimiterRule(new LeakyBucketStrategy(requestQuota,maximumRequestQuota,restoreRateAmount,restoreRateTimeAmount,restoreRateTimePeriod));
-
             int requestId = 123;
-
-            if (rateLimiter.ValidateRule(user.Id, requestId, rule))
+            RateLimiterRule rule = new RateLimiterRule(new LeakyBucketStrategy(maximumRequestQuota, restoreRateAmount, restoreRateTimeAmount, restoreRateTimePeriod));
+            if (rateLimiter.ValidateRule(user.Id, requestId, rule ))
                 getCallActualOutput = api.DoGetCall(user);
          
             Assert.AreEqual(getCallExpectedOutput,getCallActualOutput);
+        }
+
+        [Test]
+        public void SimpleRuleWithFixedWindowStrategyAndCountryFilter()
+        {
+            user = api.AuthenticateUser("test auth token");
+
+            int maximumRequestQuota = 10;
+            int restoreRateAmount = 1;
+            int restoreRateTimeAmount = 2;
+            EnumRestoreRateTimePeriod restoreRateTimePeriod = EnumRestoreRateTimePeriod.Seconds;
+
+            int requestId = 123;
+            RateLimiterRule rule = new RateLimiterRule(new FixedWindowStrategy(), new LocationBasedFilter { CountryCode = "US" });
+            if (rateLimiter.ValidateRule(user.Id, requestId, rule, new LocationBasedFilter { CountryCode = user.CountryCode })) ;
+                getCallActualOutput = api.DoGetCall(user);
+
+            Assert.AreEqual(getCallExpectedOutput, getCallActualOutput);
+        }
+
+
+        [Test]
+        public void MultipleRules()
+        {
+            user = api.AuthenticateUser("test auth token");
+
+            int maximumRequestQuota = 10;
+            int restoreRateAmount = 1;
+            int restoreRateTimeAmount = 2;
+            EnumRestoreRateTimePeriod restoreRateTimePeriod = EnumRestoreRateTimePeriod.Seconds;
+
+            int requestId = 123;
+
+            List<RateLimiterRule> rules = new List<RateLimiterRule> { 
+                new RateLimiterRule(new FixedWindowStrategy(), new LocationBasedFilter { CountryCode = "US" }),
+                new RateLimiterRule(new LeakyBucketStrategy(maximumRequestQuota, restoreRateAmount, restoreRateTimeAmount, restoreRateTimePeriod))
+            };
+            if (rateLimiter.ValidatedRuleList(user.Id, requestId, rules, new LocationBasedFilter { CountryCode = user.CountryCode }))
+                getCallActualOutput = api.DoGetCall(user);
+
+            Assert.AreEqual(getCallExpectedOutput, getCallActualOutput);
         }
     }
 }

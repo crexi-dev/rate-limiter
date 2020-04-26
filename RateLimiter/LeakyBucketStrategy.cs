@@ -28,7 +28,7 @@ namespace RateLimiter
 
         private ConcurrentDictionary<int, Bucket> buckets;
 
-        public LeakyBucketStrategy(int requestQuota, int maximumRequestQuota, int restoreRateAmount, int restoreRateTimeAmount, EnumRestoreRateTimePeriod restoreRateTimePeriod)
+        public LeakyBucketStrategy(int maximumRequestQuota, int restoreRateAmount, int restoreRateTimeAmount, EnumRestoreRateTimePeriod restoreRateTimePeriod)
         {
             MaximumRequestQuota = maximumRequestQuota;
             RestoreRateAmount = restoreRateAmount;
