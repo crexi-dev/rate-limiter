@@ -32,13 +32,11 @@ namespace RateLimiter
                 return Filters == null;
             else if (Filters == null)
                 return true;
-            
-            bool filterMatched = false;
             int countMatchedFilters = 0;
 
             foreach (var targetFilter in targetFilters)
             {
-                filterMatched = isMatched(targetFilter);
+                bool filterMatched = isMatched(targetFilter);
                 if (filterMatched)
                 {
                     if (matchMode == EnumFilterMatchMode.Any)

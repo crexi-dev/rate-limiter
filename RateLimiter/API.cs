@@ -24,7 +24,7 @@ namespace RateLimiter
 
         public string DoGetCall(User user)
         {
-            string result = string.Format("User {0} successfully executed an API call", user.Name);
+            string result = "success";
 
             return result;
         }

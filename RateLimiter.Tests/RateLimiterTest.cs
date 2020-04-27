@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using RateLimiter;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace RateLimiter.Tests
 {
@@ -42,14 +44,44 @@ namespace RateLimiter.Tests
             user = api.AuthenticateUser("test auth token");
 
             int fixedWindowMaxRequestsPerSescond = 2;
-            int fixedWindowTimeWindowInSeconds = 10;
-
-            int requestId = 123;
+            int fixedWindowTimeWindowInSeconds = 5;
+            var filter = new LocationBasedFilter { CountryCode = user.CountryCode };
             RateLimiterRule rule = new RateLimiterRule(new FixedWindowStrategy(fixedWindowMaxRequestsPerSescond, fixedWindowTimeWindowInSeconds), new LocationBasedFilter { CountryCode = "US" });
-            if (rateLimiter.ValidateRule(user.Id, requestId, rule, new LocationBasedFilter { CountryCode = user.CountryCode })) 
-                getCallActualOutput = api.DoGetCall(user);
+            //create loop to call many requests to trigger DOS
+            
+            int expectedAllowedCount = 2, actualAllowedCount = 0;
+            for (int i = 1; i <= 10; i++)
+            {
+                if (rateLimiter.ValidateRule(user.Id, i, rule, filter))
+                {
+                    getCallActualOutput = api.DoGetCall(user);
+                    TestContext.WriteLine("Allowed request id: {0}", i);
+                    actualAllowedCount++;
+                }
+                else
+                    TestContext.WriteLine("Denied request id: {0}", i);
+            }
 
-            Assert.AreEqual(getCallExpectedOutput, getCallActualOutput);
+            Assert.AreEqual(expectedAllowedCount, actualAllowedCount);
+
+            expectedAllowedCount = 8;
+            actualAllowedCount = 0;
+            for (int i = 1; i <= 10; i++)
+            {
+                if (rateLimiter.ValidateRule(user.Id, i, rule, filter))
+                {
+                    getCallActualOutput = api.DoGetCall(user);
+                    TestContext.WriteLine("Allowed request id: {0}", i);
+                    actualAllowedCount++;
+                }
+                else
+                    TestContext.WriteLine("Denied request id: {0}", i);
+
+                if (i == 2)
+                    Thread.Sleep(5000);
+            }
+
+            Assert.AreEqual(expectedAllowedCount, actualAllowedCount);
         }
 
 
@@ -57,7 +89,7 @@ namespace RateLimiter.Tests
         public void MultipleRules()
         {
             user = api.AuthenticateUser("test auth token");
-
+            var filter = new LocationBasedFilter { CountryCode = user.CountryCode };
             int maximumRequestQuota = 10;
             int restoreRateAmount = 1;
             int restoreRateTimeAmount = 2;
@@ -65,13 +97,18 @@ namespace RateLimiter.Tests
 
             int fixedWindowMaxRequestsPerSescond = 2;
             int fixedWindowTimeWindowInSeconds = 10;
+
+            List<RateLimiterRule> rules = new List<RateLimiterRule> {
+                new RateLimiterRule(new FixedWindowStrategy(fixedWindowMaxRequestsPerSescond,fixedWindowTimeWindowInSeconds), new LocationBasedFilter { CountryCode = "US" }),
+                new RateLimiterRule(new LeakyBucketStrategy(maximumRequestQuota, restoreRateAmount, restoreRateTimeAmount, restoreRateTimePeriod), new LocationBasedFilter { CountryCode="EU" })
+            };
+
+
+            //trigger DOS with different users with US and EU token
             int requestId = 123;
 
-            List<RateLimiterRule> rules = new List<RateLimiterRule> { 
-                new RateLimiterRule(new FixedWindowStrategy(fixedWindowMaxRequestsPerSescond,fixedWindowTimeWindowInSeconds), new LocationBasedFilter { CountryCode = "US" }),
-                new RateLimiterRule(new LeakyBucketStrategy(maximumRequestQuota, restoreRateAmount, restoreRateTimeAmount, restoreRateTimePeriod))
-            };
-            if (rateLimiter.ValidatedRuleList(user.Id, requestId, rules, new LocationBasedFilter { CountryCode = user.CountryCode }))
+          
+            if (rateLimiter.ValidatedRuleList(user.Id, requestId, rules, filter))
                 getCallActualOutput = api.DoGetCall(user);
 
             Assert.AreEqual(getCallExpectedOutput, getCallActualOutput);

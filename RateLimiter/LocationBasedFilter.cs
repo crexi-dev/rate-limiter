@@ -20,10 +20,10 @@ namespace RateLimiter
                 throw new ArgumentException("targetFilter should be type of LocationBasedFilter");
            
             var target = (LocationBasedFilter)targetFilter;
-            
-            return CountryCode.Equals(target.CountryCode, StringComparison.InvariantCultureIgnoreCase)
-                && PostalCode.Equals(target.PostalCode, StringComparison.InvariantCultureIgnoreCase)
-                && City.Equals(target.City, StringComparison.InvariantCultureIgnoreCase);
+
+            return CountryCode == target.CountryCode
+                && PostalCode == target.PostalCode
+                && City == target.City;
         }
 
     }
