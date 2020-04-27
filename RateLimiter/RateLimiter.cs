@@ -39,8 +39,10 @@ namespace RateLimiter
                 return true;
             List<IRateLimiterFilter> targetFilters = targetFilter != null ? new List<IRateLimiterFilter>() { targetFilter } : null;
             foreach (var rule in rules)
-                return ValidateRule(userId, requestId, rule, targetFilters);
-
+            {
+                if (ValidateRule(userId, requestId, rule, targetFilters))
+                    return true;
+            }
             return false;
         }
 

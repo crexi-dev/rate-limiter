@@ -13,9 +13,9 @@ namespace RateLimiter
         public int TimeWindowInSeconds { get; private set; }
 
         private ConcurrentDictionary<int, Bucket> buckets;
-        public FixedWindowStrategy(int maxRequestPerSecond, int timeWindowInSeconds)
+        public FixedWindowStrategy(int maxRequestPerWindow, int timeWindowInSeconds)
         {
-            MaximumRequestQuota = maxRequestPerSecond;
+            MaximumRequestQuota = maxRequestPerWindow;
             TimeWindowInSeconds = timeWindowInSeconds;
             buckets = new ConcurrentDictionary<int, Bucket>();
         }
@@ -31,7 +31,8 @@ namespace RateLimiter
 
             if (secondsFromLastUpdate >= TimeWindowInSeconds)
             {
-                bucket.RequestsCount = 0;
+                bucket.RequestsCount = 1;
+                bucket.LastCountUpdateDT = DateTime.UtcNow;
                 result = true;
             }
             else
@@ -39,6 +40,7 @@ namespace RateLimiter
                 if (bucket.RequestsCount < MaximumRequestQuota)
                 {
                     bucket.RequestsCount++;
+                    bucket.LastCountUpdateDT = DateTime.UtcNow;
                     result = true;
                 }
                 else

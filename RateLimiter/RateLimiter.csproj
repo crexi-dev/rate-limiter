@@ -42,15 +42,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API.cs" />
-    <Compile Include="FixedWindowStrategy.cs" />
-    <Compile Include="IRateLimiterStrategy.cs" />
-    <Compile Include="LeakyBucketStrategy.cs" />
-    <Compile Include="LocationBasedFilter.cs" />
+    <Compile Include="Strategies\FixedWindowStrategy.cs" />
+    <Compile Include="Strategies\IRateLimiterStrategy.cs" />
+    <Compile Include="Strategies\LeakyBucketStrategy.cs" />
+    <Compile Include="Filters\LocationBasedFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RateLimiter.cs" />
-    <Compile Include="IRateLimiterFilter.cs" />
-    <Compile Include="RateLimiterRule.cs" />
-    <Compile Include="SlidingWindowStrategy.cs" />
+    <Compile Include="Filters\IRateLimiterFilter.cs" />
+    <Compile Include="Rules\RateLimiterRule.cs" />
+    <Compile Include="Strategies\SlidingWindowStrategy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
