@@ -17,11 +17,10 @@ namespace RateLimiter.Filters
     public class RateLimiterBlockIpRangeAttribute : ActionFilterAttribute, IRateLimiterAttribute
     {
         ///// <summary>
-        ///// Limits the number of requests (maxRequestsPerTimeSpan) for every timespan (timeSpanInSeconds) per account or token
+        ///// Blocks access from IPs between a range of IP addresses.
         ///// </summary>
-        ///// <param name="timeSpanInSeconds">number of seconds to calculate access limits.</param>
-        ///// <param name="maxRequestsPerTimeSpan">number of maximum requests allowed per timespan.</param>
-        ///// <param name="isLimitPerAccount">If true limits access per account ID otherwise limits per token.</param>
+        ///// <param name="ipRangeStart">Blocked IP range start (inclusive).</param>
+        ///// <param name="ipRangeEnd">Blocked IP range end (inclusive).</param>
         public RateLimiterBlockIpRangeAttribute(string ipRangeStart, string ipRangeEnd)
         {
             IpRangeStart = ipRangeStart;

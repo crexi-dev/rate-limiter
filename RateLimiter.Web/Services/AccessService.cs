@@ -89,19 +89,6 @@ namespace RateLimiter.Services
             byte[] startIpBytes = startIp.GetAddressBytes();
             byte[] endIpBytes = endIp.GetAddressBytes();
 
-            //bool lowerBoundary = true, upperBoundary = true;
-
-            //for (int i = 0; i < startIpBytes.Length && (lowerBoundary || upperBoundary); i++)
-            //{
-            //    if ((lowerBoundary && clientIpBytes[i] < startIpBytes[i]) || (upperBoundary && clientIpBytes[i] > endIpBytes[i]))
-            //    {
-            //        return false;
-            //    }
-
-            //    lowerBoundary &= (clientIpBytes[i] == startIpBytes[i]);
-            //    upperBoundary &= (clientIpBytes[i] == endIpBytes[i]);
-            //}
-
             for (int i = 0; i < startIpBytes.Length; i++)
             {
                 if ((clientIpBytes[i] < startIpBytes[i]) || (clientIpBytes[i] > endIpBytes[i]))
