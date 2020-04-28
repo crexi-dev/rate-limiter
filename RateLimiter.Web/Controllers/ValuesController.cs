@@ -15,6 +15,7 @@ namespace RateLimiter.Web.Controllers
 
         [HttpGet]
         [RateLimiterRequestRate(60, 4)]
+        [Route("api/values/request-rate-limit")]
         // GET api/values
         public IHttpActionResult GetLimitedByRequestRate()
         {
@@ -28,6 +29,7 @@ namespace RateLimiter.Web.Controllers
 
         [HttpGet]
         [RateLimiterRequestRate(60, 4)]
+        [Route("api/values/token-region-limit")]
         // GET api/values
         public IHttpActionResult GetLimitedPerTokenRegion()
         {
@@ -41,6 +43,7 @@ namespace RateLimiter.Web.Controllers
 
         [HttpGet]
         [RateLimiterBlockIpRange("127.0.0.0", "127.0.0.99")]
+        [Route("api/values/ip-range-limit")]
         // GET api/values
         public IHttpActionResult GetFromBlockedEndpoint()
         {
@@ -54,6 +57,7 @@ namespace RateLimiter.Web.Controllers
 
         [HttpGet]
         [RateLimiterPerTimeSpan(30)]
+        [Route("api/values/timespan-limit")]
         // GET api/values
         public IHttpActionResult GetLimitedByTimeSpan()
         {
