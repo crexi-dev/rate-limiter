@@ -48,7 +48,7 @@ namespace RateLimiter.Tests
             var filter = new LocationBasedFilter { CountryCode = user.CountryCode };
             RateLimiterRule rule = new RateLimiterRule(new FixedWindowStrategy(fixedWindowMaxRequestsPerSescond, fixedWindowTimeWindowInSeconds), new LocationBasedFilter { CountryCode = "US" });
 
-            int expectedAllowedCount = 10, actualAllowedCount = 0;
+            int expectedAllowedCount = 4, actualAllowedCount = 0;
           
             for (int i = 1; i <= 10; i++)
             {
