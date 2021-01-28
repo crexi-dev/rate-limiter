@@ -8,9 +8,20 @@ namespace RateLimiter
 {
     public static class Limitations
     {
-        public static Boolean IsSatisfied(IRequestLimitation Limitation, APIRequest Request)
+        public static Boolean IsSatisfied(IRequestLimitation Limitation, APIEndPoint Request)
         {
             return Limitation.IsSatisfiedBy(Request);
+        }
+
+        public static Boolean AreSatisfiedAll(IEnumerable<IRequestLimitation> RequestLimitations, APIEndPoint Request)
+        {
+            foreach (IRequestLimitation Limitation in RequestLimitations)
+            {
+                if (!Limitation.IsSatisfiedBy(Request))
+                    return false;
+            }
+
+            return true;
         }
     }
 
@@ -23,7 +34,7 @@ namespace RateLimiter
             this.TimeSpan = TimeSpan;
         }
 
-        public bool IsSatisfiedBy(APIRequest Request)
+        public bool IsSatisfiedBy(APIEndPoint Request)
         {
             return Request.IsAfterTimeSpan(TimeSpan);
         }
@@ -40,7 +51,7 @@ namespace RateLimiter
             this.NumberOfRequestsAllowed = NumberOfRequestsAllowed;
         }
 
-        public bool IsSatisfiedBy(APIRequest Request)
+        public bool IsSatisfiedBy(APIEndPoint Request)
         {
             return Request.IsWithinRequestsPerTimeSpan(this.TimeSpan, this.NumberOfRequestsAllowed);
         }

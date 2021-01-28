@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APIRequest.cs" />
+    <Compile Include="APIEndPoint.cs" />
     <Compile Include="IRequestLimitation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestLimitations.cs" />

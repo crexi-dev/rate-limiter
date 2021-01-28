@@ -10,51 +10,43 @@ namespace RateLimiter
     {
         private String Token;
         private DateTime CurrentRequestTime;
-        private DateTime LastRequestTime;
-        private Int32 NumberOfRequests;
-        private DateTime LastSpanTime;
+        private Dictionary<String, APIEndPoint> EndPointCalls;
 
-        //Private to restrict instatiation of empty APIRequest, token and Request Time must be supplied during instantiation.
         private APIRequest(){}
         public APIRequest(String RequestToken, DateTime RequestTime)
         {
             this.Token = RequestToken;
             this.CurrentRequestTime = RequestTime;
-            this.LastRequestTime = DateTime.MinValue;
-            this.NumberOfRequests = 1;
-            this.LastSpanTime = RequestTime;
+            this.EndPointCalls = new Dictionary<String, APIEndPoint>();
         }
 
-        public Boolean IsAfterTimeSpan(Double TimeSpan)
+        public APIEndPoint GetEndPoint(String EndPointId, String Token, DateTime RequestTime)
         {
-            DateTime TimeSpanSinceLastCall = this.LastRequestTime.AddSeconds(TimeSpan);
-            Int32 ComparisonResult = TimeSpanSinceLastCall.CompareTo(this.CurrentRequestTime);
+            APIEndPoint RequestedEndPoint;
 
-            return ComparisonResult <= 0 ? true : false;
-        }
-
-        public Boolean IsWithinRequestsPerTimeSpan(Int32 TimeSpan, Int32 NumberOfRequestsAllowed)
-        {
-            this.ResetNumberOfRequestsPerTimeSpan(TimeSpan);
-            return NumberOfRequestsAllowed >= this.NumberOfRequests ? true : false;
-        }
-
-        private void ResetNumberOfRequestsPerTimeSpan(Int32 TimeSpan)
-        {
-            DateTime SpanTime = this.LastSpanTime.AddSeconds(TimeSpan);
-
-            if (SpanTime.CompareTo(this.CurrentRequestTime) <= 0)
+            if (this.EndPointCalls.TryGetValue(EndPointId, out RequestedEndPoint))
             {
-                this.NumberOfRequests = 0;
-                this.LastSpanTime = this.CurrentRequestTime;
+                RequestedEndPoint.Update(RequestTime);
             }
+            else
+            {
+                RequestedEndPoint = new APIEndPoint(EndPointId, Token, RequestTime);
+                this.EndPointCalls.Add(Token, RequestedEndPoint);
+            }
+
+            return RequestedEndPoint;
         }
 
-        public void UpdateRequest(DateTime RequestTime)
+
+
+        public void Update(DateTime RequestTime)
         {
-            this.LastRequestTime = this.CurrentRequestTime;
             this.CurrentRequestTime = RequestTime;
-            this.NumberOfRequests++;
+        }
+        
+        public void AddEndPoint(String EndpointId, APIEndPoint CurrentEndPoint)
+        {
+            this.EndPointCalls.Add(EndpointId, CurrentEndPoint);
         }
     }
 }

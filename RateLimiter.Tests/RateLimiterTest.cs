@@ -13,7 +13,7 @@ namespace RateLimiter.Tests
         public void RequestManager_Creates_APIRequest()
         {
             RequestManager Manager = new RequestManager();
-            APIRequest CurrentRequest = Manager.CreateRequest("Customer001Token");
+            APIEndPoint CurrentRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
 
             Assert.IsTrue(CurrentRequest != null);
         }
@@ -22,9 +22,9 @@ namespace RateLimiter.Tests
         public void Request_Satisfies_TimeSpanSinceLastCallLimitation()
         {
             RequestManager Manager = new RequestManager();
-            APIRequest CurrentRequest = Manager.CreateRequest("Customer001Token");
+            APIEndPoint CurrentEndPointRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
 
-            if (!Limitations.IsSatisfied(new TimeSpanSinceLastCallLimitation(1), CurrentRequest))
+            if (!Limitations.IsSatisfied(new TimeSpanSinceLastCallLimitation(1), CurrentEndPointRequest))
                 throw new TimeSpanSinceLastCallLimitationException();
         }
 
@@ -32,9 +32,9 @@ namespace RateLimiter.Tests
         public void SecondRequest_Satisfies_TimeSpanSinceLastCallLimitation()
         {
             RequestManager Manager = new RequestManager();
-            APIRequest CurrentRequest = Manager.CreateRequest("Customer001Token");
+            APIEndPoint CurrentRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
             Thread.Sleep(1000);
-            CurrentRequest = Manager.CreateRequest("Customer001Token");
+            CurrentRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
 
             if (!Limitations.IsSatisfied(new TimeSpanSinceLastCallLimitation(1), CurrentRequest))
                 throw new TimeSpanSinceLastCallLimitationException();
@@ -44,7 +44,7 @@ namespace RateLimiter.Tests
         public void Request_Satisfies_XRequestsPerTimeSpanLimitation()
         {
             RequestManager Manager = new RequestManager();
-            APIRequest CurrentRequest = Manager.CreateRequest("Customer001Token");
+            APIEndPoint CurrentRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
 
             if (!Limitations.IsSatisfied(new XRequestsPerTimeSpanLimitation(20000000, 1), CurrentRequest))
                 throw new XRequestsPerTimeSpanException();
@@ -54,8 +54,8 @@ namespace RateLimiter.Tests
         public void SecondRequest_Satisfies_XRequestsPerTimeSpanLimitation()
         {
             RequestManager Manager = new RequestManager();
-            APIRequest CurrentRequest = Manager.CreateRequest("Customer001Token");
-            CurrentRequest = Manager.CreateRequest("Customer001Token");
+            APIEndPoint CurrentRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
+            CurrentRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
 
             if (!Limitations.IsSatisfied(new XRequestsPerTimeSpanLimitation(20000000, 2), CurrentRequest))
                 throw new XRequestsPerTimeSpanException();
@@ -65,8 +65,8 @@ namespace RateLimiter.Tests
         public void Request_DoesNot_Satisfies_TimeSpanSinceLastCallLimitation()
         {
             RequestManager Manager = new RequestManager();
-            APIRequest CurrentRequest = Manager.CreateRequest("Customer001Token");
-            CurrentRequest = Manager.CreateRequest("Customer001Token");
+            APIEndPoint CurrentRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
+            CurrentRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
 
             try
             {
@@ -84,8 +84,8 @@ namespace RateLimiter.Tests
         public void Request_DoesNot_Satisfies_XRequestsPerTimeSpanLimitation()
         {
             RequestManager Manager = new RequestManager();
-            APIRequest CurrentRequest = Manager.CreateRequest("Customer001Token");
-            CurrentRequest = Manager.CreateRequest("Customer001Token");
+            APIEndPoint CurrentRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
+            CurrentRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
 
             try
             {
@@ -97,6 +97,26 @@ namespace RateLimiter.Tests
                 if (!(Ex is XRequestsPerTimeSpanException))
                     Assert.Fail();
             }
+        }
+
+        [Test]
+        public void Collection_Of_Limitations_Test()
+        {
+            RequestManager Manager = new RequestManager();
+            APIEndPoint CurrentRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
+            Thread.Sleep(1000);
+            CurrentRequest = Manager.CreateRequest("Customer001Token", "APIEndPointId001", DateTime.Now);
+
+            System.Collections.Generic.List<IRequestLimitation> Constraints = new System.Collections.Generic.List<IRequestLimitation>();
+
+            XRequestsPerTimeSpanLimitation XRequests = new XRequestsPerTimeSpanLimitation(20000000, 2);
+            TimeSpanSinceLastCallLimitation TimeSpanSinceLastCall = new TimeSpanSinceLastCallLimitation(1);
+
+            Constraints.Add(XRequests);
+            Constraints.Add(TimeSpanSinceLastCall);
+
+            if (!Limitations.AreSatisfiedAll(Constraints, CurrentRequest))
+                Assert.Fail();
         }
     }
 }

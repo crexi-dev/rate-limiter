@@ -8,6 +8,6 @@ namespace RateLimiter
 {
     public interface IRequestLimitation
     {
-        bool IsSatisfiedBy(APIRequest Request);
+        bool IsSatisfiedBy(APIEndPoint Request);
     }
 }
