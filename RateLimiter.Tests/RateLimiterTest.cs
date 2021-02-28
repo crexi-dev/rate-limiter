@@ -57,5 +57,12 @@ namespace RateLimiter.Tests
             var allowed3 = await _limiterService.ProccessRequest("TokenTest3").ConfigureAwait(false);
             Assert.IsTrue(allowed3);
         }
+
+        [Test]
+        public async Task NotConfiguredShouldGoFree()
+        {
+            var allowed = await _limiterService.ProccessRequest("NotLimitedToken").ConfigureAwait(false);
+            Assert.IsTrue(allowed);
+        }
     }
 }

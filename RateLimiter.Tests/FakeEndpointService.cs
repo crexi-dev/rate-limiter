@@ -12,7 +12,8 @@ namespace RateLimiter.Tests
             _endpointsDictionary = new Dictionary<string, string>(){
                 { "TokenTest1", "USBasedEndpoint1" },
                 { "TokenTest2", "USBasedEndpoint2" },
-                { "TokenTest3", "EUBasedEndpoint1" }
+                { "TokenTest3", "EUBasedEndpoint1" },
+                { "NotLimitedToken", "NotLimitedEndpoint" }
             };
         }
 
