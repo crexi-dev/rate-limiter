@@ -38,7 +38,6 @@ namespace RateLimiter.Test
         [TestMethod]
         public void ShouldRequestCountBeLimitedToOnePerSecond()
         {
-
             var result1 = manager.GetEvaluater("token_0").CanGoThrough(DateTimeOffset.Now);
             Assert.IsTrue(result1);
 
