@@ -99,5 +99,12 @@ namespace RateLimiter.Test
             var result12 = manager.GetEvaluater("token_1").CanGoThrough(DateTimeOffset.Now);
             Assert.IsFalse(result12);
         }
+
+        [Test]
+        public void ShouldBeFalseForInvalidKey()
+        {
+            var result13 = manager.GetEvaluater("token_3").CanGoThrough(DateTimeOffset.Now);
+            Assert.IsFalse(result13);
+        }
     }
 }

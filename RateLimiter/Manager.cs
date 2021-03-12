@@ -1,4 +1,5 @@
 ﻿using RateLimiter.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace RateLimiter
@@ -9,12 +10,17 @@ namespace RateLimiter
 
         public Manager(IDictionary<string, Client> values)
         {
-            _values = values;
+            _values = values ?? throw new ArgumentNullException(nameof(values));
         }
 
         public IEvaluate GetEvaluater(string token)
         {
-            return _values[token].GetEvaluator();
+            if (_values.ContainsKey(token))
+            {
+                return _values[token].GetEvaluator();
+            }
+
+            return NullableResource.Instance;
         }
     }
 }

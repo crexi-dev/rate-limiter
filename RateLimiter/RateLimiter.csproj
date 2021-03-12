@@ -46,6 +46,7 @@
     <Compile Include="Interfaces\IResouce.cs" />
     <Compile Include="Interfaces\IRule.cs" />
     <Compile Include="Manager.cs" />
+    <Compile Include="NullableResource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource.cs" />
     <Compile Include="Rules\RequestPerTimeSpanRule.cs" />
