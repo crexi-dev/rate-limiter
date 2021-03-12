@@ -41,7 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client.cs" />
+    <Compile Include="Interfaces\IEvaluate.cs" />
+    <Compile Include="Interfaces\IResouce.cs" />
+    <Compile Include="Interfaces\IRule.cs" />
+    <Compile Include="Manager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resource.cs" />
+    <Compile Include="Rules\RequestPerTimeSpanRule.cs" />
+    <Compile Include="Rules\RequestSinceLastCallRule.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
