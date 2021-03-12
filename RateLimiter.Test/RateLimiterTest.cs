@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
+using NUnit.Framework;
 using RateLimiter.Rules;
 using System;
 using System.Collections.Generic;
@@ -6,12 +7,12 @@ using System.Threading;
 
 namespace RateLimiter.Test
 {
-    [TestClass]
-    public class UnitTest1
+    [TestFixture]
+    public class RateLimiterTest
     {
         Manager manager;
 
-        [TestInitialize]
+        [OneTimeSetUp]
         public void Initialize()
         {
             var clients = new Dictionary<string, Client>
@@ -35,7 +36,7 @@ namespace RateLimiter.Test
             manager = new Manager(clients);
         }
 
-        [TestMethod]
+        [Test]
         public void ShouldRequestCountBeLimitedToOnePerSecond()
         {
             var result1 = manager.GetEvaluater("token_0").CanGoThrough(DateTimeOffset.Now);
@@ -57,7 +58,7 @@ namespace RateLimiter.Test
             Assert.IsFalse(result4);
         }
 
-        [TestMethod]
+        [Test]
         public void ShouldRequestBeThreePerThreeSecondsTimeSpan()
         {
             var result5 = manager.GetEvaluater("token_1").CanGoThrough(DateTimeOffset.Now);
