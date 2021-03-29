@@ -41,7 +41,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api.cs" />
+    <Compile Include="Application\Interfaces\IDateTime.cs" />
+    <Compile Include="Application\Interfaces\IIdentityService.cs" />
+    <Compile Include="Application\Interfaces\ILimitProvider.cs" />
+    <Compile Include="Application\Interfaces\ILimitRuleFilter.cs" />
+    <Compile Include="Application\Interfaces\IRequestLimitService.cs" />
+    <Compile Include="Application\Interfaces\IRequestResolver.cs" />
+    <Compile Include="Application\Interfaces\ITokenBucket.cs" />
+    <Compile Include="Domain\Aggregate\IResourceRepository.cs" />
+    <Compile Include="Domain\Aggregate\LimitRule.cs" />
+    <Compile Include="Domain\Aggregate\Resource.cs" />
+    <Compile Include="Domain\Common\ValueObject.cs" />
+    <Compile Include="Domain\Contexts\ClientContext.cs" />
+    <Compile Include="Domain\Contexts\EvaluationContext.cs" />
+    <Compile Include="Domain\Contexts\RequestContext.cs" />
+    <Compile Include="Domain\Exceptions\LimitExceededException.cs" />
+    <Compile Include="Domain\ValueObjects\VisitContext.cs" />
+    <Compile Include="Infrastructure\Filters\GeoLocationRuleFilter.cs" />
+    <Compile Include="Infrastructure\Persistance\InMemoryResourceRepository.cs" />
+    <Compile Include="Infrastructure\Persistance\InMemoryTokenBucket.cs" />
+    <Compile Include="Infrastructure\Providers\LimitProvider.cs" />
+    <Compile Include="Infrastructure\Services\DateTimeService.cs" />
+    <Compile Include="Infrastructure\Services\RequestLimitService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
