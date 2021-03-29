@@ -9,6 +9,8 @@ namespace RateLimiter.Infastructure.Providers
     {
         public VisitContext Evaluate(EvaluationContext context, VisitContext visit)
         {
+            // For simplycity, implementation based on the assumption. Configuration settings only allows 1 Window and 1 Interval rule.
+            // TODO : update implementation.
             foreach (var rule in context.RuleSet)
             {
                 if (rule.Threshold > 1) // Window based
