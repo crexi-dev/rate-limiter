@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter", "RateLimiter\RateLimiter.csproj", "{36F4BDC6-D3DA-403A-8DB7-0C79F94B938F}"
 EndProject
@@ -11,6 +11,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RateLimiter.Interface", "RateLimiter.Interface\RateLimiter.Interface.csproj", "{720F5BA4-8385-48FE-B4ED-40C85C82285F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RateLimiter.Rule.RequestPerTimespan", "RateLimiter.Rule.RequestPerTimespan\RateLimiter.Rule.RequestPerTimespan.csproj", "{93B116F2-768F-4A53-9434-C2E292C7A690}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RateLimiter.Rule.RequestByLastCall", "RateLimiter.Rule.RequestByLastCall\RateLimiter.Rule.RequestByLastCall.csproj", "{1A227EA2-F9D1-4515-9964-F1FC6D59726F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RateLimiter.Model", "RateLimiter.Model\RateLimiter.Model.csproj", "{4C83288F-ABB6-4450-962B-720EC3BA1A6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.ConfigurationHelper", "RateLimiter.ConfigurationHelper\RateLimiter.ConfigurationHelper.csproj", "{4F2B03BF-548D-44C2-B7A3-17F878256D6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +36,26 @@ Global
 		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{720F5BA4-8385-48FE-B4ED-40C85C82285F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{720F5BA4-8385-48FE-B4ED-40C85C82285F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{720F5BA4-8385-48FE-B4ED-40C85C82285F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{720F5BA4-8385-48FE-B4ED-40C85C82285F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93B116F2-768F-4A53-9434-C2E292C7A690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93B116F2-768F-4A53-9434-C2E292C7A690}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93B116F2-768F-4A53-9434-C2E292C7A690}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93B116F2-768F-4A53-9434-C2E292C7A690}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A227EA2-F9D1-4515-9964-F1FC6D59726F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A227EA2-F9D1-4515-9964-F1FC6D59726F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A227EA2-F9D1-4515-9964-F1FC6D59726F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A227EA2-F9D1-4515-9964-F1FC6D59726F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C83288F-ABB6-4450-962B-720EC3BA1A6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C83288F-ABB6-4450-962B-720EC3BA1A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C83288F-ABB6-4450-962B-720EC3BA1A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C83288F-ABB6-4450-962B-720EC3BA1A6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F2B03BF-548D-44C2-B7A3-17F878256D6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F2B03BF-548D-44C2-B7A3-17F878256D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F2B03BF-548D-44C2-B7A3-17F878256D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F2B03BF-548D-44C2-B7A3-17F878256D6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
