@@ -41,7 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\Queries\SearchQuery.cs" />
+    <Compile Include="Domain\ApiLimiter\Region.cs" />
+    <Compile Include="Domain\ApiLimiter\Resource.cs" />
+    <Compile Include="Domain\ApiLimiter\Rule.cs" />
+    <Compile Include="Infrastructure\InMemoryRulesRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Api\Commands\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApiEntry.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
