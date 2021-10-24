@@ -42,9 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Queries\SearchQuery.cs" />
+    <Compile Include="Domain\ApiLimiter\ITimestamp.cs" />
     <Compile Include="Domain\ApiLimiter\Region.cs" />
     <Compile Include="Domain\ApiLimiter\Resource.cs" />
-    <Compile Include="Domain\ApiLimiter\Rule.cs" />
+    <Compile Include="Domain\ApiLimiter\TimespanRule.cs" />
+    <Compile Include="Domain\ApiLimiter\Timestamp.cs" />
+    <Compile Include="Domain\ApiLimiter\VisitLimiter.cs" />
+    <Compile Include="Domain\ApiLimiter\SlidingWindowRule.cs" />
     <Compile Include="Infrastructure\InMemoryRulesRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace RateLimiter.Domain.ApiLimiter
 {
-    public class Rule
+    public class TimespanRule
     {
-        public Region Region { get; set; }
-        //public Resource Resource { get; set; }
-        public int Limit { get; set; }
+        //public Region Region { get; set; }
         public TimeSpan TimeSpan { get; set; }
     }
 }
