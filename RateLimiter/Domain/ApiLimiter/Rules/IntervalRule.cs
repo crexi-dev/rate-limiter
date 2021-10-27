@@ -12,9 +12,6 @@ namespace RateLimiter.Domain.ApiLimiter
 
         private long? _windowStartTime;
 
-        // In a sliding window we would normally estimate the counts in the previous window
-        // TODO: Add in Previous Window estimates
-
         public IntervalRule(ITimestamp timestamp, int requestIntervalMs)
         {
             _timestamp = timestamp;
