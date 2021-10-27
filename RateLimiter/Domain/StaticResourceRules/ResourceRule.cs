@@ -14,6 +14,6 @@ namespace RateLimiter.Domain.Resource
     {
         public string ResourceName { get; set; }
         public string Region { get; set; }
-        public IEnumerable<IRule> ResourceRules { get; set; }
+        public IEnumerable<IRule> Rules { get; set; }
     }
 }

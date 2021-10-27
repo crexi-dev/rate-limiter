@@ -1,6 +1,8 @@
-﻿namespace RateLimiter.Domain.ApiLimiter
+﻿using System;
+
+namespace RateLimiter.Domain.ApiLimiter
 {
-    public interface IRule
+    public interface IRule : ICloneable
     {
         bool NewVisitAndRuleCheck();
     }

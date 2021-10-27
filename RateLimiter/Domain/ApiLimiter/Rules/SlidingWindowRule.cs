@@ -11,6 +11,7 @@ namespace RateLimiter.Domain.ApiLimiter
         private readonly object _lock = new object();
 
         private readonly ITimestamp _timestamp;
+        private int _requestIntervalMs;
         private readonly long _requestIntervalTicks;
         private readonly int _requestLimit;
 
@@ -24,6 +25,7 @@ namespace RateLimiter.Domain.ApiLimiter
         {
             _timestamp = timestamp;
             _requestLimit = requestLimit;
+            _requestIntervalMs = requestIntervalMs;
             _requestIntervalTicks = requestIntervalMs * TimeSpan.TicksPerMillisecond;
         }
 
@@ -60,6 +62,11 @@ namespace RateLimiter.Domain.ApiLimiter
                     return false;
                 }
             }
+        }
+
+        public object Clone()
+        {
+            return new SlidingWindowRule(_timestamp, _requestLimit, _requestIntervalMs);
         }
     }
 }

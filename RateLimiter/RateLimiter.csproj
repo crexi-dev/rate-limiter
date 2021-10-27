@@ -50,7 +50,7 @@
     <Compile Include="Domain\ApiLimiter\Rules\IntervalRule.cs" />
     <Compile Include="Domain\ApiLimiter\TimespanRule.cs" />
     <Compile Include="Domain\ApiLimiter\Timestamp.cs" />
-    <Compile Include="Domain\ApiLimiter\VisitLimiter.cs" />
+    <Compile Include="Domain\ApiLimiter\ResourceLimiter.cs" />
     <Compile Include="Domain\ApiLimiter\Rules\SlidingWindowRule.cs" />
     <Compile Include="Domain\StaticResourceRules\ResourceRules.cs" />
     <Compile Include="Infrastructure\InMemoryRulesRepository.cs" />

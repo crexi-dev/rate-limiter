@@ -12,6 +12,7 @@ namespace RateLimiter.Domain.ApiLimiter
 
         private readonly ITimestamp _timestamp;
         private readonly long _requestIntervalTicks;
+        private readonly int _requestIntervalMs;
 
         private long? _windowStartTime;
 
@@ -21,6 +22,7 @@ namespace RateLimiter.Domain.ApiLimiter
         public IntervalRule(ITimestamp timestamp, int requestIntervalMs)
         {
             _timestamp = timestamp;
+            _requestIntervalMs = requestIntervalMs;
             _requestIntervalTicks = requestIntervalMs * TimeSpan.TicksPerMillisecond;
         }
 
@@ -53,6 +55,11 @@ namespace RateLimiter.Domain.ApiLimiter
 
                 return true;
             }
+        }
+
+        public object Clone()
+        {
+            return new IntervalRule(_timestamp, _requestIntervalMs);
         }
     }
 }
