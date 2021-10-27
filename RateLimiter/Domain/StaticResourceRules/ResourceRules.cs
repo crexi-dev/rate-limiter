@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace RateLimiter.Domain.Resource
 {
     /// <summary>
-    /// ResourceRules gets serialized into the "Rules" persistence storage
+    /// TODO: ResourceRules gets serialized into the "Rules" persistent storage
     /// </summary>
     public class ResourceRules
     {

@@ -45,23 +45,20 @@
     <Compile Include="Api\Queries\SearchQuery.cs" />
     <Compile Include="Domain\ApiLimiter\ApiLimiter.cs" />
     <Compile Include="Domain\ApiLimiter\IApiLimiter.cs" />
+    <Compile Include="Domain\ApiLimiter\ITokenBucket.cs" />
     <Compile Include="Domain\ApiLimiter\Rules\IRule.cs" />
     <Compile Include="Domain\ApiLimiter\ITimestamp.cs" />
-    <Compile Include="Domain\ApiLimiter\Region.cs" />
     <Compile Include="Domain\StaticResourceRules\ResourceRule.cs" />
     <Compile Include="Domain\ApiLimiter\Rules\IntervalRule.cs" />
-    <Compile Include="Domain\ApiLimiter\TimespanRule.cs" />
     <Compile Include="Domain\ApiLimiter\Timestamp.cs" />
-    <Compile Include="Domain\ApiLimiter\ResourceLimiter.cs" />
+    <Compile Include="Domain\ApiLimiter\TokenBucket.cs" />
     <Compile Include="Domain\ApiLimiter\Rules\SlidingWindowRule.cs" />
     <Compile Include="Domain\StaticResourceRules\ResourceRules.cs" />
     <Compile Include="Infrastructure\IInMemoryRulesRepository.cs" />
     <Compile Include="Infrastructure\InMemoryRulesRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Api\Helper\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="ApiEntry.cs" />
   </ItemGroup>

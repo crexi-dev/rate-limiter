@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RateLimiter.Domain.ApiLimiter
 {
-    public class ResourceLimiter
+    public class TokenBucket : ITokenBucket
     {
         // This list is the set of rules for this resource. The list remains static after initialization.
         private readonly List<IRule> _rules;
@@ -16,17 +16,10 @@ namespace RateLimiter.Domain.ApiLimiter
         // Token : Rule
         // As we add more tokens, we add them to this dictionary and clone the rule set above.
         private ConcurrentDictionary<string, IEnumerable<IRule>> _rulesPerToken;
-        //public string Token { get; set; }
 
-        //private Dictionary<(string Resource, string Region), List<IRule>> Rules;
-
-        //public VisitLimiter AddRule(string Resource, string Region, IRule rule)
-        //{
-
-        //}
-
-        public ResourceLimiter()
+        public TokenBucket()
         {
+            _rules = new List<IRule>();
             _rulesPerToken = new ConcurrentDictionary<string, IEnumerable<IRule>>();
         }
 

@@ -1,17 +1,14 @@
 ﻿using RateLimiter.Api.Queries;
 using RateLimiter.Domain.ApiLimiter;
-using RateLimiter.Domain.Resource;
 using RateLimiter.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateLimiter
 {
     public class ApiEntry
     {
+        public const string SUCCESS = "Success";
+        public const string FAIL = "Fail";
+
         private SearchQuery _searchQuery;
         private UpdateCommand _updateCommand;
         private IInMemoryRulesRepository _inMemoryRulesRepository;
@@ -28,14 +25,14 @@ namespace RateLimiter
 
         public string Search(string token)
         {
-            // Normally would use something like MediatR here, but want to keep this project simple
-            return _searchQuery.Execute(token);
+            // Normally would use something like MediatR for CQRS here, but want to keep this project simple
+            return _searchQuery.Execute(token) ? SUCCESS : FAIL;
         }
 
         public string Update(string token)
         {
-            // Normally would use something like MediatR here, but want to keep this project simple
-            return _updateCommand.Execute(token);
+            // Normally would use something like MediatR for CQRS here, but want to keep this project simple
+            return _updateCommand.Execute(token) ? SUCCESS : FAIL;
         }
     }
 }

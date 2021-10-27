@@ -10,36 +10,43 @@ namespace RateLimiter.Domain.ApiLimiter
 {
     public class ApiLimiter : IApiLimiter
     {
-        // Token : VisitLimiter
-        //public Dictionary<string, VisitLimiter> visitLimiters;
+        public const string GLOBAL = "GLOBAL";
 
-        private ConcurrentDictionary<(string Resource, string Region), ResourceLimiter> _resourceLimiters;
+        private ConcurrentDictionary<(string Resource, string Region), TokenBucket> _resourceLimiters;
 
         public ApiLimiter(ResourceRules resourceRules)
         {
             //visitLimiters = new Dictionary<string, VisitLimiter>();
-            _resourceLimiters = new ConcurrentDictionary<(string Resource, string Region), ResourceLimiter>();
+            _resourceLimiters = new ConcurrentDictionary<(string Resource, string Region), TokenBucket>();
             foreach (var resource in resourceRules.ResourceRuleList)
             {
-                var resourceLimiter = new ResourceLimiter();
-                resourceLimiter.AddRules(resource.Rules);
-                _resourceLimiters.TryAdd((resource.ResourceName, resource.Region), resourceLimiter);
+                var tokenBucket = new TokenBucket();
+                tokenBucket.AddRules(resource.Rules);
+                _resourceLimiters.TryAdd((resource.ResourceName, resource.Region), tokenBucket);
             }
         }
 
         public bool Verify(string resource, string token)
         {
-            //if (!_resourceLimiters.ContainsKey((resource, region)))
-            //    return true;
+            // Assume the region is embedded with the token
+            // TODO : Change this logic. Perhaps embed the region inside a JWT token?
+            string region = token.Substring(0, 2);
 
-            if (!_resourceLimiters.TryGetValue((resource, region), out var resourceLimiter))
+            bool result = true;
+            bool globalResult = true;
+
+            TokenBucket globalResourceTokenBucket = null;
+            if (!_resourceLimiters.TryGetValue((resource, region), out var tokenBucket) &&
+                !_resourceLimiters.TryGetValue((resource, GLOBAL), out globalResourceTokenBucket))
                 return true;
 
-            return resourceLimiter.Verify(token);
-            //_resourceLimiters.GetOrAdd((resource, region), (data, rl) =>
-            //{
+            if (tokenBucket != null)
+                result = tokenBucket.Verify(token);
 
-            //});
+            if (globalResourceTokenBucket != null)
+                globalResult = globalResourceTokenBucket.Verify(token);
+
+            return result && globalResult;
         }
     }
 }
