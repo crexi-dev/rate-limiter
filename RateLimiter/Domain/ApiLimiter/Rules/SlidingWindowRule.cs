@@ -17,6 +17,7 @@ namespace RateLimiter.Domain.ApiLimiter
 
         private long? _windowStartTime;
         private int _requestCount;
+        public int RequestCount => _requestCount;
 
         // In a sliding window we would normally estimate the counts in the previous window
         // TODO: Add in Previous Window estimates
@@ -52,7 +53,7 @@ namespace RateLimiter.Domain.ApiLimiter
                     _windowStartTime = currentTime;
                 }
 
-                if (_requestCount <= _requestLimit)
+                if (_requestCount < _requestLimit)
                 {
                     _requestCount++;
                     return true;

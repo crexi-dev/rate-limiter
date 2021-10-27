@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace RateLimiter.Api.Queries
 {
-    public class SearchQuery
+    public class UpdateCommand
     {
         public const string SUCCESS = "Success";
         public const string FAIL = "Fail";
-        public const string RESOURCE = "rs1";
+        public const string RESOURCE = "up1";
         private IApiLimiter _apiLimiter;
         private IInMemoryRulesRepository _inMemoryRulesRepository;
 
-        public SearchQuery(IApiLimiter apiLimiter, IInMemoryRulesRepository inMemoryRulesRepository)
+        public UpdateCommand(IApiLimiter apiLimiter, IInMemoryRulesRepository inMemoryRulesRepository)
         {
             _apiLimiter = apiLimiter;
             _inMemoryRulesRepository = inMemoryRulesRepository;

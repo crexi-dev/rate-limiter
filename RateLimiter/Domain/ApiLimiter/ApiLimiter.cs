@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RateLimiter.Domain.ApiLimiter
 {
-    public class ApiLimiter
+    public class ApiLimiter : IApiLimiter
     {
         // Token : VisitLimiter
         //public Dictionary<string, VisitLimiter> visitLimiters;
@@ -27,7 +27,7 @@ namespace RateLimiter.Domain.ApiLimiter
             }
         }
 
-        public bool Verify(string resource, string region, string token)
+        public bool Verify(string resource, string token)
         {
             //if (!_resourceLimiters.ContainsKey((resource, region)))
             //    return true;
