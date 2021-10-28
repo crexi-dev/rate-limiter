@@ -6,5 +6,8 @@
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UserSecretsId>7b3d4013-8578-4f0b-b335-fae583a86888</UserSecretsId>
   </PropertyGroup>
+  <ItemGroup>
+  </ItemGroup>
 </Project>  
