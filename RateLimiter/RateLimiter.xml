@@ -1,0 +1,613 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RateLimiter</name>
+    </assembly>
+    <members>
+        <member name="T:RateLimiter.Application.AccessRestriction.Authorization.IUserToken">
+            <summary>
+            Represents a user identity.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Authorization.IUserToken.UserId">
+            <summary>
+            Identifier for a user of this service (could be a person, machine to machine client, etc.)
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Authorization.UserToken">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Authorization.UserToken.UserId">
+            <inheritdoc />
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.IRule">
+            <summary>
+            Basic framework of a rate limiting rule.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRule.FailMessage">
+            <summary>
+            Client friendly message indicating why the rule failed.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRule.Id">
+            <summary>
+            Identifier for this rule.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRule.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+        </member>
+        <member name="M:RateLimiter.Application.AccessRestriction.Rule.IRule.Execute``1(System.Int32,RateLimiter.Application.AccessRestriction.Authorization.IUserToken)">
+            <summary>
+            Execute this rule
+            </summary>
+            <typeparam name="TResource">The resource type that this rule is for.</typeparam>
+            <param name="id"></param>
+            <param name="userToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.IRuleResource">
+            <summary>
+            Association between a resource and a rule governing access to it
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRuleResource.ResourceName">
+            <summary>
+            Name of the resource
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRuleResource.Rule">
+            <summary>
+            The rule governing access
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.IRuleResult">
+            <summary>
+            Results of executing a rule
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRuleResult.FailMessage">
+            <summary>
+            Indication of why the rule failed, if applicable
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRuleResult.IsSuccess">
+            <summary>
+            Indicates whether this rule passed or failed.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRuleResult.Rule">
+            <summary>
+            The evaluated rule. Returned for display purposes.
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.IRuleSet">
+            <summary>
+            Collection of rules
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRuleSet.Description">
+            <summary>
+            Gets or sets a user friendly explanation of the rule set, i.e  'Limit Resource A by region and time span'.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRuleSet.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRuleSet.Rules">
+            <summary>
+            The rules included in this set.
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.IRuleEngineExecutionResult">
+            <summary>
+            Result of executing a collection of rules.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRuleEngineExecutionResult.IsSuccess">
+            <summary>
+            Whether the set of rules passed. A single failure is enough to cause the ruleset to fail.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.IRuleEngineExecutionResult.RuleResults">
+            <summary>
+            Collection of individual rule results.
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.RateLimit.IPerMinuteRule">
+            <summary>
+            Rule where access to a resource is defined in terms of how many times per minute a resource can be accessed
+            Implements the <see cref="T:RateLimiter.Application.AccessRestriction.Rule.IRule" />
+            </summary>
+            <seealso cref="T:RateLimiter.Application.AccessRestriction.Rule.IRule" />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RateLimit.IPerMinuteRule.AccessPerMinute">
+            <summary>
+            Gets or sets the allowed accesses per minute.
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.RateLimit.ITimeElapsedRule">
+            <summary>
+            Rule where access to a resource is defined in terms of how long must elapse between accesses
+            Implements the <see cref="T:RateLimiter.Application.AccessRestriction.Rule.IRule" />
+            </summary>
+            <seealso cref="T:RateLimiter.Application.AccessRestriction.Rule.IRule" />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RateLimit.ITimeElapsedRule.MinimumSecondsElapsed">
+            <summary>
+            Gets or sets the minimum seconds elapsed between views.
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.RateLimit.PerMinuteRule">
+            <inheritdoc cref="T:RateLimiter.Application.AccessRestriction.Rule.RateLimit.IPerMinuteRule" />
+        </member>
+        <member name="M:RateLimiter.Application.AccessRestriction.Rule.RateLimit.PerMinuteRule.#ctor(RateLimiter.Data.Repository.IResourceAccessRepository)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="resourceAccessRepository"></param>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RateLimit.PerMinuteRule.AccessPerMinute">
+            <inheritdoc/>
+        </member>
+        <member name="M:RateLimiter.Application.AccessRestriction.Rule.RateLimit.PerMinuteRule.ExecuteRule``1(System.Int32,RateLimiter.Application.AccessRestriction.Authorization.IUserToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.RateLimit.TimeElapsedRule">
+            <inheritdoc cref="T:RateLimiter.Application.AccessRestriction.Rule.RateLimit.ITimeElapsedRule"/>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RateLimit.TimeElapsedRule.MinimumSecondsElapsed">
+            <inheritdoc/>
+        </member>
+        <member name="M:RateLimiter.Application.AccessRestriction.Rule.RateLimit.TimeElapsedRule.#ctor(RateLimiter.Data.Repository.IResourceAccessRepository)">
+            
+        </member>
+        <member name="M:RateLimiter.Application.AccessRestriction.Rule.RateLimit.TimeElapsedRule.ExecuteRule``1(System.Int32,RateLimiter.Application.AccessRestriction.Authorization.IUserToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.RateLimit.TimeRuleBase">
+            <summary>
+            Base class for rules implementing time and region based restrictions
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RateLimit.TimeRuleBase.RegionCode">
+            <summary>
+            Region code to be used in a derived class.
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.Rule">
+            <summary>
+            Base class for specific rule implementations.
+            Implements the <see cref="T:RateLimiter.Application.AccessRestriction.Rule.IRule" />
+            </summary>
+            <seealso cref="T:RateLimiter.Application.AccessRestriction.Rule.IRule" />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.Rule.FailMessage">
+            <inheritdoc/>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.Rule.Id">
+            <inheritdoc/>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.Rule.Name">
+            <inheritdoc/>
+        </member>
+        <member name="M:RateLimiter.Application.AccessRestriction.Rule.Rule.Execute``1(System.Int32,RateLimiter.Application.AccessRestriction.Authorization.IUserToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:RateLimiter.Application.AccessRestriction.Rule.Rule.ExecuteRule``1(System.Int32,RateLimiter.Application.AccessRestriction.Authorization.IUserToken)">
+            <summary>
+            Executes the rule. This is where implementing class would do its logic, for a specific rule type.
+            </summary>
+            <param name="id">Id of the resource to access.</param>
+            <param name="userToken">The access identity, a token containing info about the calling consumer.</param>
+            <returns>IRuleResult.</returns>
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.RuleResource">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RuleResource.ResourceName">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RuleResource.Rule">
+            <inheritdoc />
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.RuleResult">
+            <inheritdoc />
+        </member>
+        <member name="M:RateLimiter.Application.AccessRestriction.Rule.RuleResult.#ctor(RateLimiter.Application.AccessRestriction.Rule.IRule)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="rule"></param>
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RuleResult.FailMessage">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RuleResult.IsSuccess">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RuleResult.Rule">
+            <inheritdoc />
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.RuleSet">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RuleSet.Description">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RuleSet.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RuleSet.Rules">
+            <inheritdoc />
+        </member>
+        <member name="T:RateLimiter.Application.AccessRestriction.Rule.RuleEngineExecutionResult">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RuleEngineExecutionResult.IsSuccess">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Application.AccessRestriction.Rule.RuleEngineExecutionResult.RuleResults">
+            <inheritdoc />
+        </member>
+        <member name="T:RateLimiter.Application.Exception.RateLimitException">
+            <summary>
+            Exception indicating that a rate limiting rule has failed.
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Application.MapperProfiles.DomainToViewModelProfile">
+            <summary>
+            Automapper profile
+            </summary>
+        </member>
+        <member name="M:RateLimiter.Application.MapperProfiles.DomainToViewModelProfile.#ctor">
+            <summary>
+            Configure domain/viewmodel mappings
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Application.Services.IRateRuleEngineService">
+            <summary>
+            Engine for executing rate limiting rules.
+            </summary>
+        </member>
+        <member name="M:RateLimiter.Application.Services.IRateRuleEngineService.Execute``1(System.Int32,RateLimiter.Application.AccessRestriction.Authorization.IUserToken)">
+            <summary>
+            Execute all rules for a given resource type, id and user
+            </summary>
+            <typeparam name="TResource"></typeparam>
+            <param name="id"></param>
+            <param name="userToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RateLimiter.Application.Services.IResourceService">
+            <summary>
+            Service to return resources (in a full app, would support full CRUD)
+            </summary>
+        </member>
+        <member name="M:RateLimiter.Application.Services.IResourceService.Get``2(System.Int32,RateLimiter.Application.AccessRestriction.Authorization.IUserToken)">
+            <summary>
+            Get a resource by ID, IF the user is allowed to access it right now.
+            </summary>
+            <typeparam name="TResource">The domain object to get.</typeparam>
+            <typeparam name="TViewModel">ViewModel for the domain object.</typeparam>
+            <param name="id">Domain object id</param>
+            <param name="userToken">Token identifying user id, region, etc.</param>
+            <returns></returns>
+        </member>
+        <member name="T:RateLimiter.Application.Services.RateRuleEngineService">
+            <inheritdoc />
+        </member>
+        <member name="M:RateLimiter.Application.Services.RateRuleEngineService.#ctor(RateLimiter.Data.Repository.IRuleRepository)">
+            <summary>
+            Initializes a new instance of the <see cref="T:RateLimiter.Application.Services.RateRuleEngineService"/> class.
+            </summary>
+            <param name="ruleRepository">The rule repository.</param>
+        </member>
+        <member name="M:RateLimiter.Application.Services.RateRuleEngineService.Execute``1(System.Int32,RateLimiter.Application.AccessRestriction.Authorization.IUserToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:RateLimiter.Application.Services.ResourceService">
+            <inheritdoc />
+        </member>
+        <member name="M:RateLimiter.Application.Services.ResourceService.#ctor(RateLimiter.Application.Services.IRateRuleEngineService,RateLimiter.Data.Repository.IResourceRepository,RateLimiter.Data.Repository.IResourceAccessRepository,AutoMapper.IMapper)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="rateRuleEngineService"></param>
+            <param name="resourceRepository"></param>
+            <param name="resourceAccessRepository"></param>
+            <param name="mapper"></param>
+        </member>
+        <member name="M:RateLimiter.Application.Services.ResourceService.Get``2(System.Int32,RateLimiter.Application.AccessRestriction.Authorization.IUserToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:RateLimiter.Data.Repository.IResourceAccess">
+            <summary>
+            Interface IResourceAccess, stores views of a resource associated with a user
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Data.Repository.IResourceAccess.ResourceName">
+            <summary>
+            Gets or sets the name of the resource.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Data.Repository.IResourceAccess.Id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Data.Repository.IResourceAccess.UserId">
+            <summary>
+            Gets or sets the user identifier.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Data.Repository.IResourceAccess.Accessed">
+            <summary>
+            Gets or sets the accessed.
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Data.Repository.IResourceAccessRepository">
+            <summary>
+            Interface IResourceAccessRepository, read/write collection of views of resources
+            </summary>
+        </member>
+        <member name="M:RateLimiter.Data.Repository.IResourceAccessRepository.Add``1(System.Int32,System.Int32)">
+            <summary>
+            Add a view of a resource by a user.
+            </summary>
+            <typeparam name="TResource">The type of the t resource.</typeparam>
+            <param name="id">The identifier.</param>
+            <param name="userId">The user identifier.</param>
+        </member>
+        <member name="M:RateLimiter.Data.Repository.IResourceAccessRepository.Get``1(System.Int32,System.Int32)">
+            <summary>
+            Gets all views of a resource by a user id.
+            </summary>
+            <typeparam name="TResource">The type of the t resource.</typeparam>
+            <param name="id">The identifier.</param>
+            <param name="userId">The user identifier.</param>
+            <returns>List&lt;IResourceAccess&gt;.</returns>
+        </member>
+        <member name="T:RateLimiter.Data.Repository.IResourceRepository">
+            <summary>
+            In memory storage of resources
+            </summary>
+        </member>
+        <member name="M:RateLimiter.Data.Repository.IResourceRepository.Add``1(RateLimiter.Domain.Entities.IResource)">
+            <summary>
+            Add a resource of a specific type.
+            </summary>
+            <typeparam name="TResource"></typeparam>
+            <param name="resource"></param>
+        </member>
+        <member name="M:RateLimiter.Data.Repository.IResourceRepository.Get``1(System.Int32)">
+            <summary>
+            get a resource of a specific type and id.
+            </summary>
+            <typeparam name="TResource"></typeparam>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RateLimiter.Data.Repository.IRuleRepository">
+            <summary>
+            In memory collection of rules
+            </summary>
+        </member>
+        <member name="M:RateLimiter.Data.Repository.IRuleRepository.GetAll``1">
+            <summary>
+            Get all rules for a resource type
+            </summary>
+            <typeparam name="TResource"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:RateLimiter.Data.Repository.IRuleRepository.Add``1(RateLimiter.Application.AccessRestriction.Rule.IRule)">
+            <summary>
+            Add a rule for a resource type
+            </summary>
+            <typeparam name="TResource"></typeparam>
+            <param name="rule"></param>
+        </member>
+        <member name="T:RateLimiter.Data.Repository.ResourceAccess">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Data.Repository.ResourceAccess.ResourceName">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Data.Repository.ResourceAccess.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Data.Repository.ResourceAccess.UserId">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Data.Repository.ResourceAccess.Accessed">
+            <inheritdoc />
+        </member>
+        <member name="T:RateLimiter.Data.Repository.ResourceAccessRepository">
+            <inheritdoc />
+        </member>
+        <member name="M:RateLimiter.Data.Repository.ResourceAccessRepository.Add``1(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:RateLimiter.Data.Repository.ResourceAccessRepository.Get``1(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:RateLimiter.Data.Repository.ResourceRepository">
+            <inheritdoc />
+        </member>
+        <member name="M:RateLimiter.Data.Repository.ResourceRepository.Add``1(RateLimiter.Domain.Entities.IResource)">
+            <inheritdoc />
+        </member>
+        <member name="M:RateLimiter.Data.Repository.ResourceRepository.Get``1(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:RateLimiter.Data.Repository.RuleRepository">
+            <inheritdoc />
+        </member>
+        <member name="M:RateLimiter.Data.Repository.RuleRepository.GetAll``1">
+            <inheritdoc />
+        </member>
+        <member name="M:RateLimiter.Data.Repository.RuleRepository.Add``1(RateLimiter.Application.AccessRestriction.Rule.IRule)">
+            <inheritdoc />
+        </member>
+        <member name="T:RateLimiter.Domain.Entities.IResource">
+            <summary>
+            Represents a (very abstract) resource. Implementations include other properties as appropriate.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Domain.Entities.IResource.ResourceName">
+            <summary>
+            Name.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Domain.Entities.IResource.Id">
+            <summary>
+            Unique identifier.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Domain.Entities.IResource.Updated">
+            <summary>
+            When this resource was last updated.
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Domain.Entities.ResourceA">
+            <summary>
+            Resource A
+            </summary>
+        </member>
+        <member name="M:RateLimiter.Domain.Entities.ResourceA.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Domain.Entities.ResourceA.ResourceAProperty1">
+            <summary>
+            An arbitrary property specific to ResourceA
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Domain.Entities.ResourceB">
+            <summary>
+            Resource B
+            </summary>
+        </member>
+        <member name="M:RateLimiter.Domain.Entities.ResourceB.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Domain.Entities.ResourceB.ResourceBProperty1">
+            <summary>
+            An arbitrary property specific to ResourceA
+            </summary>
+        </member>
+        <member name="P:RateLimiter.Domain.Entities.ResourceB.ResourceBProperty2">
+            <summary>
+            An differetnt arbitrary property specific to ResourceA
+            </summary>
+        </member>
+        <member name="T:RateLimiter.Domain.Entities.ResourceBase">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Domain.Entities.ResourceBase.ResourceName">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Domain.Entities.ResourceBase.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.Domain.Entities.ResourceBase.Updated">
+            <inheritdoc />
+        </member>
+        <member name="T:RateLimiter.Presentation.Api">
+            <summary>
+            Simulated WebAPI controller.
+            </summary>
+        </member>
+        <member name="M:RateLimiter.Presentation.Api.#ctor(RateLimiter.Application.Services.IResourceService)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="resourceService"></param>
+        </member>
+        <member name="M:RateLimiter.Presentation.Api.GetResourceA(System.Int32,RateLimiter.Application.AccessRestriction.Authorization.UserToken)">
+            <summary>
+            Get a viewModel representing an instance of ResourceA
+            </summary>
+            <param name="id">Unique ID for the instance of the resource.</param>
+            <param name="userToken">Token identifying the user.</param>
+            <returns></returns>
+        </member>
+        <member name="M:RateLimiter.Presentation.Api.GetResourceB(System.Int32,RateLimiter.Application.AccessRestriction.Authorization.UserToken)">
+            <summary>
+            Get a viewModel representing an instance of ResourceB
+            </summary>
+            <param name="id">Unique ID for the instance of the resource.</param>
+            <param name="userToken">Token identifying the user.</param>
+            <returns></returns>
+        </member>
+        <member name="T:RateLimiter.ViewModels.IResourceReadViewModelBase">
+            <summary>
+            Base for resource view models
+            </summary>
+        </member>
+        <member name="P:RateLimiter.ViewModels.IResourceReadViewModelBase.Id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.ViewModels.IResourceReadViewModelBase.Updated">
+            <summary>
+            Gets or sets the date this resource was last updated.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.ViewModels.IResourceReadViewModelBase.Retrieved">
+            <summary>
+            Gets or sets the date the resource was retrieved.
+            </summary>
+        </member>
+        <member name="T:RateLimiter.ViewModels.ResourceAReadViewModel">
+            <summary>
+            ViewModel to expose  ResourceA
+            Implements the <see cref="T:RateLimiter.ViewModels.ResourceReadViewModelBase" />
+            </summary>
+            <seealso cref="T:RateLimiter.ViewModels.ResourceReadViewModelBase" />
+        </member>
+        <member name="P:RateLimiter.ViewModels.ResourceAReadViewModel.ResourceAProperty1">
+            <summary>
+            Gets or sets the resource a property1.
+            </summary>
+        </member>
+        <member name="T:RateLimiter.ViewModels.ResourceBReadViewModel">
+            <summary>
+            ViewModel to expose  ResourceB
+            Implements the <see cref="T:RateLimiter.ViewModels.ResourceReadViewModelBase" />
+            </summary>
+            <seealso cref="T:RateLimiter.ViewModels.ResourceReadViewModelBase" />
+        </member>
+        <member name="P:RateLimiter.ViewModels.ResourceBReadViewModel.ResourceBProperty1">
+            <summary>
+            Gets or sets the resource b property1.
+            </summary>
+        </member>
+        <member name="P:RateLimiter.ViewModels.ResourceBReadViewModel.ResourceBProperty2">
+            <summary>
+            Gets or sets the resource b property2.
+            </summary>
+        </member>
+        <member name="T:RateLimiter.ViewModels.ResourceReadViewModelBase">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.ViewModels.ResourceReadViewModelBase.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.ViewModels.ResourceReadViewModelBase.Updated">
+            <inheritdoc />
+        </member>
+        <member name="P:RateLimiter.ViewModels.ResourceReadViewModelBase.Retrieved">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

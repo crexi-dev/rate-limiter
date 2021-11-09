@@ -7,4 +7,12 @@
     <Nullable>enable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\spectre\Desktop\repos\rate-limiter\RateLimiter\RateLimiter.xml</DocumentationFile>
+  </PropertyGroup>
+  
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.0" />
+  </ItemGroup>
 </Project>  
