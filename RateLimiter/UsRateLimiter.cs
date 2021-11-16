@@ -11,7 +11,7 @@ namespace RateLimiter
         private readonly int _requestsPerSeconds;
         private bool _disposed = false;
         private int _counter = 0;
-        private object _locker = new ();
+        private object _counterLocker = new ();
 
         public bool Allowed => this._counter < this._requestsPerSeconds;
         public UsRateLimiter(int requestsPerSecond, Func<Task> doCall)
@@ -43,7 +43,7 @@ namespace RateLimiter
 
         private void IncrementCounter() 
         {
-            lock (this._locker) 
+            lock (this._counterLocker) 
             {
                 this._counter++;
             }
@@ -51,7 +51,7 @@ namespace RateLimiter
 
         private void ResetCounter() 
         {
-            lock (this._locker) 
+            lock (this._counterLocker) 
             {
                 this._counter = 0;
             }

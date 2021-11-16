@@ -9,8 +9,20 @@ namespace RateLimiter
         private readonly Func<Task> _doCall;
         private readonly Timer _timer;
         private bool _disposed = false;
+        private object _allowedLocker = new ();
+        private bool _allowed;
+        public bool Allowed 
+        {
+            get => this._allowed;
+            set 
+            {
+                lock (_allowedLocker) 
+                {
+                    this._allowed = value;
+                }
+            }
+        }
 
-        public bool Allowed { get; private set; }
         public EuRateLimiter(int period, Func<Task> doCall)
         {
             this._doCall = doCall;
