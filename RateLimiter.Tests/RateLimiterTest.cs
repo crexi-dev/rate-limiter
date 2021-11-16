@@ -9,8 +9,8 @@ namespace RateLimiter.Tests
     {
         private readonly int _euRate = 2000;
         private readonly int _usResponsesPerSecond = 2;
-        private readonly Guid _euGuid = new();
-        private readonly Guid _usGuid = new();
+        private readonly Guid _euGuid = Guid.NewGuid();
+        private readonly Guid _usGuid = Guid.NewGuid();
 
         [SetUp]
         public void GlobalSetup()
@@ -22,9 +22,11 @@ namespace RateLimiter.Tests
         [Test]
         public async Task UsTokenShouldBeCalledNotMoreOftenThenRequested()
         {
-            await RateLimiterSingleton.Instance.TryCallAsync(this._usGuid);
+            Assert.IsTrue(await RateLimiterSingleton.Instance.TryCallAsync(this._usGuid));
+            Assert.IsTrue(await RateLimiterSingleton.Instance.TryCallAsync(this._usGuid));
             Assert.IsFalse(await RateLimiterSingleton.Instance.TryCallAsync(this._usGuid));
-            await Task.Delay(500);
+            await Task.Delay(1000);
+            Assert.IsTrue(await RateLimiterSingleton.Instance.TryCallAsync(this._usGuid));
             Assert.IsTrue(await RateLimiterSingleton.Instance.TryCallAsync(this._usGuid));
             Assert.IsFalse(await RateLimiterSingleton.Instance.TryCallAsync(this._usGuid));
         }
@@ -32,7 +34,7 @@ namespace RateLimiter.Tests
         [Test]
         public async Task EuTokenShouldBeCalledNotMoreOftenThenRequested()
         {
-            await RateLimiterSingleton.Instance.TryCallAsync(this._euGuid);
+            Assert.IsTrue(await RateLimiterSingleton.Instance.TryCallAsync(this._euGuid));
             Assert.IsFalse(await RateLimiterSingleton.Instance.TryCallAsync(this._euGuid));
             await Task.Delay(_euRate);
             Assert.IsTrue(await RateLimiterSingleton.Instance.TryCallAsync(this._euGuid));
