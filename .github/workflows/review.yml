@@ -1,0 +1,24 @@
+name: clone-pr
+
+on:
+  pull_request:
+    types: [ opened ]
+    branches: [ master ]
+
+jobs:
+  clone:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout PR branch, push to the remote repo and create PR
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - run: |
+          git checkout ${{ github.head_ref }}
+          git config --unset-all http.https://github.com/.extraheader
+          git push https://crexi-dev:${{ secrets.API_TOKEN }}@github.com/crexi-dev/rate-limiter-private.git
+          echo '${{ secrets.API_TOKEN }}' | gh auth login --with-token
+          gh pr create --base main --title '${{ github.event.pull_request.title }}' --body '${{ github.event.pull_request.body }}' --head '${{ github.head_ref }}' --repo 'crexi-dev/rate-limiter-private'
