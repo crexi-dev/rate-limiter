@@ -1,7 +1,7 @@
 name: clone-pr
 
 on:
-  pull_request:
+  pull_request_target:
     types: [ opened ]
     branches: [ master ]
 
@@ -13,12 +13,12 @@ jobs:
       # Checkout PR branch, push to the remote repo and create PR
       - uses: actions/checkout@v2
         with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.head_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
       - run: |
-          git checkout ${{ github.head_ref }}
           git config --unset-all http.https://github.com/.extraheader
-          git push https://crexi-dev:${{ secrets.API_TOKEN }}@github.com/crexi-dev/rate-limiter-private.git
+          git push https://crexi-dev:${{ secrets.API_TOKEN }}@github.com/crexi-dev/rate-limiter-private.git ${{ github.head_ref }}:${{ github.event.pull_request.head.user.login }}__${{ github.head_ref }}
           echo '${{ secrets.API_TOKEN }}' | gh auth login --with-token
-          gh pr create --base master --title '${{ github.event.pull_request.title }}' --body '${{ github.event.pull_request.body }}' --head '${{ github.head_ref }}' --repo 'crexi-dev/rate-limiter-private'
+          gh pr create --base master --title '${{ github.event.pull_request.title }}' --body '${{ github.event.pull_request.body }}' --head '${{ github.event.pull_request.head.user.login }}__${{ github.head_ref }}' --repo 'crexi-dev/rate-limiter-private'
