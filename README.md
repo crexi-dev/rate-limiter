@@ -1,6 +1,6 @@
 ﻿**Rate-limiting pattern**
 
-Rate limiting involves restricting the number of requests that can be made by a client.
+Rate limiting involves restricting the number of requests that can be made by a client
 A client is identified with an access token, which is used for every request to a resource.
 To prevent abuse of the server, APIs enforce rate-limiting techniques.
 Based on the client, the rate-limiting application can decide whether to allow the request to go through or not.
