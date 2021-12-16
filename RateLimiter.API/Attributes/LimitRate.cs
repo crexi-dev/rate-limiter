@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using RateLimiter.Enums;
+using RateLimiter.Api.Enums;
 
 namespace RateLimiter.API.Attributes
 {
@@ -38,7 +38,6 @@ namespace RateLimiter.API.Attributes
 				context.Result = new StatusCodeResult((int)HttpStatusCode.TooManyRequests);
 				return;
 			}
-
 
 			base.OnActionExecuting(context);
 		}

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RateLimiter.API.Attributes;
-using RateLimiter.Enums;
+using RateLimiter.Api.Enums;
 
 namespace RateLimiter.API.Controllers
 {
@@ -39,6 +39,7 @@ namespace RateLimiter.API.Controllers
 			})
 			.ToArray();
 		}
+
 		[HttpGet]
 		[Route("sinceLastCall")]
 		[LimitRate(Rule = new[] { LimiterRule.BasedOnTimeSinceLastCall }, Period = 10)]
@@ -53,6 +54,7 @@ namespace RateLimiter.API.Controllers
 			})
 			.ToArray();
 		}
+
 		[HttpGet]
 		[LimitRate(Rule = new[] { LimiterRule.BasedOnTime, LimiterRule.BasedOnTimeSinceLastCall },
 			RequestsPerMinute = 10, Period = 10)]
