@@ -15,11 +15,14 @@ namespace RateLimiter.Models.Middleware;
 
 public class RateLimiter
 {
+    // Not good caching because we don't clear it. Maybe, we need some async job that will clear such resources.
     private static readonly ConcurrentDictionary<ClientInfo, ClientStatus> ClientsStatuses = new();
 
     private readonly RequestDelegate _next;
     private readonly RateLimitConfiguration _configuration;
     private readonly SemaphoreSlim _semaphore;
+
+    // Would be nice to move rule groups validations to separate Processors
     private readonly bool _ipLimitEnabled;
     private readonly bool _clientKeyLimitEnabled;
 
