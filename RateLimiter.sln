@@ -12,8 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{D6AB5090-3FFF-4DFC-A977-0283AF5C2EFD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,10 +26,6 @@ Global
 		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6AB5090-3FFF-4DFC-A977-0283AF5C2EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6AB5090-3FFF-4DFC-A977-0283AF5C2EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6AB5090-3FFF-4DFC-A977-0283AF5C2EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6AB5090-3FFF-4DFC-A977-0283AF5C2EFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
