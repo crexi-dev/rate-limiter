@@ -4,14 +4,16 @@
     <AssemblyName>RateLimiter.Tests</AssemblyName>
     <RootNamespace>RateLimiter.Tests</RootNamespace>
     <LangVersion>9</LangVersion>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\RateLimiter\RateLimiter.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="6.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
   </ItemGroup>

@@ -4,7 +4,10 @@
     <AssemblyName>RateLimiter</AssemblyName>
     <RootNamespace>RateLimiter</RootNamespace>
     <LangVersion>9</LangVersion>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Linq" Version="4.3.0" />
+  </ItemGroup>
 </Project>  
