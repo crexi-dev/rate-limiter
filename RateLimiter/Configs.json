@@ -1,0 +1,14 @@
+{
+  "Rules": [
+    {
+      "ClientLocation": 0,
+      "RequestFrequency": 50,
+      "FromLastCallTimePassed": 1000
+    },
+    {
+      "ClientLocation": 1,
+      "RequestFrequency": 30,
+      "FromLastCallTimePassed": 2000
+    }
+  ]
+}
