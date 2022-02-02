@@ -8,6 +8,8 @@ namespace RateLimiter
     {
         public int Id { get; set; }
         public string UserName { get; set; }
+        public string UserName1 { get; set; }
+
 
         public void GetResourceA()
         {
