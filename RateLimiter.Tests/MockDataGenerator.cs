@@ -64,7 +64,7 @@ namespace RateLimiter.Tests
                 mockRequests.Add(new RequestModel
                 {
                     Token = $"{rule.Location}{i}",
-                    RequestFired = dateTime.AddSeconds(5)
+                    RequestFired = dateTime.AddSeconds(rule.Interval.Seconds)
                 });
             }
 
@@ -100,7 +100,7 @@ namespace RateLimiter.Tests
                 mockRequests.Add(new RequestModel
                 {
                     Token = $"{rule.Location}{i}",
-                    RequestFired = dateTime.AddSeconds(1)
+                    RequestFired = dateTime.AddSeconds(rule.Interval.Seconds)
                 });
             }
 
