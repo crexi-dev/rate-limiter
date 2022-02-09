@@ -1,0 +1,12 @@
+{
+    "Rules" : {
+        "EU" : {
+            "IntervalMs" : 5000,
+            "AllowedAmount": 10
+        },
+        "US" : {
+            "IntervalMs" : 1000,
+            "AllowedAmount": 20
+        }
+    }
+}
