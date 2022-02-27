@@ -6,5 +6,6 @@ namespace RateLimiter
 	{
 		public T Id { get; }
 		public DateTimeOffset Timestamp { get; }
+		public string Resource { get; set; }
 	}
 }

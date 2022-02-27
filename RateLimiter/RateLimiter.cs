@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RateLimiter
@@ -17,7 +18,7 @@ namespace RateLimiter
 			_historyProvider = historyProvider;
 		}
 
-		public async Task<bool> IsRateLimited(IAccessToken<T> accessToken)
+		public async Task<bool> IsRateLimited(IAccessToken<T> accessToken, CancellationToken cancellationToken = default)
 		{
 			var matchingRules = _rules.Where(rule => rule.Matcher.MatchesToken(accessToken));
 			if (!matchingRules.Any())
@@ -25,8 +26,13 @@ namespace RateLimiter
 				return false;
 			}
 
-			var history = await _historyProvider.GetApiRequestHistory(accessToken);
-			return matchingRules.Any(rule => rule.Inspector.IsRateLimited(history));
+			var history = await _historyProvider.GetApiRequestHistory(accessToken, cancellationToken);
+
+			return matchingRules.Any(rule =>
+			{
+				var matchingHistory = rule.Filter.FilterHistory(history);
+				return rule.Inspector.IsRateLimited(matchingHistory);
+			});
 		}
 	}
 }
