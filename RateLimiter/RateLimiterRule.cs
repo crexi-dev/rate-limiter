@@ -3,12 +3,12 @@ using RateLimiter.TokenSelectors;
 
 namespace RateLimiter
 {
-	public class RateLimiterRule
+	public class RateLimiterRule<T>
 	{
-		public ITokenSelector Selector { get; }
-		public ITokenLimiter Limiter { get; }
+		public ITokenSelector<T> Selector { get; }
+		public ITokenLimiter<T> Limiter { get; }
 
-		public RateLimiterRule(ITokenSelector selector, ITokenLimiter limiter)
+		public RateLimiterRule(ITokenSelector<T> selector, ITokenLimiter<T> limiter)
 		{
 			Selector = selector;
 			Limiter = limiter;

@@ -1,21 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RateLimiter
 {
-	public class RateLimiter
+	public class RateLimiter<T>
 	{
-		private readonly List<RateLimiterRule> _rules;
-		public IEnumerable<RateLimiterRule> Rules => _rules.AsReadOnly();
+		private readonly List<RateLimiterRule<T>> _rules;
+		private readonly IApiRequestHistoryProvider<T> _historyProvider;
 
-		public RateLimiter(IEnumerable<RateLimiterRule> rules)
+		public IEnumerable<RateLimiterRule<T>> Rules => _rules.AsReadOnly();
+
+		public RateLimiter(IApiRequestHistoryProvider<T> historyProvider, IEnumerable<RateLimiterRule<T>> rules)
 		{
 			_rules = rules.ToList();
+			_historyProvider = historyProvider;
 		}
 
-		bool IsRateLimited(IAccessToken accessToken) =>
-			_rules
-				.Where(rule => rule.Selector.IsSelected(accessToken))
-				.Any(rule => rule.Limiter.IsRateLimited(accessToken));
+		public async Task<bool> IsRateLimited(IAccessToken<T> accessToken)
+		{
+			var matchingRules = _rules.Where(rule => rule.Selector.IsSelected(accessToken));
+			if (!matchingRules.Any())
+			{
+				return false;
+			}
+
+			var history = await _historyProvider.GetApiRequestHistory(accessToken);
+			return matchingRules.Any(rule => rule.Limiter.IsRateLimited(history));
+		}
 	}
 }

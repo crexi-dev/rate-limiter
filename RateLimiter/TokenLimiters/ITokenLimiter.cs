@@ -1,7 +1,9 @@
-﻿namespace RateLimiter.TokenLimiters
+﻿using System.Collections.Generic;
+
+namespace RateLimiter.TokenLimiters
 {
-	public interface ITokenLimiter
+	public interface ITokenLimiter<T>
 	{
-		bool IsRateLimited(IAccessToken accessToken);
+		bool IsRateLimited(IEnumerable<IApiRequest<T>> history);
 	}
 }
