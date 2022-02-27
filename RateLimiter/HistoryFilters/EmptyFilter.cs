@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace RateLimiter.HistoryFilters
+﻿namespace RateLimiter.RequestFilters
 {
-	public class EmptyFilter<T> : IHistoryFilter<T>
+	/// <summary>
+	/// A default request filter that doesn't filter out any requests.
+	/// </summary>
+	public class EmptyFilter<T> : IRequestFilter<T>
 	{
-		public IEnumerable<IApiRequest<T>> FilterHistory(IEnumerable<IApiRequest<T>> history) => history;
+		public bool IsRequestIncluded(IApiRequest<T> request) => true;
 	}
 }
