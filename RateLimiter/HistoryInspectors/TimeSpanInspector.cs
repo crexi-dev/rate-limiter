@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RateLimiter.TokenLimiters
+namespace RateLimiter.HistoryInspectors
 {
-	public class TimeSpanLimiter<T> : ITokenLimiter<T>
+	public class TimeSpanInspector<T> : IHistoryInspector<T>
 	{
 		private readonly TimeSpan _timeSpan;
 		private readonly int _maxRequests;
 
-		public TimeSpanLimiter(TimeSpan timeSpan, int maxRequests)
+		public TimeSpanInspector(TimeSpan timeSpan, int maxRequests)
 		{
 			_timeSpan = timeSpan;
 			_maxRequests = maxRequests;

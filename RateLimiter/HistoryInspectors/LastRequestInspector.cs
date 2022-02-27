@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RateLimiter.TokenLimiters
+namespace RateLimiter.HistoryInspectors
 {
-	public class LastRequestLimiter<T> : ITokenLimiter<T>
+	public class LastRequestInspector<T> : IHistoryInspector<T>
 	{
 		private readonly TimeSpan _minimumInterval;
 
-		public LastRequestLimiter(TimeSpan minimumInterval)
+		public LastRequestInspector(TimeSpan minimumInterval)
 		{
 			_minimumInterval = minimumInterval;
 		}

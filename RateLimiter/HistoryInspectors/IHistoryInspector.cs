@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace RateLimiter.TokenLimiters
+namespace RateLimiter.HistoryInspectors
 {
-	public interface ITokenLimiter<T>
+	public interface IHistoryInspector<T>
 	{
 		bool IsRateLimited(IEnumerable<IApiRequest<T>> history);
 	}
