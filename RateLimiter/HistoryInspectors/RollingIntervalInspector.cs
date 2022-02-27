@@ -6,7 +6,7 @@ namespace RateLimiter.HistoryInspectors
 {
 	/// <summary>
 	/// Sets a maximum number of requests that can be made over a
-	/// given timespan.
+	/// given interval.
 	/// 
 	/// For example, if a user can only make 100 requests per hour,
 	/// then the inspector examines the history and filters out
@@ -14,7 +14,7 @@ namespace RateLimiter.HistoryInspectors
 	/// remaining requests is 100 or more, then the user is rate limited.
 	/// Otherwise, they are not.
 	/// </summary>
-	public class TimeSpanInspector<T> : IHistoryInspector<T>
+	public class RollingIntervalInspector<T> : IHistoryInspector<T>
 	{
 		private readonly TimeSpan _timeSpan;
 		private readonly int _maxRequests;
@@ -24,8 +24,13 @@ namespace RateLimiter.HistoryInspectors
 		/// </summary>
 		/// <param name="timeSpan">The interval of time to check for request history.</param>
 		/// <param name="maxRequests">The maximum number of requests allowed for that time interval.</param>
-		public TimeSpanInspector(TimeSpan timeSpan, int maxRequests)
+		public RollingIntervalInspector(TimeSpan timeSpan, int maxRequests)
 		{
+			if (maxRequests <= 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(maxRequests), "Max requests must be positive.");
+			}
+
 			_timeSpan = timeSpan;
 			_maxRequests = maxRequests;
 		}

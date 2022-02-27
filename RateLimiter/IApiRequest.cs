@@ -22,6 +22,6 @@ namespace RateLimiter
 		/// <summary>
 		/// The resource that was accessed by this request.
 		/// </summary>
-		public string Resource { get; set; }
+		public string Resource { get; }
 	}
 }

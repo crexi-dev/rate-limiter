@@ -12,10 +12,12 @@ namespace RateLimiter.RequestFilters
 
 		public ResourceFilter(params string[] resources)
 		{
-			_resources = resources.ToHashSet();
+			_resources = resources
+				.Select(resource => resource.ToUpperInvariant())
+				.ToHashSet();
 		}
 
 		public bool IsRequestIncluded(IApiRequest<T> request) =>
-			_resources.Contains(request.Resource);
+			_resources.Contains(request.Resource.ToUpperInvariant());
 	}
 }
