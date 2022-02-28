@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using RateLimiter.Tests.Utilities;
 using RateLimiter.TokenMatchers;
 
 namespace RateLimiter.Tests.TokenMatchers
@@ -12,12 +13,7 @@ namespace RateLimiter.Tests.TokenMatchers
 			[TestCase("US")]
 			public void EmptyCountryCodesNeverMatches(string placeOfOrigin)
 			{
-				var accessToken = new AccessToken
-				{
-					UserId = 1,
-					IPAddress = "127.0.0.1",
-					CountryCode = placeOfOrigin
-				};
+				var accessToken = new AccessToken(1, "127.0.0.1", placeOfOrigin);
 
 				var matcher = new PlaceOfOriginMatcher<int>();
 
@@ -29,12 +25,7 @@ namespace RateLimiter.Tests.TokenMatchers
 			[Test]
 			public void EmptyInputNeverMatches()
 			{
-				var accessToken = new AccessToken
-				{
-					UserId = 1,
-					IPAddress = "127.0.0.1",
-					CountryCode = string.Empty
-				};
+				var accessToken = new AccessToken(1, "127.0.0.1", string.Empty);
 
 				var matcher = new PlaceOfOriginMatcher<int>("US", "CA", "MX");
 
@@ -46,12 +37,7 @@ namespace RateLimiter.Tests.TokenMatchers
 			[Test]
 			public void MissingCountryCodeDoesNotMatch()
 			{
-				var accessToken = new AccessToken
-				{
-					UserId = 1,
-					IPAddress = "127.0.0.1",
-					CountryCode = "ES"
-				};
+				var accessToken = new AccessToken(1, "127.0.0.1", "ES");
 
 				var matcher = new PlaceOfOriginMatcher<int>("DE", "FR");
 
@@ -65,12 +51,7 @@ namespace RateLimiter.Tests.TokenMatchers
 			{
 				var countryCode = "US";
 
-				var accessToken = new AccessToken
-				{
-					UserId = 1,
-					IPAddress = "127.0.0.1",
-					CountryCode = countryCode
-				};
+				var accessToken = new AccessToken(1, "127.0.0.1", countryCode);
 
 				var matcher = new PlaceOfOriginMatcher<int>(countryCode);
 
@@ -84,12 +65,7 @@ namespace RateLimiter.Tests.TokenMatchers
 			{
 				var countryCode = "ca";
 
-				var accessToken = new AccessToken
-				{
-					UserId = 1,
-					IPAddress = "127.0.0.1",
-					CountryCode = countryCode
-				};
+				var accessToken = new AccessToken(1, "127.0.0.1", countryCode);
 
 				var matcher = new PlaceOfOriginMatcher<int>(countryCode);
 
@@ -103,12 +79,7 @@ namespace RateLimiter.Tests.TokenMatchers
 			{
 				var countryCode = "GB";
 
-				var accessToken = new AccessToken
-				{
-					UserId = 1,
-					IPAddress = "127.0.0.1",
-					CountryCode = countryCode
-				};
+				var accessToken = new AccessToken(1, "127.0.0.1", countryCode);
 
 				var matcher = new PlaceOfOriginMatcher<int>("gb");
 
@@ -122,12 +93,7 @@ namespace RateLimiter.Tests.TokenMatchers
 			{
 				var countryCode = "FR";
 
-				var accessToken = new AccessToken
-				{
-					UserId = 1,
-					IPAddress = "127.0.0.1",
-					CountryCode = countryCode
-				};
+				var accessToken = new AccessToken(1, "127.0.0.1", countryCode);
 
 				var matcher = new PlaceOfOriginMatcher<int>("DE", "FR", "BE");
 

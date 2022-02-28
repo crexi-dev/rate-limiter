@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RateLimiter.Tests
+namespace RateLimiter.Tests.Utilities
 {
 	internal class InMemoryHistoryProvider<T> : IApiRequestHistoryProvider<T> where T : notnull
 	{
@@ -16,10 +16,13 @@ namespace RateLimiter.Tests
 		public async Task<IEnumerable<IApiRequest<T>>> GetApiRequestHistory(IAccessToken<T> accessToken, CancellationToken cancellationToken = default) =>
 			await Task.FromResult(_history.GetValueOrDefault(accessToken.UserId, new List<IApiRequest<T>>()).AsReadOnly());
 
-		public void Record(IApiRequest<T> request)
+		public void Record(params IApiRequest<T>[] requests)
 		{
-			_history.TryAdd(request.UserId, new List<IApiRequest<T>>());
-			_history[request.UserId].Add(request);
+			foreach (var request in requests)
+			{
+				_history.TryAdd(request.UserId, new List<IApiRequest<T>>());
+				_history[request.UserId].Add(request);
+			}
 		}
 	}
 }

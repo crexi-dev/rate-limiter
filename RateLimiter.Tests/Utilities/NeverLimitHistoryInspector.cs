@@ -1,7 +1,7 @@
 ﻿using RateLimiter.HistoryInspectors;
 using System.Collections.Generic;
 
-namespace RateLimiter.Tests
+namespace RateLimiter.Tests.Utilities
 {
 	/// <summary>
 	/// A default history inspector that never rate limits the user.

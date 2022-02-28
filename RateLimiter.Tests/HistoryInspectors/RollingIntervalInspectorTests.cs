@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using RateLimiter.HistoryInspectors;
+using RateLimiter.Tests.Utilities;
 using System;
 
 namespace RateLimiter.Tests.HistoryInspectors
@@ -27,12 +28,8 @@ namespace RateLimiter.Tests.HistoryInspectors
 		[TestFixture]
 		public class IsRateLimited
 		{
-			private static ApiRequest GetRequest(TimeSpan timeBeforeNow) => new()
-			{
-				UserId = 1,
-				Resource = "Orders",
-				Timestamp = DateTimeOffset.UtcNow.Subtract(timeBeforeNow)
-			};
+			private static ApiRequest GetRequest(TimeSpan timeBeforeNow) =>
+				new(1, DateTimeOffset.UtcNow.Subtract(timeBeforeNow), "Orders");
 
 			[Test]
 			public void EmptyHistoryIsNotRateLimited()

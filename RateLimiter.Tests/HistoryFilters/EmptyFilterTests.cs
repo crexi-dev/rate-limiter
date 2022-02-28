@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using RateLimiter.RequestFilters;
+using RateLimiter.Tests.Utilities;
 using System;
 
 namespace RateLimiter.Tests.HistoryFilters
@@ -12,12 +13,7 @@ namespace RateLimiter.Tests.HistoryFilters
 			[Test]
 			public void AlwaysReturnsTrue()
 			{
-				var request = new ApiRequest
-				{
-					UserId = 1,
-					Resource = "Products",
-					Timestamp = DateTimeOffset.Now
-				};
+				var request = new ApiRequest(1, DateTimeOffset.Now, "Products");
 
 				var filter = new EmptyFilter<int>();
 

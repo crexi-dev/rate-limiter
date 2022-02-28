@@ -17,7 +17,7 @@ namespace RateLimiter
 		/// <summary>
 		/// Filters a user's request history to only requests that are applicable to this rule.
 		/// </summary>
-		public IRequestFilter<T> Filter { get; set; }
+		public IRequestFilter<T> Filter { get; }
 
 		/// <summary>
 		/// Given the filtered request history, this determines whether an incoming request

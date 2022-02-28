@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using RateLimiter.Tests.Utilities;
 using RateLimiter.TokenMatchers;
 
 namespace RateLimiter.Tests.TokenMatchers
@@ -11,12 +12,7 @@ namespace RateLimiter.Tests.TokenMatchers
 			[Test]
 			public void AlwaysMatches()
 			{
-				var token = new AccessToken
-				{
-					UserId = 1,
-					CountryCode = "US",
-					IPAddress = "127.0.0.1"
-				};
+				var token = new AccessToken(1, "127.0.0.1", "US");
 
 				var matcher = new AllMatcher<int>();
 
