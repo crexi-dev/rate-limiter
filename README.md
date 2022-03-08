@@ -27,3 +27,23 @@ Should you have any questions or concerns, submit them as a [GitHub issue](https
 You should [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the project, and [create a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) once you are finished.
 
 Good luck!
+
+---
+
+Rate Limiter Implementation - Simple console app - Ashwin Kannalath
+
+**Running App**
+From the RateLimiter folder, in your commandline, use: `dotnet run`
+
+**Running Unit Tests**
+From the root RATE-LIMITER folder, in your commandline, use: `dotnet test`
+
+**Configurations**
+There are three hardcoded api resource endpoints, for which rules and the mapping of the api resources to the rule(s) can be configured in the `appsettings.json` file under the `RateLimiter` project.
+
+**Assumptions**
+
+* Multiple Rules: When multiple rules are applied to an api resource, all rules must pass before api call is successful. The first failed rule will result in rejection.
+* Assumed it is okay to avoid the use of promise based code to not have an abundance of warning due to lack of await keywords within functions due to the simplified nature of "database" and "api" calls. Typically we would have asynchronous calls to the api/db that are non blocking - also a console app was used for simplicity, but this would typically not be the case.
+
+Thank you!
