@@ -1,4 +1,29 @@
-.vs
-packages
-bin 
-obj
+# Build output
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+
+# cache for misc downloads
+artifacts/
+
+# dotnet install directory
+.dotnet/
+
+ # Visual Studio 2015 cache/options directory
+.vs/
+
+# Visual Studio Code cache/options directory
+.vscode/
+
+# Rider directory
+.idea/
+
+# Test files
+*.trx
+
+# User-specific files
+*.suo
+*.user
+
+# ImageBuilder directory
+.Microsoft.DotNet.ImageBuilder

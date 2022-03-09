@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "ThrottledService": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:54996;http://localhost:54997"
+    }
+  }
+}

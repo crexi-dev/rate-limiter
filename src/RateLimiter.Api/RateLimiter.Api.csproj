@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Common\RateLimiter.Common\RateLimiter.Common.Utilities.csproj" />
+		<ProjectReference Include="..\Filters\RateLimiter.Filters\RateLimiter.Filters.csproj" />
+		<ProjectReference Include="..\Models\RateLimiter.Models.Contract\RateLimiter.Models.Contract.csproj" />
+		<ProjectReference Include="..\Services\RateLimiter.Services.WeatherForcast\RateLimiter.Services.Weather.csproj" />
+	</ItemGroup>
+
+</Project>
