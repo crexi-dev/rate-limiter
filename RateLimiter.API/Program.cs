@@ -17,6 +17,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<CustomHeaderSwaggerAttribute>();
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Rate Limit API",
+        Description = @"Please use these tokens <br /> "
+                      + "EU - 7ma0e8+yl37aCqJIK9vLcwna+sSdXzvg9PVsc0zhjTKSj3GILY/GAVRIdYBGSAbqRAYRBikxvm0FOIo+BQNPcw== <br />"
+                      + "US - 8hp8M1z31XxXtbmyaRXJnlv0/10ziScLf3Xp7EBTWbnRe7RWyNgySvIiuaje2rYTeMvuLAPRODlrS0K3e/NbsA==",
+    });
 });
 
 builder.Services.AddMemoryCache();
