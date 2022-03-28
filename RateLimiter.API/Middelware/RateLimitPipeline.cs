@@ -71,13 +71,13 @@ namespace RateLimiter.API.Middelware
                 context.Request.Path
             };
 
-            if (apiDecorator.StrategyType == RestrictionTypeEnum.IpAddress)
+            if (apiDecorator.Restriction == RestrictionTypeEnum.IpAddress)
                 keys.Add(GetClientByIp(context));
 
-            if (apiDecorator.StrategyType == RestrictionTypeEnum.PerUser)
+            if (apiDecorator.Restriction == RestrictionTypeEnum.PerUser)
                 keys.Add(GetClientByUser(context));
 
-            if (apiDecorator.StrategyType == RestrictionTypeEnum.PerApiKey)
+            if (apiDecorator.Restriction == RestrictionTypeEnum.PerApiKey)
                 keys.Add(GetClientByKey(context));
 
            
