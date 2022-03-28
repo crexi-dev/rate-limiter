@@ -39,7 +39,7 @@ namespace RateLimiter.API.Middelware
             if (validateOtherCalls != null)
             {
 
-                if (DateTime.Now < validateOtherCalls.Value.AddSeconds(5))
+                if (DateTime.Now < validateOtherCalls.Value.AddSeconds(20))
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
                     return;
