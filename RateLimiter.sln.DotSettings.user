@@ -1,0 +1,20 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a27336a5_002D5b33_002D410a_002Da971_002Db2a094c7e020/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="OneRequest_RuleIsPassed" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.TimeSpanResourceRuleTest.OneRequest_RuleIsPassed&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.TimeSpanResourceRuleTest.FailedWhenLotOfRequests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.TimeSpanResourceRuleTest.SuccessWhenLotOfRequests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.Rules.IntervalAccessRuleTests.CreateSeveralRequestsWithTheSpecifiedInterval_ValidationShouldPass&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.Rules.IntervalAccessRuleTests.CreateTwoRequestsWithTheSmallInterval_ValidationShouldFail&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.Rules.IntervalAccessRuleTests.CreateSeveralRequestsWithTheSmallInterval_ValidationShouldFail&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.Rules.IntervalAccessRuleTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.Rules.PeriodAccessRuleTests.AllowedCountRequestsDuringThePeriod_ValidationShouldPass&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.Rules.PeriodAccessRuleTests.MoreThenAllowedCountRequestsDuringThePeriod_ValidationShouldFail&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.Rules.PeriodAccessRuleTests.AllowedCountRequestsWithPendingDuringThePeriod_ValidationShouldPass&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.Rules.PeriodAccessRuleTests.SendALotOfRequestsWithAllowablePending_ValidationShouldPass&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.Rules.ResourceRulesConfigurationTests.SendAllowedCountRequestsForUsersResource_TestShouldPass&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.Rules.ResourceRulesConfigurationTests.SendAllowedCountRequestsForUSUsersResource_TestShouldPass&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.Rules.ResourceRulesConfigurationTests.SendAllowedIntervalRequestsForEUUsersResource_TestShouldPass&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net5.0::RateLimiter.Tests.Rules.ResourceRulesConfigurationTests.SendAllowedCountWithAllowedIntervalRequestsForItemsResource_TestShouldPass&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
