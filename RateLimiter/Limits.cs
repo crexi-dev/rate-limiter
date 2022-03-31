@@ -8,18 +8,23 @@ namespace RateLimiter
 {
   public class Limits
   {
+    #region ***Private
     private int _maxCount;
     private int _secondsSinceLastCall;
     private double _tokenLifetimeMs;
     private static List<AccessLog> _accessHistory = new List<AccessLog>();
     private static List<string> _AllowedOrigins = new List<string>() { "EU", "US" };
+    #endregion
+    #region ***Ctor
     public Limits(int maxCount = 1000, int secondsSinceLastCall = 1000, double tokenLifeTimeMs = 5)
     {
       _maxCount = maxCount;
       _secondsSinceLastCall = secondsSinceLastCall;
       _tokenLifetimeMs = tokenLifeTimeMs;
     }
+    #endregion
 
+    #region ***Public
     public bool Validate(LimitTypes limittype, string token)
     {
       Token tokenData = Token.ReadTokenData(token);
@@ -47,7 +52,9 @@ namespace RateLimiter
       }
       return result;
     }
+    #endregion
 
+    #region ***Private
     private bool TokenExpiration(Token tokenData)
     {
       var checkValues = DateTimeOffset.UtcNow.AddSeconds(-_tokenLifetimeMs).ToUnixTimeMilliseconds();
@@ -72,5 +79,7 @@ namespace RateLimiter
       var lastCallDate = tokenHistory.Max(acc => acc.AccessDate);
       return lastCallDate.AddSeconds(_secondsSinceLastCall) < DateTime.Now;
     }
+    #endregion
+
   }
 }
