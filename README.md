@@ -13,11 +13,15 @@ Some examples of request-limiting rules (you could imagine any others)
 * a certain timespan passed since the last call;
 * for US-based tokens, we use X requests per timespan, for EU-based - certain timespan passed since the last call.
 
-The goal is to design a class(-es) that manage rate limits for every provided API resource by a set of provided *configurable and extendable* rules. For example, for one resource you could configure the limiter to use Rule A, for another one - Rule B, for a third one - both A + B, etc. Any combinations of rules are possible, keep this fact in mind when designing the classes.
+The goal is to design a class(-es) that manage rate limits for every provided API resource by a set of provided *configurable and extendable* rules. 
+For example, for one resource you could configure the limiter to use Rule A, for another one - Rule B, for a third one - both A + B, etc. 
+Any combinations of rules are possible, keep this fact in mind when designing the classes.
 
 Use simple in-memory data structures to store the data; don't rely on a particular database. Do not prepare any complex environment,
-a class library with a set of tests is more than enough. Don't worry about the API itself, including auth token generation - there is no real API environment required.
-For simplicity, you can implement the API resource as a simple C# method accepting a user token, and at the very beginning of the method, you set up your classes and ask whether further execution is allowed for this particular callee.
+a class library with a set of tests is more than enough. Don't worry about the API itself, 
+including auth token generation - there is no real API environment required.
+For simplicity, you can implement the API resource as a simple C# method accepting a user token, and at the very beginning of the method, 
+you set up your classes and ask whether further execution is allowed for this particular callee.
 
 There is a Test Project set up for you to use. You are welcome to create your own test project and use whatever test runner you would like.   
 
