@@ -9,43 +9,20 @@ namespace RateLimiter
   public class Limits
   {
     #region ***Private
-    private int _maxCount;
-    private int _secondsSinceLastCall;
-    private double _tokenLifetimeMs;
     private static List<AccessLog> _accessHistory = new List<AccessLog>();
-    private static List<string> _AllowedOrigins = new List<string>() { "EU", "US" };
-    #endregion
-    #region ***Ctor
-    public Limits(int maxCount = 1000, int secondsSinceLastCall = 1000, double tokenLifeTimeMs = 5)
-    {
-      _maxCount = maxCount;
-      _secondsSinceLastCall = secondsSinceLastCall;
-      _tokenLifetimeMs = tokenLifeTimeMs;
-    }
     #endregion
 
+
     #region ***Public
-    public bool Validate(LimitTypes limittype, string token)
+    public static bool Validate(string token, List<ValidationMethod> validationMethods)
     {
       Token tokenData = Token.ReadTokenData(token);
       bool result = true;
+      foreach (var validationMethod in validationMethods)
+      {
+        result = result & validationMethod.Method(token, tokenData, validationMethod.IntValue, validationMethod.StringValue);
+      }
 
-      if ((limittype & LimitTypes.PerTimeSpan) == LimitTypes.PerTimeSpan && tokenData.Origin != "EU")
-      {
-        result = result & PerTimeSpan(token);
-      }
-      if ((limittype & LimitTypes.SinceLastCall) == LimitTypes.SinceLastCall && tokenData.Origin != "US")
-      {
-        result = result & SinceLastCall(token);
-      }
-      if ((limittype & LimitTypes.TokenOrigin) == LimitTypes.TokenOrigin)
-      {
-        result = result & TokenOrigin(tokenData);
-      }
-      if ((limittype & LimitTypes.TokenExpiration) == LimitTypes.TokenExpiration)
-      {
-        result = result & TokenExpiration(tokenData);
-      }
       if (result)
       {
         _accessHistory.Add(new AccessLog() { Token = token, AccessDate = DateTime.Now });
@@ -54,32 +31,38 @@ namespace RateLimiter
     }
     #endregion
 
-    #region ***Private
-    private bool TokenExpiration(Token tokenData)
+    #region ***ValidationTypes
+    public static bool TokenExpiration(string token, Token tokenData, int tokenLifetimeSeconds, string stringVlue)
     {
-      var checkValues = DateTimeOffset.UtcNow.AddSeconds(-_tokenLifetimeMs).ToUnixTimeMilliseconds();
+      double tokenLifetime = (double)tokenLifetimeSeconds;
+      var checkValues = DateTimeOffset.UtcNow.AddSeconds(-tokenLifetime).ToUnixTimeMilliseconds();
       return long.Parse(tokenData.Iat) > checkValues;
     }
 
-    private bool TokenOrigin(Token tokenData)
+    public static bool TokenOrigin(string token, Token tokenData, int intValue, string origins)
     {
-      return _AllowedOrigins.Contains(tokenData.Origin);
+      var allowedOrigins = origins.Split(",");
+      return allowedOrigins.Contains(tokenData.Origin);
     }
 
-    private bool PerTimeSpan(string token)
+    public static bool PerTimeSpan(string token, Token tokenData, int maxCount, string skipOrigins)
     {
-
+      if (skipOrigins.Split(",").Contains(tokenData.Origin))
+        return true;
       var AccessCount = _accessHistory.Where(acc => acc.Token == token && acc.AccessDate > DateTime.Now.AddHours(-1));
-      return AccessCount.Count() < _maxCount;
+      return AccessCount.Count() < maxCount;
     }
-    private bool SinceLastCall(string token)
+    public static bool SinceLastCall(string token, Token tokenData, int secondsSinceLastCall, string skipOrigins)
     {
+      if (skipOrigins.Split(",").Contains(tokenData.Origin))
+        return true;
       var tokenHistory = _accessHistory.Where(acc => acc.Token == token);
       if (!tokenHistory.Any()) return true;
       var lastCallDate = tokenHistory.Max(acc => acc.AccessDate);
-      return lastCallDate.AddSeconds(_secondsSinceLastCall) < DateTime.Now;
+      return lastCallDate.AddSeconds(secondsSinceLastCall) < DateTime.Now;
     }
     #endregion
 
   }
+
 }

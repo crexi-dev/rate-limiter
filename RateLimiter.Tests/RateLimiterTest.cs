@@ -31,8 +31,8 @@ namespace RateLimiter.Tests
     {
       Resources resources = new Resources();
       Assert.IsFalse(resources.ApiResource2(_ruToken));//RU token - return false because resource is configured to accept tokens originated from US or EU
-      Assert.IsTrue(resources.ApiResource2(_euToken));//EU token - return false because resource is configured to accept tokens originated from US or EU
-      Assert.IsTrue(resources.ApiResource2(_usToken));//US token - return false because resource is configured to accept tokens originated from US or EU
+      Assert.IsTrue(resources.ApiResource2(_euToken));//EU token - return false because resource is configured to accept tokens originated from US or EU and token length is greater then 5
+      Assert.IsTrue(resources.ApiResource2(_usToken));//US token - return false because resource is configured to accept tokens originated from US or EU and token length is greater then 5
     }
     [Test]
     public void TestReesource3()
