@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RateLimiter.Entity\RateLimiter.Entity.csproj" />
+    <ProjectReference Include="..\RateLimiter.Repository\RateLimiter.Repository.csproj" />
+  </ItemGroup>
+
+</Project>
