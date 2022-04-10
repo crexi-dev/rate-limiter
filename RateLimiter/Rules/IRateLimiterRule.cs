@@ -6,6 +6,6 @@ namespace RateLimiter.Rules
 {
     public interface IRateLimiterRule
     {
-        bool IsValid();
+        bool Validate();
     }
 }

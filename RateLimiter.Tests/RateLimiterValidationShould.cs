@@ -30,9 +30,9 @@ namespace RateLimiter.Tests
         [Fact]
         public void Return_True_On_All_Tests_Passing()
         {
-            rule1.IsValid().Returns(true);
-            rule2.IsValid().Returns(true);
-            rule3.IsValid().Returns(true);
+            rule1.Validate().Returns(true);
+            rule2.Validate().Returns(true);
+            rule3.Validate().Returns(true);
             var result = validation.IsRequestValid(rules);
             result.ShouldBeTrue();
         }
@@ -40,9 +40,9 @@ namespace RateLimiter.Tests
         [Fact]
         public void Return_False_On_One_Test_Failing()
         {
-            rule1.IsValid().Returns(true);
-            rule2.IsValid().Returns(false);
-            rule3.IsValid().Returns(true);
+            rule1.Validate().Returns(true);
+            rule2.Validate().Returns(false);
+            rule3.Validate().Returns(true);
             var result = validation.IsRequestValid(rules);
             result.ShouldBeFalse();
         }

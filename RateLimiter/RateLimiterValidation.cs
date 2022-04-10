@@ -13,7 +13,7 @@ namespace RateLimiter
     {
         public bool IsRequestValid(IEnumerable<IRateLimiterRule> rateLimiterRules)
         {
-            return rateLimiterRules.All(x => x.IsValid());
+            return rateLimiterRules.All(x => x.Validate());
         }
     }
 }

@@ -8,6 +8,7 @@ namespace RateLimiter
     {
         public TimePassedRuleOptions CertainTimePassedRule { get; set; }
 
+        public RequestPerTimeSpanOptions RequestPerTimeSpanOptions { get;set; }
     }
 
     /// <summary>
@@ -27,5 +28,12 @@ namespace RateLimiter
         public int MaxAlloweRequests { get; set; }
 
         public TimeSpan WithinTimeSpan { get; set; }
+    }
+
+    public class RegionBasedRuleOptions
+    {
+        public TimePassedRuleOptions AmericanBaseRuleOptions { get; set; }
+
+        public RequestPerTimeSpanOptions EuropeanBasedRuleOptions { get; set; }
     }
 }

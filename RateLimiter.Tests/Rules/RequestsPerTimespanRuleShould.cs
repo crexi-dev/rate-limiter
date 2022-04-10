@@ -42,7 +42,7 @@ namespace RateLimiter.Tests.Rules
             repository.GetAmountOfLoginsSinceTimespan(Arg.Any<Guid>(), Arg.Any<TimeSpan>())
                 .Returns(8);
 
-            var result = rule.IsValid();
+            var result = rule.Validate();
             result.ShouldBeTrue();
         }
 
@@ -52,7 +52,7 @@ namespace RateLimiter.Tests.Rules
             repository.GetAmountOfLoginsSinceTimespan(Arg.Any<Guid>(), Arg.Any<TimeSpan>())
                 .Returns(12);
 
-            var result = rule.IsValid();
+            var result = rule.Validate();
             result.ShouldBeFalse();
         }
     }

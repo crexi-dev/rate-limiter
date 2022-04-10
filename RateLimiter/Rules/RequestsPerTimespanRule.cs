@@ -21,7 +21,7 @@ namespace RateLimiter.Rules
             this.options = options.Value;
         }
 
-        public bool IsValid()
+        public bool Validate()
         {
             var numberOfRequests = rateLimiterRepository.GetAmountOfLoginsSinceTimespan(apiClient.ClientId, options.WithinTimeSpan);
 

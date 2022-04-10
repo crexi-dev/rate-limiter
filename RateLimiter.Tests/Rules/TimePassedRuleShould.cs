@@ -31,7 +31,7 @@ namespace RateLimiter.Tests.Rules
             rateLimiterRepository.GetLastLoginDateTime(Arg.Any<Guid>())
                 .Returns((DateTime?)null);
 
-            var isValid = certainTimePassedRule.IsValid();
+            var isValid = certainTimePassedRule.Validate();
             isValid.ShouldBeTrue();
         }
 
@@ -49,7 +49,7 @@ namespace RateLimiter.Tests.Rules
                 MinTimespan = new TimeSpan(TimeSpan.TicksPerDay) // Request should be within 1 day.
             });
 
-            var isValid = certainTimePassedRule.IsValid();
+            var isValid = certainTimePassedRule.Validate();
             isValid.ShouldBeFalse();
         }
 
@@ -66,7 +66,7 @@ namespace RateLimiter.Tests.Rules
                 MinTimespan = new TimeSpan(TimeSpan.TicksPerDay) // Request should be within 1 day.
             });
 
-            var isValid = certainTimePassedRule.IsValid();
+            var isValid = certainTimePassedRule.Validate();
             isValid.ShouldBeTrue();
         }
 

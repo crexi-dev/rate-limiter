@@ -13,15 +13,15 @@ namespace RateLimiter.Rules
         private readonly IOptions<TimePassedRuleOptions> options;
 
         public TimePassedRule(IApiClient apiClient,
-                                 IRateLimiterRepository rateLimiterRepository,
-                                 IOptions<TimePassedRuleOptions> options)
+                              IRateLimiterRepository rateLimiterRepository,
+                              IOptions<TimePassedRuleOptions> options)
         {
             this.apiClient = apiClient;
             this.rateLimiterRepository = rateLimiterRepository;
             this.options = options;
         }
 
-        public bool IsValid()
+        public bool Validate()
         {
             var lastLoginDateTime = rateLimiterRepository.GetLastLoginDateTime(apiClient.ClientId);
 
