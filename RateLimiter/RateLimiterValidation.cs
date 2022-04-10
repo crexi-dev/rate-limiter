@@ -4,7 +4,12 @@ using System.Linq;
 
 namespace RateLimiter
 {
-    public class RateLimiterValidation
+    public interface IRateLimiterValidation
+    {
+        bool IsRequestValid(IEnumerable<IRateLimiterRule> rateLimiterRules);
+    }
+
+    public class RateLimiterValidation : IRateLimiterValidation
     {
         public bool IsRequestValid(IEnumerable<IRateLimiterRule> rateLimiterRules)
         {

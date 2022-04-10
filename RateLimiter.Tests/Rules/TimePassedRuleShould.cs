@@ -1,31 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Microsoft.Extensions.Options;
 using NSubstitute;
-using Shouldly;
 using RateLimiter.Common;
-using Microsoft.Extensions.Options;
 using RateLimiter.Rules;
+using Shouldly;
+using System;
+using Xunit;
 
 namespace RateLimiter.Tests.Rules
 {
-    public class CertainTimePassedRuleShould
+    public class TimePassedRuleShould
     {
         private IApiClient apiClient;
-        private IOptions<RulesOptions> options;
+        private IOptions<TimePassedRuleOptions> options;
         private IRateLimiterRepository rateLimiterRepository;
-        private CertainTimePassedRule certainTimePassedRule;
+        private TimePassedRule certainTimePassedRule;
 
-        public CertainTimePassedRuleShould()
+        public TimePassedRuleShould()
         {
             apiClient = Substitute.For<IApiClient>();
-            options = Substitute.For<IOptions<RulesOptions>>();
+            options = Substitute.For<IOptions<TimePassedRuleOptions>>();
             rateLimiterRepository = Substitute.For<IRateLimiterRepository>();
 
-            certainTimePassedRule = new CertainTimePassedRule(apiClient, rateLimiterRepository, options);
+            certainTimePassedRule = new TimePassedRule(apiClient, rateLimiterRepository, options);
         }
 
         [Fact]
@@ -48,7 +44,7 @@ namespace RateLimiter.Tests.Rules
                 .Returns((DateTime?)DateTime.Now.AddDays(-1).AddHours(-1));
 
 
-            options.Value.Returns(new RulesOptions
+            options.Value.Returns(new TimePassedRuleOptions
             {
                 MinTimespan = new TimeSpan(TimeSpan.TicksPerDay) // Request should be within 1 day.
             });
@@ -65,7 +61,7 @@ namespace RateLimiter.Tests.Rules
                 .Returns((DateTime?)DateTime.Now.AddHours(-5));
 
 
-            options.Value.Returns(new RulesOptions
+            options.Value.Returns(new TimePassedRuleOptions
             {
                 MinTimespan = new TimeSpan(TimeSpan.TicksPerDay) // Request should be within 1 day.
             });

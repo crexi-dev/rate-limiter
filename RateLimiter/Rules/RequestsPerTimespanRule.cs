@@ -10,22 +10,22 @@ namespace RateLimiter.Rules
     {
         private readonly IApiClient apiClient;
         private readonly IRateLimiterRepository rateLimiterRepository;
-        private readonly IOptions<RulesOptions> options;
+        private readonly RequestPerTimeSpanOptions options;
 
         public RequestsPerTimespanRule(IApiClient apiClient,
                                    IRateLimiterRepository rateLimiterRepository,
-                                   IOptions<RulesOptions> options)
+                                   IOptions<RequestPerTimeSpanOptions> options)
         {
             this.apiClient = apiClient;
             this.rateLimiterRepository = rateLimiterRepository;
-            this.options = options;
+            this.options = options.Value;
         }
 
         public bool IsValid()
         {
+            var numberOfRequests = rateLimiterRepository.GetAmountOfLoginsSinceTimespan(apiClient.ClientId, options.WithinTimeSpan);
 
-            throw new NotImplementedException();
-            
+            return numberOfRequests < options.MaxAlloweRequests;            
         }
     }
 }

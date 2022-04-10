@@ -6,15 +6,15 @@ using System.Text;
 
 namespace RateLimiter.Rules
 {
-    public class CertainTimePassedRule : IRateLimiterRule
+    public class TimePassedRule : IRateLimiterRule
     {
         private readonly IApiClient apiClient;
         private readonly IRateLimiterRepository rateLimiterRepository;
-        private readonly IOptions<RulesOptions> options;
+        private readonly IOptions<TimePassedRuleOptions> options;
 
-        public CertainTimePassedRule(IApiClient apiClient,
+        public TimePassedRule(IApiClient apiClient,
                                  IRateLimiterRepository rateLimiterRepository,
-                                 IOptions<RulesOptions> options)
+                                 IOptions<TimePassedRuleOptions> options)
         {
             this.apiClient = apiClient;
             this.rateLimiterRepository = rateLimiterRepository;
