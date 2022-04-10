@@ -1,14 +1,10 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
+using Shouldly;
 
 namespace RateLimiter.Tests
 {
-    [TestFixture]
     public class RateLimiterTest
     {
-        [Test]
-        public void Example()
-        {
-            Assert.IsTrue(true);
-        }
+        
     }
 }
