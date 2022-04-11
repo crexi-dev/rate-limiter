@@ -51,11 +51,13 @@ namespace RateLimiter.API
             services.AddMemoryCache();
             services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
             services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
-            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
-            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
-            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-            services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>(); 
+
+            services.Configure<ClientRateLimitOptions>(Configuration.GetSection("ClientRateLimiting"));
+            services.Configure<ClientRateLimitPolicies>(Configuration.GetSection("ClientRateLimitPolicies"));
+ 
             services.AddInMemoryRateLimiting();
+            // configure the resolvers
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
             // Swagger Initialization 
             services.AddSwaggerGen(sw =>
@@ -97,6 +99,7 @@ namespace RateLimiter.API
             app.UseAuthorization();
 
             app.UseIpRateLimiting();
+            app.UseClientRateLimiting();
 
             app.UseEndpoints(endpoints =>
             {

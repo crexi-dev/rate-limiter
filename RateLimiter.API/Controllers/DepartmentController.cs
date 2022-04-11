@@ -25,7 +25,7 @@ namespace RateLimiter.API.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet] 
         public IActionResult GetDeparments()
         {
             _logger.LogInformation($"DepartmentController.GetDeparments action executed at {DateTime.UtcNow.ToLongTimeString()}");

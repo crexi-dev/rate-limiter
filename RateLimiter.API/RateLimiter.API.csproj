@@ -21,6 +21,7 @@
     <ProjectReference Include="..\RateLimiter.Entity\RateLimiter.Entity.csproj" />
     <ProjectReference Include="..\RateLimiter.Repository\RateLimiter.Repository.csproj" />
     <ProjectReference Include="..\RateLimiter.Service\RateLimiter.Service.csproj" />
+    <ProjectReference Include="..\RateLimiter\RateLimiter.csproj" />
   </ItemGroup>
 
 
