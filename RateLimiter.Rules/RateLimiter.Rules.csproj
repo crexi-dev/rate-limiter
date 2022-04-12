@@ -8,7 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\RateLimiter.Interfaces\RateLimiter.Interfaces.csproj" />
     <ProjectReference Include="..\RateLimiter.Models\RateLimiter.Models.csproj" />
-    <ProjectReference Include="..\RateLimiter.Storage\RateLimiter.Storage.csproj" />
+    <ProjectReference Include="..\RateLimiter.Storage\RateLimiter.Repository.csproj" />
   </ItemGroup>
 
 </Project>

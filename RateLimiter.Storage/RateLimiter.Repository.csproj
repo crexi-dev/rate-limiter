@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RateLimiter.Interfaces\RateLimiter.Interfaces.csproj" />
     <ProjectReference Include="..\RateLimiter.Models\RateLimiter.Models.csproj" />
   </ItemGroup>
 

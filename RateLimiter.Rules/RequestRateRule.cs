@@ -1,6 +1,6 @@
 ﻿using RateLimiter.Interfaces;
 using RateLimiter.Models;
-using RateLimiter.Storage;
+using RateLimiter.Repository;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -12,19 +12,21 @@ namespace RateLimiter.Rules
     public class RequestRateRule : IRateLimiter
     {
 
-        private readonly ConcurrentDictionary<string, RequestDetails> DBStore;
+        private readonly ConcurrentDictionary<string, RequestDetails> _DBStore;
         private const int _MaxRequestCount = 5;
+        private readonly IRepository _repository;
 
         public RequestRateRule()
         {
-            DBStore = new InMemoryStore().AccessStorage();
+            _repository = new InMemoryStorage();
+            _DBStore = _repository.AccessStorage();
         }
 
 
         public bool ApplyRule(string token)
         {
 
-            if (DBStore.TryGetValue(token, out RequestDetails requestDetails))
+            if (_DBStore.TryGetValue(token, out RequestDetails requestDetails))
             {
 
                 //if (request.recordedTimeInterval.TotalMinutes > 1)
@@ -49,7 +51,7 @@ namespace RateLimiter.Rules
                     count = 1,
                     recordedTimeInterval = new TimeSpan(0, 1, 0)
                 };
-                return DBStore.TryAdd(token, request);
+                return _DBStore.TryAdd(token, request);
             }
         }
     }

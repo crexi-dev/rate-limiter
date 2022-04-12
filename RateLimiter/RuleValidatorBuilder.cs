@@ -6,12 +6,12 @@ using System.Collections.Generic;
 
 namespace RateLimiter
 {
-    public class RequestValidatorBuilder
+    public class RuleValidatorBuilder
     {
-        private readonly List<IRateLimiter> _rateLimiters = new();
+        private readonly List<IRateLimiter> _rateLimiters = new List<IRateLimiter>();
 
 
-        public RequestValidatorBuilder(List<IRateLimiter> rateLimiter)
+        public RuleValidatorBuilder(List<IRateLimiter> rateLimiter)
         {
             _rateLimiters = rateLimiter;
         }
@@ -19,14 +19,15 @@ namespace RateLimiter
 
         public bool ValidateClientToken(string token)
         {
+            bool isValid = false;
             if(!string.IsNullOrWhiteSpace(token))
             {
                 foreach (var item in _rateLimiters)
                 {
-                    return item.ApplyRule(token);
+                    isValid =  item.ApplyRule(token);
                 }
             }
-            return false;
+            return isValid;
         }
     }
 }

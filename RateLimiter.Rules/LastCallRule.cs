@@ -1,21 +1,23 @@
 ﻿using RateLimiter.Interfaces;
 using RateLimiter.Models;
+using RateLimiter.Repository;
 using System;
 using System.Collections.Concurrent;
-using RateLimiter.Storage;
 
 namespace RateLimiter.Rules
 {
-    internal class LastCallRule : IRateLimiter
+    public class LastCallRule : IRateLimiter
     {
 
         private readonly ConcurrentDictionary<string, RequestDetails> _requests;
-        private const int _MaxAllowedMinutes = 30;
+        private const int _MaxAllowedMinutes = 1;
+        private readonly IRepository _repository;
 
         public LastCallRule()
         {
-            InMemoryStore dbStore = new InMemoryStore();
-            _requests = dbStore.AccessStorage();
+
+            _repository = new InMemoryStorage();
+            _requests = _repository.AccessStorage();
         }
 
         public bool ApplyRule(string token)

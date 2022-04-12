@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Models", "RateL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Rules", "RateLimiter.Rules\RateLimiter.Rules.csproj", "{522B4524-2366-4171-8032-7548B2688505}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Storage", "RateLimiter.Storage\RateLimiter.Storage.csproj", "{56A131EE-6957-41D3-B24D-B99A8C881A24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Repository", "RateLimiter.Storage\RateLimiter.Repository.csproj", "{56A131EE-6957-41D3-B24D-B99A8C881A24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

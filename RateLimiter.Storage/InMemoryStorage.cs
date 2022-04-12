@@ -1,12 +1,10 @@
-﻿using RateLimiter.Models;
-using System;
+﻿using RateLimiter.Interfaces;
+using RateLimiter.Models;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RateLimiter.Storage
+namespace RateLimiter.Repository
 {
-    public class InMemoryStore
+    public class InMemoryStorage : IRepository
     {
 
         private static readonly ConcurrentDictionary<string, RequestDetails> _inMemoryStore  = new ConcurrentDictionary<string, RequestDetails>();

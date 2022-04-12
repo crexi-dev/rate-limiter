@@ -5,4 +5,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RateLimiter.Models\RateLimiter.Models.csproj" />
+  </ItemGroup>
+
 </Project>
