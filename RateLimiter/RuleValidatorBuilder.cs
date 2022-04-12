@@ -24,7 +24,9 @@ namespace RateLimiter
             {
                 foreach (var item in _rateLimiters)
                 {
-                    isValid =  item.ApplyRule(token);
+                    isValid = item.ApplyRule(token);
+                    // if any rule fails return false and break out of the loop
+                    if (!isValid) break; 
                 }
             }
             return isValid;

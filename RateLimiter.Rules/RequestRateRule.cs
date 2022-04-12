@@ -3,9 +3,6 @@ using RateLimiter.Models;
 using RateLimiter.Repository;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RateLimiter.Rules
 {
@@ -25,22 +22,17 @@ namespace RateLimiter.Rules
 
         public bool ApplyRule(string token)
         {
-
+            bool ruleStatus = false;
             if (_DBStore.TryGetValue(token, out RequestDetails requestDetails))
             {
 
-                //if (request.recordedTimeInterval.TotalMinutes > 1)
-                //    return false;
-                //else if (request.recordedTimeInterval.TotalMinutes < 1 && request.count >= _MaxRequestCount)
-                //    return false;
                 if (requestDetails.count > _MaxRequestCount)
-                {
-                    return false;
-                }
+                    ruleStatus =  false;
+                
                 else
                 {
-                    requestDetails.count += 1;
-                    return true;
+                    requestDetails.count++;
+                    ruleStatus =  true;
                 }
 
             }
@@ -49,10 +41,13 @@ namespace RateLimiter.Rules
                 var request = new RequestDetails
                 {
                     count = 1,
-                    recordedTimeInterval = new TimeSpan(0, 1, 0)
+                    recordedTimeInterval = new TimeSpan(0, 1, 0),
+                    TimeRequestMade = DateTime.UtcNow
+                    
                 };
-                return _DBStore.TryAdd(token, request);
+                ruleStatus =  _DBStore.TryAdd(token, request);
             }
+            return ruleStatus;
         }
     }
 }
