@@ -8,6 +8,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RateLimiter.Rules\RateLimiter.Rules.csproj" />
+    <ProjectReference Include="..\RateLimiter.Storage\RateLimiter.Storage.csproj" />
     <ProjectReference Include="..\RateLimiter\RateLimiter.csproj" />
   </ItemGroup>
   <ItemGroup>

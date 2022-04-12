@@ -1,16 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter", "RateLimiter\RateLimiter.csproj", "{36F4BDC6-D3DA-403A-8DB7-0C79F94B938F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RateLimiter", "RateLimiter\RateLimiter.csproj", "{36F4BDC6-D3DA-403A-8DB7-0C79F94B938F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Tests", "RateLimiter.Tests\RateLimiter.Tests.csproj", "{C4F9249B-010E-46BE-94B8-DD20D82F1E60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RateLimiter.Tests", "RateLimiter.Tests\RateLimiter.Tests.csproj", "{C4F9249B-010E-46BE-94B8-DD20D82F1E60}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9B206889-9841-4B5E-B79B-D5B2610CCCFF}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Interfaces", "RateLimiter.Interfaces\RateLimiter.Interfaces.csproj", "{98E9D14C-573E-4450-93FB-7D3EE5F7CA3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Models", "RateLimiter.Models\RateLimiter.Models.csproj", "{93C188A9-6BB4-4B2A-B858-90FB7455EDCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Rules", "RateLimiter.Rules\RateLimiter.Rules.csproj", "{522B4524-2366-4171-8032-7548B2688505}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Storage", "RateLimiter.Storage\RateLimiter.Storage.csproj", "{56A131EE-6957-41D3-B24D-B99A8C881A24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +34,22 @@ Global
 		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98E9D14C-573E-4450-93FB-7D3EE5F7CA3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98E9D14C-573E-4450-93FB-7D3EE5F7CA3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98E9D14C-573E-4450-93FB-7D3EE5F7CA3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98E9D14C-573E-4450-93FB-7D3EE5F7CA3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93C188A9-6BB4-4B2A-B858-90FB7455EDCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93C188A9-6BB4-4B2A-B858-90FB7455EDCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93C188A9-6BB4-4B2A-B858-90FB7455EDCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93C188A9-6BB4-4B2A-B858-90FB7455EDCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{522B4524-2366-4171-8032-7548B2688505}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{522B4524-2366-4171-8032-7548B2688505}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{522B4524-2366-4171-8032-7548B2688505}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{522B4524-2366-4171-8032-7548B2688505}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56A131EE-6957-41D3-B24D-B99A8C881A24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56A131EE-6957-41D3-B24D-B99A8C881A24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56A131EE-6957-41D3-B24D-B99A8C881A24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56A131EE-6957-41D3-B24D-B99A8C881A24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

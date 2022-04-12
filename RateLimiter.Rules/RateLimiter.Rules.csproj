@@ -1,14 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>RateLimiter</AssemblyName>
-    <RootNamespace>RateLimiter</RootNamespace>
-    <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\RateLimiter.Interfaces\RateLimiter.Interfaces.csproj" />
     <ProjectReference Include="..\RateLimiter.Models\RateLimiter.Models.csproj" />
+    <ProjectReference Include="..\RateLimiter.Storage\RateLimiter.Storage.csproj" />
   </ItemGroup>
-</Project>  
+
+</Project>
