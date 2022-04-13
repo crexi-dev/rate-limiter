@@ -1,11 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using RateLimiter.Exceptions;
 using RateLimiter.Interfaces;
 using RateLimiter.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
