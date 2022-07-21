@@ -1,6 +1,6 @@
 ﻿using RateLimiter.Model;
 
-namespace RateLimiter.Cache
+namespace RateLimiter.DataAccess
 {
     public interface IStorageService
     {

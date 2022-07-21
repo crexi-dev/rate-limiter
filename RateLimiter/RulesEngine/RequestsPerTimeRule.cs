@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using RateLimiter.Cache;
+using RateLimiter.DataAccess;
 using RateLimiter.Model;
 using RateLimiter.RulesEngine.Interfaces;
 using System;

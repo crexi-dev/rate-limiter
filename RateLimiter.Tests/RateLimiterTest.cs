@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using RateLimiter.Cache;
+using RateLimiter.DataAccess;
 using RateLimiter.Model;
 using RateLimiter.RulesEngine;
 using RateLimiter.RulesEngine.Interfaces;

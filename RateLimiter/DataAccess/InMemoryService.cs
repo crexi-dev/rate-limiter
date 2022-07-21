@@ -1,7 +1,7 @@
 ﻿using RateLimiter.Model;
 using System.Collections.Generic;
 
-namespace RateLimiter.Cache
+namespace RateLimiter.DataAccess
 {
     public class InMemoryService : IStorageService
     {

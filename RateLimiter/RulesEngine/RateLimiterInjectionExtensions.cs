@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RateLimiter.Cache;
+using RateLimiter.DataAccess;
 using RateLimiter.RulesEngine.Interfaces;
 
 namespace RateLimiter.RulesEngine
