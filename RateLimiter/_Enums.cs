@@ -6,4 +6,11 @@
         Success,
         Other
     }
+
+    public enum Region
+    {
+        US,
+        EU,
+        Other
+    }
 }

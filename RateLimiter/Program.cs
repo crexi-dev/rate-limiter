@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using RuleLimiterTask;
-using RuleLimiterTask.Resources;
 using RuleLimiterTask.Rules;
 using RuleLimiterTask.Rules.Settings;
 using System.Reflection;
@@ -22,7 +21,7 @@ var userRequest7 = new UserRequest(Region.EU, 1);
 
 // rule settings
 var requestPerTimespanSettings = config.GetSection("RequestPerTimespan").Get<RequestPerTimespanSettings>();
-var timespanSinceLastCallSettings = config.GetSection("TimespanPassedSinceLastCallInMs").Get<TimespanSinceLastCallSettings>();
+var timespanSinceLastCallSettings = config.GetSection("TimespanPassedSinceLastCall").Get<TimespanSinceLastCallSettings>();
 
 // cache
 var cache = new CacheService();
@@ -32,20 +31,23 @@ var requestPerTimespanRule = new RequestPerTimespanRule(requestPerTimespanSettin
 var timespanSinceLastCallRule = new TimespanSinceLastCallRule(timespanSinceLastCallSettings);
 
 // resources
-var resource1 = new Resource1();
-resource1.ApplyRule(requestPerTimespanRule);
+var resource = new Resource();
+resource.ApplyRule(requestPerTimespanRule);
+resource.ApplyRule(timespanSinceLastCallRule);
 
-userRequest1.RequestAccess(resource1, cache);
+userRequest1.RequestAccess(resource, cache);
 await Task.Delay(10);
-userRequest2.RequestAccess(resource1, cache);
+userRequest2.RequestAccess(resource, cache);
 await Task.Delay(10);
-userRequest3.RequestAccess(resource1, cache);
+userRequest3.RequestAccess(resource, cache);
 await Task.Delay(10);
-userRequest4.RequestAccess(resource1, cache);
+userRequest4.RequestAccess(resource, cache);
 await Task.Delay(10);
-userRequest5.RequestAccess(resource1, cache);
+userRequest5.RequestAccess(resource, cache);
 await Task.Delay(10);
-userRequest6.RequestAccess(resource1, cache);
+userRequest6.RequestAccess(resource, cache);
+await Task.Delay(10);
+userRequest7.RequestAccess(resource, cache);
 
 Console.WriteLine($"user request 1 is {userRequest1.State}");
 Console.WriteLine($"user request 2 is {userRequest2.State}");
@@ -53,3 +55,4 @@ Console.WriteLine($"user request 3 is {userRequest3.State}");
 Console.WriteLine($"user request 4 is {userRequest4.State}");
 Console.WriteLine($"user request 5 is {userRequest5.State}");
 Console.WriteLine($"user request 6 is {userRequest6.State}");
+Console.WriteLine($"user request 7 is {userRequest7.State}");

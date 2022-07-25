@@ -1,20 +1,17 @@
-﻿using RuleLimiterTask.Resources;
-
-namespace RuleLimiterTask
+﻿namespace RuleLimiterTask
 {
     public class UserRequest
     {
         public RequestState State { get; set; }
+        public Token Token { get; }
+        public DateTime RequestTime { get; private set; }
 
         public UserRequest(Region region, int userId)
         {
             Token = new Token(region, userId);
         }
 
-        public Token Token { get; }
-        public DateTime RequestTime { get; private set; }
-
-        public void RequestAccess(BaseResource resource, ICacheService cache) 
+        public void RequestAccess(Resource resource, ICacheService cache)
         {
             RequestTime = DateTime.Now;
 

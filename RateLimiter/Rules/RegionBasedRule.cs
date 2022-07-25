@@ -1,6 +1,8 @@
-﻿namespace RuleLimiterTask.Rules
+﻿using RuleLimiterTask.Cache;
+
+namespace RuleLimiterTask.Rules
 {
-    public abstract class RegionBasedRule : BaseRule
+    public abstract class RegionBasedRule : IRule
     {
         private readonly Region _region;
         protected IRule _innerRule;
@@ -9,5 +11,7 @@
         {
             _region = region;
         }
+
+        public abstract bool IsValid(UserRequest request, CacheEntry cacheEntry);
     }
 }

@@ -3,5 +3,7 @@
     "TimespanInMs": 10000, // 10 seconds
     "Count": 3
   },
-  "TimespanPassedSinceLastCallInMs": 2000 // 2 seconds
+  "TimespanPassedSinceLastCall": {
+    "InMs": 2000 // 2 seconds
+  }
 }

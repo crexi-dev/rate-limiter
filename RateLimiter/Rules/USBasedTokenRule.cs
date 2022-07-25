@@ -1,4 +1,5 @@
-﻿using RuleLimiterTask.Rules.Settings;
+﻿using RuleLimiterTask.Cache;
+using RuleLimiterTask.Rules.Settings;
 
 namespace RuleLimiterTask.Rules
 {
@@ -9,9 +10,9 @@ namespace RuleLimiterTask.Rules
             _innerRule = new RequestPerTimespanRule(settings);
         }
 
-        public override bool IsValid(UserRequest request, ICacheService cache)
+        public override bool IsValid(UserRequest request, CacheEntry cacheEntry)
         {
-            return _innerRule.IsValid(request, cache);
+            return _innerRule.IsValid(request, cacheEntry);
         }
     }
 }

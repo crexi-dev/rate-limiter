@@ -2,6 +2,6 @@
 {
     public class TimespanSinceLastCallSettings
     {
-        public int TimespanPassedSinceLastCallInMs { get; set; }
+        public int InMs { get; set; }
     }
 }

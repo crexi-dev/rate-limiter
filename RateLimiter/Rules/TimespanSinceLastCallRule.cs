@@ -3,7 +3,7 @@ using RuleLimiterTask.Rules.Settings;
 
 namespace RuleLimiterTask.Rules
 {
-    public class TimespanSinceLastCallRule : BaseRule
+    public class TimespanSinceLastCallRule : IRule
     {
         private readonly TimespanSinceLastCallSettings _settings;
 
@@ -12,14 +12,11 @@ namespace RuleLimiterTask.Rules
             _settings = settings;
         }
 
-        public override bool IsValid(UserRequest request, ICacheService cache)
+        public bool IsValid(UserRequest request, CacheEntry cacheEntry)
         {
-            var key = GenerateKey(request.Token.UserId);
-
-            var cacheEntry = cache.Get<CacheEntry>(key) ?? new();
             var last = cacheEntry.Last;
 
-            if (last == default || request.RequestTime - last > TimeSpan.FromMilliseconds(_settings.TimespanPassedSinceLastCallInMs)) 
+            if (last == default || request.RequestTime - last > TimeSpan.FromMilliseconds(_settings.InMs)) 
             {
                 cacheEntry.Last = request.RequestTime;
 
