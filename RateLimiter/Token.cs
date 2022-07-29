@@ -1,4 +1,4 @@
-﻿namespace RuleLimiterTask
+﻿namespace RateLimiter
 {
     public class Token
     {

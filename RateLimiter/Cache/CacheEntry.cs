@@ -1,4 +1,8 @@
-﻿namespace RuleLimiterTask.Cache
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace RateLimiter.Cache
 {
     public class CacheEntry
     {

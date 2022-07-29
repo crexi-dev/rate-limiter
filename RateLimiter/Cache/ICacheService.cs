@@ -1,4 +1,4 @@
-﻿namespace RuleLimiterTask
+﻿namespace RateLimiter.Cache
 {
     public interface ICacheService
     {

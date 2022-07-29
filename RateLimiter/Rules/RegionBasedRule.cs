@@ -1,6 +1,6 @@
-﻿using RuleLimiterTask.Cache;
+﻿using RateLimiter.Cache;
 
-namespace RuleLimiterTask.Rules
+namespace RateLimiter.Rules
 {
     public abstract class RegionBasedRule : IRule
     {

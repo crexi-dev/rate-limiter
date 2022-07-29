@@ -1,9 +1,0 @@
-{
-  "RequestPerTimespan": {
-    "TimespanInMs": 10000, // 10 seconds
-    "Count": 3
-  },
-  "TimespanPassedSinceLastCall": {
-    "InMs": 2000 // 2 seconds
-  }
-}

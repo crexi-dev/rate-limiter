@@ -1,7 +1,8 @@
-﻿using RuleLimiterTask.Cache;
-using RuleLimiterTask.Rules.Settings;
+﻿using System;
+using RateLimiter.Cache;
+using RateLimiter.Rules.Settings;
 
-namespace RuleLimiterTask.Rules
+namespace RateLimiter.Rules
 {
     public class RequestPerTimespanRule : IRule
     {

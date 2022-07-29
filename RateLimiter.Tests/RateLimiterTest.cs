@@ -1,29 +1,26 @@
-﻿using FluentAssertions;
-using RuleLimiterTask;
-using RuleLimiterTask.Rules;
-using RuleLimiterTask.Rules.Settings;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.Extensions.Configuration;
+using RateLimiter.Cache;
+using RateLimiter.Rules;
+using RateLimiter.Rules.Settings;
 using Xunit;
 
-namespace TestProject1
+namespace RateLimiter.Tests
 {
-    public class RateLimiterTests
+    public class RateLimiterTest
     {
-        private readonly RequestPerTimespanSettings _requestPerTimespanSettings;
-        private readonly TimespanSinceLastCallSettings _timespanSinceLastCallSettings;
+        private readonly IConfiguration _configuration;
 
-        public RateLimiterTests()
+        public RateLimiterTest()
         {
-            _requestPerTimespanSettings = new RequestPerTimespanSettings()
-            {
-                Count = 2,
-                TimespanInMs = 5000
-            };
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("config.json", optional: false);
 
-            _timespanSinceLastCallSettings = new TimespanSinceLastCallSettings()
-            {
-                InMs = 1000
-            };
+            _configuration = builder.Build();
         }
 
         [Fact]
@@ -31,16 +28,24 @@ namespace TestProject1
         {
             // Arrange
             var cache = new CacheService();
+
             var request1 = new UserRequest(Region.Other, 1);
             var request2 = new UserRequest(Region.Other, 1);
-            var resource = new Resource();
-            var rule = new TimespanSinceLastCallRule(_timespanSinceLastCallSettings);
+
+            var endpoint = new Endpoint(_configuration, cache);
+
+            var resource = new Resource("api/other");
+
+            var settings = _configuration.GetSection("TimespanPassedSinceLastCall")
+                .Get<TimespanSinceLastCallSettings>();
+            var rule = new TimespanSinceLastCallRule(settings);
             resource.ApplyRule(rule);
+            endpoint.AddResource(resource);
 
             // Act
-            request1.RequestAccess(resource, cache);
-            await Task.Delay(_timespanSinceLastCallSettings.InMs - 50); // shorter than in the settings
-            request2.RequestAccess(resource, cache);
+            endpoint.AcceptRequest(request1, "api/other");
+            await Task.Delay(settings.InMs - 50); // shorter than in the settings
+            endpoint.AcceptRequest(request2, "api/other");
 
             // Assert
             request1.State.Should().Be(RequestState.Success);
@@ -52,16 +57,24 @@ namespace TestProject1
         {
             // Arrange
             var cache = new CacheService();
+
             var request1 = new UserRequest(Region.Other, 1);
             var request2 = new UserRequest(Region.Other, 2);
-            var resource = new Resource();
-            var rule = new TimespanSinceLastCallRule(_timespanSinceLastCallSettings);
+
+            var endpoint = new Endpoint(_configuration, cache);
+
+            var resource = new Resource("api/other");
+
+            var settings = _configuration.GetSection("TimespanPassedSinceLastCall")
+                .Get<TimespanSinceLastCallSettings>();
+            var rule = new TimespanSinceLastCallRule(settings);
             resource.ApplyRule(rule);
+            endpoint.AddResource(resource);
 
             // Act
-            request1.RequestAccess(resource, cache);
-            await Task.Delay(_timespanSinceLastCallSettings.InMs - 50); // shorter than in the settings
-            request2.RequestAccess(resource, cache);
+            endpoint.AcceptRequest(request1, "api/other");
+            await Task.Delay(settings.InMs - 50); // shorter than in the settings
+            endpoint.AcceptRequest(request2, "api/other");
 
             // Assert
             request1.State.Should().Be(RequestState.Success);
@@ -73,28 +86,25 @@ namespace TestProject1
         {
             // Arrange
             var cache = new CacheService();
-            var request1 = new UserRequest(Region.Other, 1);
-            var request2 = new UserRequest(Region.Other, 1);
-            var request3 = new UserRequest(Region.Other, 1);
-            var request4 = new UserRequest(Region.Other, 1);
-            var resource = new Resource();
-            var rule = new RequestPerTimespanRule(_requestPerTimespanSettings);
+
+            var endpoint = new Endpoint(_configuration, cache);
+
+            var resource = new Resource("api/other");
+
+            var settings = _configuration.GetSection("RequestPerTimespan").Get<RequestPerTimespanSettings>();
+            var rule = new RequestPerTimespanRule(settings);
             resource.ApplyRule(rule);
+            endpoint.AddResource(resource);
+
+            var requests = Enumerable.Repeat(0, settings.Count + 1).Select(x => new UserRequest(Region.Other, 1))
+                .ToList();
 
             // Act
-            request1.RequestAccess(resource, cache);
-            await Task.Delay(1000);
-            request2.RequestAccess(resource, cache);
-            await Task.Delay(1000);
-            request3.RequestAccess(resource, cache);
-            await Task.Delay(3000);
-            request4.RequestAccess(resource, cache);
+            requests.ForEach(r => endpoint.AcceptRequest(r, "api/other"));
 
             // Assert
-            request1.State.Should().Be(RequestState.Success);
-            request2.State.Should().Be(RequestState.Success);
-            request3.State.Should().Be(RequestState.AccessDenied);
-            request2.State.Should().Be(RequestState.Success);
+            requests.Take(requests.Count - 1).Select(x => x.State).Should().AllBeEquivalentTo(RequestState.Success);
+            requests[^1].State.Should().Be(RequestState.AccessDenied);
         }
 
         [Fact]
@@ -104,16 +114,25 @@ namespace TestProject1
             var cache = new CacheService();
             var request1 = new UserRequest(Region.Other, 1);
             var request2 = new UserRequest(Region.Other, 1);
-            var resource = new Resource();
-            var rule1 = new RequestPerTimespanRule(_requestPerTimespanSettings);
-            var rule2 = new TimespanSinceLastCallRule(_timespanSinceLastCallSettings);
+
+            var endpoint = new Endpoint(_configuration, cache);
+
+            var resource = new Resource("api/other");
+
+            var settings1 = _configuration.GetSection("RequestPerTimespan").Get<RequestPerTimespanSettings>();
+            var rule1 = new RequestPerTimespanRule(settings1);
+            var settings2 = _configuration.GetSection("TimespanPassedSinceLastCall")
+                .Get<TimespanSinceLastCallSettings>();
+            var rule2 = new TimespanSinceLastCallRule(settings2);
             resource.ApplyRule(rule1);
             resource.ApplyRule(rule2);
+            endpoint.AddResource(resource);
 
             // Act
-            request1.RequestAccess(resource, cache);
-            await Task.Delay(100); // for RequestPerTimespanRule second request is ok, but TimespanSinceLastCallRule will block it
-            request2.RequestAccess(resource, cache);
+            endpoint.AcceptRequest(request1, "api/other");
+            await Task.Delay(
+                100); // for RequestPerTimespanRule second request is ok, but TimespanSinceLastCallRule will block it
+            endpoint.AcceptRequest(request2, "api/other");
 
             // Assert
             request1.State.Should().Be(RequestState.Success);
@@ -121,35 +140,53 @@ namespace TestProject1
         }
 
         [Fact]
-        public async Task WhenUserIsFromUS_Rule_RequestPerTimespanRuleShouldWork()
+        public async Task WhenUserIsFromUS_Rule_RequestPerTimespanRule_ShouldWork()
         {
             // Arrange
             var cache = new CacheService();
 
-            var request1 = new UserRequest(Region.US, 1);
-            var request2 = new UserRequest(Region.US, 1);
-            var request3 = new UserRequest(Region.US, 1);
-            var request4 = new UserRequest(Region.US, 1);
+            var endpoint = new Endpoint(_configuration, cache);
 
-            var resource = new Resource();
+            var resource = new Resource("api/us");
+            endpoint.AddResource(resource);
 
-            var rule = new USBasedTokenRule(_requestPerTimespanSettings);
-            resource.ApplyRule(rule);
+            var settings = _configuration.GetSection("RequestPerTimespan").Get<RequestPerTimespanSettings>();
+
+            var requests = Enumerable.Repeat(0, settings.Count + 1).Select(x => new UserRequest(Region.US, 1)).ToList();
 
             // Act
-            request1.RequestAccess(resource, cache);
-            await Task.Delay(1000);
-            request2.RequestAccess(resource, cache);
-            await Task.Delay(1000);
-            request3.RequestAccess(resource, cache);
-            await Task.Delay(3000);
-            request4.RequestAccess(resource, cache);
+            requests.ForEach(r => endpoint.AcceptRequest(r, "api/us"));
+
+            // Assert
+            requests.Take(requests.Count - 1).Select(x => x.State).Should().AllBeEquivalentTo(RequestState.Success);
+            requests[^1].State.Should().Be(RequestState.AccessDenied);
+        }
+
+        [Fact]
+        public async Task WhenUserIsFromEU_Rule_TimespanSinceLastCallRule_ShouldWork()
+        {
+            // Arrange
+            var cache = new CacheService();
+
+            var request1 = new UserRequest(Region.EU, 1);
+            var request2 = new UserRequest(Region.EU, 1);
+
+            var endpoint = new Endpoint(_configuration, cache);
+
+            var resource = new Resource("api/eu");
+            endpoint.AddResource(resource);
+
+            var settings = _configuration.GetSection("TimespanPassedSinceLastCall")
+                .Get<TimespanSinceLastCallSettings>();
+
+            // Act
+            endpoint.AcceptRequest(request1, "api/eu");
+            await Task.Delay(settings.InMs - 50); // shorter than in the settings
+            endpoint.AcceptRequest(request2, "api/eu");
 
             // Assert
             request1.State.Should().Be(RequestState.Success);
-            request2.State.Should().Be(RequestState.Success);
-            request3.State.Should().Be(RequestState.AccessDenied);
-            request2.State.Should().Be(RequestState.Success);
+            request2.State.Should().Be(RequestState.AccessDenied);
         }
     }
 }

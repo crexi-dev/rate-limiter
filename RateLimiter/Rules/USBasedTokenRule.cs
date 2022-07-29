@@ -1,7 +1,7 @@
-﻿using RuleLimiterTask.Cache;
-using RuleLimiterTask.Rules.Settings;
+﻿using RateLimiter.Cache;
+using RateLimiter.Rules.Settings;
 
-namespace RuleLimiterTask.Rules
+namespace RateLimiter.Rules
 {
     public class USBasedTokenRule : RegionBasedRule
     {

@@ -1,4 +1,6 @@
-﻿namespace RuleLimiterTask
+﻿using System.Collections.Generic;
+
+namespace RateLimiter.Cache
 {
     public class CacheService : ICacheService
     {

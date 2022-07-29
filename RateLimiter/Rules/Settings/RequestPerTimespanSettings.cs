@@ -1,4 +1,4 @@
-﻿namespace RuleLimiterTask.Rules.Settings
+﻿namespace RateLimiter.Rules.Settings
 {
     public class RequestPerTimespanSettings
     {
