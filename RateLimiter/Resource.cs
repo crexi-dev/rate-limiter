@@ -22,11 +22,7 @@ namespace RateLimiter
 
         /// <summary>
         /// Default to Not Limit, override to add your custom rules    
-        /// <code>
-        ///  if (Key != GetResourceKey(request))
-        ///  {
-        ///     return RateLimitPartition.CreateNoLimiter(Key);
-        ///  }
+        /// <code>        
         ///  if (request.RequestUri.IsLoopback)
         ///  {
         ///    return RateLimitPartition.CreateNoLimiter(Key);
@@ -35,21 +31,14 @@ namespace RateLimiter
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public virtual RateLimitPartition<string> GetLimiter(HttpRequestMessage request)
+        public virtual PartitionedRateLimiter<HttpRequestMessage> GetLimiter(HttpRequestMessage request)
         {
-            return RateLimitPartition.CreateNoLimiter(Key);
+            return PartitionedRateLimiter.Create<HttpRequestMessage, string>(resource =>
+            {
+                return RateLimitPartition.CreateNoLimiter(Key);
+            });
         }
-
-        /// <summary>
-        /// Override this to pull the ResourceId from differente place on request Headers, Properties, etc               
-        /// <see cref="https://docs.microsoft.com/en-us/dotnet/api/system.uri.absolutepath?view=net-6.0#code-try-1"/>
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public virtual string GetResourceKey(HttpRequestMessage request)
-        {
-            return request.RequestUri.AbsolutePath;
-        }
+        
     }
 
 
