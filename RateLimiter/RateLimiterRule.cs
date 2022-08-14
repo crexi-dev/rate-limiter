@@ -16,17 +16,19 @@ namespace RateLimiter
     /// </summary>
     public abstract class RateLimiterRule
     {
-        public string Id { get; private set; }
-        public string Description { get; private set; }
+        protected int _retryAfterSeconds;
 
-        public RateLimiterRule(string id, string description)
+        public string Id { get; private set; }
+        public int RetryAfterSeconds => _retryAfterSeconds;
+
+        public RateLimiterRule(string id)
         {
-            Description = description;
+            _retryAfterSeconds = 0;
             Id = id;
         }
 
-        public abstract ReplenishingRateLimiter GetLimiter<T>(T request);
-        public abstract ReplenishingRateLimiter GetLimiter();
+        public abstract bool IsValid<T>(T request);
+        public abstract bool IsValid();
     }
 
 
@@ -38,7 +40,7 @@ namespace RateLimiter
 
         private readonly TokenBucketRateLimiter _limiter;
 
-        public RequestInTimeSpan(string id, string description, int requests, TimeSpan timeSpan): base(id, description)
+        public RequestInTimeSpan(string id, string description, int requests, TimeSpan timeSpan): base(id)
         {
             Requests = requests;
             TimeSpan = timeSpan;            
@@ -47,14 +49,19 @@ namespace RateLimiter
                 queueLimit: 1, replenishmentPeriod: timeSpan, tokensPerPeriod: 1, autoReplenishment: true));
         }
 
-        public override ReplenishingRateLimiter GetLimiter<HttpRequestMessage>(HttpRequestMessage request)
+        public override bool IsValid<HttpRequestMessage>(HttpRequestMessage request)
         {
-            return GetLimiter();
+            return IsValid();
         }
 
-        public override ReplenishingRateLimiter GetLimiter()
+        public override bool IsValid()
         {
-            return _limiter;
+            using RateLimitLease lease = _limiter.Acquire(1);
+            if (lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+            {
+                _retryAfterSeconds = retryAfter.Seconds;
+            }
+            return lease.IsAcquired;
         }
     }
 
@@ -64,22 +71,26 @@ namespace RateLimiter
         public TimeSpan TimeSpan { get; private set; }
         private readonly SlidingWindowRateLimiter _limiter;
 
-        public TimeSpanSinceLast(string id, string description, TimeSpan timeSpan):base(id, description)
+        public TimeSpanSinceLast(string id, string description, TimeSpan timeSpan):base(id)
         {
             TimeSpan = timeSpan;
             _limiter = new SlidingWindowRateLimiter(new SlidingWindowRateLimiterOptions(permitLimit: 1,
                 queueProcessingOrder: QueueProcessingOrder.OldestFirst, queueLimit: 1, window: timeSpan, segmentsPerWindow: 5, autoReplenishment: true));
         }
 
-        public override ReplenishingRateLimiter GetLimiter<HttpRequestMessage>(HttpRequestMessage request)
+        public override bool IsValid<HttpRequestMessage>(HttpRequestMessage request)
         {
-            return GetLimiter();
+            return IsValid();
         }
 
-        public override ReplenishingRateLimiter GetLimiter()
+        public override bool IsValid()
         {
-            return _limiter;
-            
+            using RateLimitLease lease = _limiter.Acquire(1);
+            if (lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+            {
+                _retryAfterSeconds = retryAfter.Seconds;
+            }
+            return lease.IsAcquired;
         }
     }
 

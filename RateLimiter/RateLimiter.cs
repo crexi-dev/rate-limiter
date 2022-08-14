@@ -77,17 +77,10 @@ namespace RateLimiter
             //TODO: Depending of amount rules/performance requirements this could be replaced for a parallel for-loop            
             foreach (var item in rules)
             {
-                var limiter = item.GetLimiter(request);                
-                if (limiter == null)
-                    continue;
+                var isValid = item.IsValid(request);                
+                canAccess = canAccess && isValid;
+                retry_seconds = Math.Max(item.RetryAfterSeconds, retry_seconds);
 
-                using RateLimitLease lease = limiter.Acquire(1);
-                canAccess = canAccess && lease.IsAcquired;
-                if (lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
-                {
-                    retry_seconds = Math.Max(retryAfter.Seconds, retry_seconds);
-                }
-                
                 // exiting without processing anymore rules: access was denied.
                 if (canAccess == false)
                     break;

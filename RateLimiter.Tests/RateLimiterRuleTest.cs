@@ -22,10 +22,9 @@ namespace RateLimiter.Tests
         [Test]
         public void RequestInTimeSpanInLimit()
         {
-            var limit = rule1.GetLimiter();
-            var lease = limit.Acquire();
-            var lease2 = limit.Acquire();
-            bool isValid = lease.IsAcquired && lease2.IsAcquired;
+            var limit1 = rule1.IsValid();
+            var limit2 = rule1.IsValid();
+            bool isValid = limit1 && limit2;
 
             Assert.IsTrue(isValid);
         }
@@ -33,11 +32,10 @@ namespace RateLimiter.Tests
         [Test]
         public void RequestInTimeSpanOffLimit()
         {
-            var limit = rule1.GetLimiter();
-            var lease = limit.Acquire();
-            var lease2 = limit.Acquire();
-            var lease3 = limit.Acquire();
-            bool isValid = lease.IsAcquired && lease2.IsAcquired && lease3.IsAcquired;
+            var limit = rule1.IsValid();
+            var limit2 = rule1.IsValid();
+            var limit3 = rule1.IsValid();            
+            bool isValid = limit && limit2 && limit3;
 
             Assert.IsFalse(isValid);
         }
@@ -45,29 +43,26 @@ namespace RateLimiter.Tests
         [Test]
         public void TimeSpanSinceLastInLimit()
         {
-            var limit = rule2.GetLimiter();
-            var lease = limit.Acquire();
-            Assert.IsTrue(lease.IsAcquired);
+            var limit = rule2.IsValid();
+            Assert.IsTrue(limit);
         }
 
         [Test(Description = "Doing call after timespan had passed since last")]
         public void TimeSpanSinceLastInLimitAfterWindow()
         {
-            var limit = rule2.GetLimiter();
-            limit.Acquire(1);
+            rule2.IsValid();
             Thread.Sleep(2000);
-            var lease = limit.Acquire();
+            var lease = rule2.IsValid();
 
-            Assert.IsTrue(lease.IsAcquired);
+            Assert.IsTrue(lease);
         }
 
         [Test]
         public void TimeSpanSinceLastOffLimit()
         {
-            var limit = rule2.GetLimiter();
-            var lease = limit.Acquire();
-            var lease2 = limit.Acquire();
-            bool isValid = lease.IsAcquired && lease2.IsAcquired;
+            var limit = rule2.IsValid();
+            var limit2 = rule2.IsValid();
+            bool isValid = limit && limit2;
             Assert.IsFalse(isValid);
         }
     }
