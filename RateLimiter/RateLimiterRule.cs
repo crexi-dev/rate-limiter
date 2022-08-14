@@ -25,7 +25,7 @@ namespace RateLimiter
             Id = id;
         }
 
-        public abstract ReplenishingRateLimiter GetLimiter(HttpRequestMessage request);
+        public abstract ReplenishingRateLimiter GetLimiter<T>(T request);
         public abstract ReplenishingRateLimiter GetLimiter();
     }
 
@@ -47,7 +47,7 @@ namespace RateLimiter
                 queueLimit: 1, replenishmentPeriod: timeSpan, tokensPerPeriod: 1, autoReplenishment: true));
         }
 
-        public override ReplenishingRateLimiter GetLimiter(HttpRequestMessage request)
+        public override ReplenishingRateLimiter GetLimiter<HttpRequestMessage>(HttpRequestMessage request)
         {
             return GetLimiter();
         }
@@ -71,7 +71,7 @@ namespace RateLimiter
                 queueProcessingOrder: QueueProcessingOrder.OldestFirst, queueLimit: 1, window: timeSpan, segmentsPerWindow: 5, autoReplenishment: true));
         }
 
-        public override ReplenishingRateLimiter GetLimiter(HttpRequestMessage request)
+        public override ReplenishingRateLimiter GetLimiter<HttpRequestMessage>(HttpRequestMessage request)
         {
             return GetLimiter();
         }

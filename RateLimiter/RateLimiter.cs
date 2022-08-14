@@ -13,7 +13,7 @@ namespace RateLimiter
 {
     public class RateLimiter : DelegatingHandler
     {
-        //TODO: Could be replaced by a HashSet later
+        //TODO: Could be replaced by a HashSet since key and resource key are the same
         private readonly Dictionary<string, Resource> _resources;
         int retry_seconds = 0;
 

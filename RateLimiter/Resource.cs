@@ -10,7 +10,7 @@ namespace RateLimiter
 {
     /// <summary>
     /// Represent a resource you wanna access 
-    /// API endpoint, Storage, Files, etc.
+    /// Rest endpoint, storage, I/O, etc.   
     /// </summary>
     public class Resource
     {
