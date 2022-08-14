@@ -15,8 +15,8 @@ namespace RateLimiter.Tests
         [SetUp]
         public void Init()
         {
-            rule1 = new RequestInTimeSpan(Guid.NewGuid().ToString(), string.Empty, 2, TimeSpan.FromSeconds(1));
-            rule2 = new TimeSpanSinceLast(Guid.NewGuid().ToString(), string.Empty, TimeSpan.FromSeconds(1));
+            rule1 = new RequestInTimeSpan(Guid.NewGuid().ToString(), 2, TimeSpan.FromSeconds(1));
+            rule2 = new TimeSpanSinceLast(Guid.NewGuid().ToString(), TimeSpan.FromSeconds(1));
         }
 
         [Test]
