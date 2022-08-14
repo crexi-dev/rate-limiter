@@ -1,46 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.RateLimiting;
+using System.Threading.Tasks;
 
 namespace RateLimiter
 {
     /// <summary>
-    /// Default Resource implementation, Inherit from this clase
-    /// for more complex combination and rules
-    /// <seealso cref="https://devblogs.microsoft.com/dotnet/announcing-rate-limiting-for-dotnet/#ratelimiter-apis"/>
+    /// Represent a resource you wanna access 
+    /// API endpoint, Storage, Files, etc.
     /// </summary>
     public class Resource
     {
         public string Key { get; private set; }
+        public List<RateLimiterRule> Rules { get; set; }
 
-        public Resource(string key)
+        public Resource(string key, List<RateLimiterRule> rules)
         {
             Key = key;
+            Rules = rules;
         }
-
-        /// <summary>
-        /// Default to Not Limit, override to add your custom rules    
-        /// <code>        
-        ///  if (request.RequestUri.IsLoopback)
-        ///  {
-        ///    return RateLimitPartition.CreateNoLimiter(Key);
-        ///  }
-        /// </code>
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public virtual PartitionedRateLimiter<HttpRequestMessage> GetLimiter(HttpRequestMessage request)
-        {
-            return PartitionedRateLimiter.Create<HttpRequestMessage, string>(resource =>
-            {
-                return RateLimitPartition.CreateNoLimiter(Key);
-            });
-        }
-        
     }
-
-
-   
 }
