@@ -15,7 +15,7 @@ namespace RateLimiter
     {
         //TODO: Could be replaced by a HashSet later
         private readonly Dictionary<string, Resource> _resources;
-        TimeSpan? retry_seconds = null;
+        int retry_seconds = 0;
 
         /// <summary>
         /// Obtain the Resource Id based on request
@@ -56,11 +56,11 @@ namespace RateLimiter
             }
 
             var response = new HttpResponseMessage(System.Net.HttpStatusCode.TooManyRequests);
-            if (retry_seconds != null)
+            if (retry_seconds != 0)
             {
-                response.Headers.Add(HeaderNames.RetryAfter, ((int)retry_seconds.Value.TotalSeconds).ToString(NumberFormatInfo.InvariantInfo));
+                response.Headers.Add(HeaderNames.RetryAfter, retry_seconds.ToString(NumberFormatInfo.InvariantInfo));
             }
-            retry_seconds = null;
+            retry_seconds = 0;
             return response;
         }
 
@@ -85,7 +85,7 @@ namespace RateLimiter
                 canAccess = canAccess && lease.IsAcquired;
                 if (lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
                 {
-                    retry_seconds = retryAfter;
+                    retry_seconds = Math.Max(retryAfter.Seconds, retry_seconds);
                 }
                 
                 // exiting without processing anymore rules: access was denied.

@@ -68,6 +68,21 @@ namespace RateLimiter.Tests
             Assert.IsTrue(isSuccess);
         }
 
+        [Test(Description = "Doing 3 requests < 30 sec && 3 requests < 2 sec")]
+        public async Task RequestToLogoutResourceIsInValid()
+        {
+            var isSuccess = true;
+            var res = await SendRequest("/logout");
+            var res2 = await SendRequest("/logout");
+            var res3 = await SendRequest("/logout");
+            isSuccess = isSuccess
+                && res == HttpStatusCode.OK
+                && res2 == HttpStatusCode.OK
+                && res3 == HttpStatusCode.OK;
+            Assert.IsFalse(isSuccess);
+        }
+
+
 
 
         private async Task<HttpStatusCode> SendRequest(string uri)
