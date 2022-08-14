@@ -34,7 +34,7 @@ namespace RateLimiter.Tests
         {
             var limit = rule1.IsValid();
             var limit2 = rule1.IsValid();
-            var limit3 = rule1.IsValid();            
+            var limit3 = rule1.IsValid();
             bool isValid = limit && limit2 && limit3;
 
             Assert.IsFalse(isValid);

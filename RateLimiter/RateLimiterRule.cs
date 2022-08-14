@@ -35,15 +35,15 @@ namespace RateLimiter
     public class RequestInTimeSpan : RateLimiterRule
     {
         public int Requests { get; private set; }
-        
+
         public TimeSpan TimeSpan { get; private set; }
 
         private readonly TokenBucketRateLimiter _limiter;
 
-        public RequestInTimeSpan(string id, string description, int requests, TimeSpan timeSpan): base(id)
+        public RequestInTimeSpan(string id, int requests, TimeSpan timeSpan) : base(id)
         {
             Requests = requests;
-            TimeSpan = timeSpan;            
+            TimeSpan = timeSpan;
 
             _limiter = new TokenBucketRateLimiter(new TokenBucketRateLimiterOptions(tokenLimit: requests, queueProcessingOrder: QueueProcessingOrder.OldestFirst,
                 queueLimit: 1, replenishmentPeriod: timeSpan, tokensPerPeriod: 1, autoReplenishment: true));
@@ -72,7 +72,7 @@ namespace RateLimiter
         public TimeSpan TimeSpan { get; private set; }
         private readonly SlidingWindowRateLimiter _limiter;
 
-        public TimeSpanSinceLast(string id, string description, TimeSpan timeSpan):base(id)
+        public TimeSpanSinceLast(string id, TimeSpan timeSpan) : base(id)
         {
             TimeSpan = timeSpan;
             _limiter = new SlidingWindowRateLimiter(new SlidingWindowRateLimiterOptions(permitLimit: 1,

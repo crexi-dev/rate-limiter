@@ -17,9 +17,9 @@ namespace RateLimiter.Tests
         [SetUp]
         public void Init()
         {
-            var rule1 = new RequestInTimeSpan(Guid.NewGuid().ToString(), string.Empty, 2, TimeSpan.FromSeconds(30));
-            var rule2 = new TimeSpanSinceLast(Guid.NewGuid().ToString(), string.Empty, TimeSpan.FromSeconds(2));
-         
+            var rule1 = new RequestInTimeSpan(Guid.NewGuid().ToString(), 2, TimeSpan.FromSeconds(30));
+            var rule2 = new TimeSpanSinceLast(Guid.NewGuid().ToString(), TimeSpan.FromSeconds(2));
+
             var resource1 = new Resource("/login", new List<RateLimiterRule>() { rule1 });
             var resource2 = new Resource("/logout", new List<RateLimiterRule>() { rule1, rule2 });
 
@@ -44,15 +44,15 @@ namespace RateLimiter.Tests
             Assert.IsTrue(isSuccess);
         }
 
-        [Test(Description ="Doing 3 request in less than 30 seconds")]
+        [Test(Description = "Doing 3 request in less than 30 seconds")]
         public async Task RequestToLoginResourceIsInValid()
         {
             var isSuccess = true;
             var res = await SendRequest("/login");
             var res2 = await SendRequest("/login");
             var res3 = await SendRequest("/login");
-            isSuccess = isSuccess 
-                && res == HttpStatusCode.OK 
+            isSuccess = isSuccess
+                && res == HttpStatusCode.OK
                 && res2 == HttpStatusCode.OK
                 && res3 == HttpStatusCode.OK;
             Assert.IsFalse(isSuccess);
@@ -96,7 +96,7 @@ namespace RateLimiter.Tests
             catch (HttpRequestException)
             {
                 return HttpStatusCode.OK;
-            }            
+            }
         }
     }
 }

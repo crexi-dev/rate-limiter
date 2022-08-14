@@ -43,7 +43,7 @@ namespace RateLimiter
 
             var id = GetResourceId(request);
             var canAccess = false;
-            
+
             if (_resources.ContainsKey(id))
             {
                 var resource = _resources[id];
@@ -68,16 +68,16 @@ namespace RateLimiter
         {
             if (rules == null)
                 return true;
-            
+
             if (rules.Count == 0)
                 return true;
 
             var canAccess = true;
-            
+
             //TODO: Depending of amount rules/performance requirements this could be replaced for a parallel for-loop            
             foreach (var item in rules)
             {
-                var isValid = item.IsValid(request);                
+                var isValid = item.IsValid(request);
                 canAccess = canAccess && isValid;
                 retry_seconds = Math.Max(item.RetryAfterSeconds, retry_seconds);
 

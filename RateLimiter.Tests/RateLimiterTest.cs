@@ -15,8 +15,8 @@ namespace RateLimiter.Tests
             RateLimiter rateLimiter = new RateLimiter(new Dictionary<string, Resource>());
             rateLimiter.GetResourceId = null;
             HttpClient _client = new HttpClient(rateLimiter);
-            _client.BaseAddress = new Uri("http://localhost");   
-            
+            _client.BaseAddress = new Uri("http://localhost");
+
             Exception? e = null;
             try
             {
