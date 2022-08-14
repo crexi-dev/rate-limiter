@@ -51,6 +51,7 @@ namespace RateLimiter
 
         public override bool IsValid<HttpRequestMessage>(HttpRequestMessage request)
         {
+            //Additional validation could be added based on request and depending on requirements
             return IsValid();
         }
 
@@ -80,6 +81,7 @@ namespace RateLimiter
 
         public override bool IsValid<HttpRequestMessage>(HttpRequestMessage request)
         {
+            //Additional validation could be added based on request and depending on requirements
             return IsValid();
         }
 
