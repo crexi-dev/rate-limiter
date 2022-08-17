@@ -4,10 +4,18 @@ namespace RateLimiter.Builders.Configuration
 {
     public sealed class RequestsPerTimeSpanRuleConfigurationBuilder
     {
+        private int maxRequests = 5;
+
+        public RequestsPerTimeSpanRuleConfigurationBuilder WithMaxRequests(int requests)
+        {
+            maxRequests = requests;
+            return this;
+        }
+
         public RequestsPerTimeSpanRuleConfiguration Build() => new()
         {
-            MaxRequests = 3,
-            TimeSpanInSeconds = 60
+            MaxRequests = maxRequests,
+            TimeSpanInSeconds = 20
         };
     }
 }

@@ -25,6 +25,6 @@ namespace RateLimiter.Stores
             cache.Set(key, clientStatistics);
         }
 
-        private string GetKey(string clientId, string resourceName) => $"{resourceName} for {clientId}";
+        private string GetKey(string clientId, string resourceName) => $"{resourceName}{clientId}";
     }
 }

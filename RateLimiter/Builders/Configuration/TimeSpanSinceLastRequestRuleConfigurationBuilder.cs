@@ -4,9 +4,17 @@ namespace RateLimiter.Builders.Configuration
 {
     public sealed class TimeSpanSinceLastRequestRuleConfigurationBuilder
     {
+        private int timeSpan = 20;
+
+        public TimeSpanSinceLastRequestRuleConfigurationBuilder WithTimeSpanInSeconds(int timeSpan)
+        {
+            this.timeSpan = timeSpan;
+            return this;
+        }
+
         public TimeSpanSinceLastRequestRuleConfiguration Build() => new()
         {
-            TimeSpanSinceLastRequestInSeconds = 20
+            TimeSpanSinceLastRequestInSeconds = timeSpan
         };
     }
 }

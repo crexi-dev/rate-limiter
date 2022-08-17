@@ -5,7 +5,7 @@ namespace RateLimiter.Builders
 {
     public sealed class RateLimiterContextBuilder
     {
-        private string resourceName = "resource1";
+        private string resourceName = "Resource1";
         private string region = "USA";
         private bool isClientAuthenticated = false;
         private bool hasSubscription = false;

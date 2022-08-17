@@ -16,7 +16,7 @@ namespace RateLimiter.Builders.Configuration
             return this;
         }
 
-        public PolicyConfigurationBuilder WithRule(ConditionConfiguration condition)
+        public PolicyConfigurationBuilder WithCondition(ConditionConfiguration condition)
         {
             conditions.Add(condition);
             return this;

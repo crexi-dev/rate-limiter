@@ -9,7 +9,7 @@ namespace RateLimiter.Models.Rules
 
         public TimeSpanSinceLastSuccessfulRequestRule(int timeSpanSinceLastSuccessfulRequestInSeconds)
         {
-            timeSpanSinceLastSuccessfulRequestInMilliseconds = TimeSpan.FromMilliseconds(timeSpanSinceLastSuccessfulRequestInSeconds);
+            timeSpanSinceLastSuccessfulRequestInMilliseconds = TimeSpan.FromSeconds(timeSpanSinceLastSuccessfulRequestInSeconds);
         }
 
         public RuleResult Execute(СlientStatistics сlientStatistics)

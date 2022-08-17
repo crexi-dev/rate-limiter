@@ -5,13 +5,11 @@ namespace RateLimiter.Models.Rules
 {
     public sealed class TimeSpanSinceLastRequestRule : IRule
     {
-        private const string message = "Enough time has not elapsed since the last request!";
-
         private TimeSpan timeSpanSinceLastRequestInMilliseconds;
 
         public TimeSpanSinceLastRequestRule(int timeSpanSinceLastRequestInSeconds)
         {
-            timeSpanSinceLastRequestInMilliseconds = TimeSpan.FromMilliseconds(timeSpanSinceLastRequestInSeconds);
+            timeSpanSinceLastRequestInMilliseconds = TimeSpan.FromSeconds(timeSpanSinceLastRequestInSeconds);
         }
 
         public RuleResult Execute(СlientStatistics сlientStatistics)
