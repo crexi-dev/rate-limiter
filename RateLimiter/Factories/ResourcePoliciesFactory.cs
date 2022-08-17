@@ -1,5 +1,4 @@
-﻿using RateLimiter.Models.Conditions;
-using RateLimiter.Models.Configuration;
+﻿using RateLimiter.Models.Configuration;
 using RateLimiter.Models.Policies;
 using System.Collections.Generic;
 using System.Linq;

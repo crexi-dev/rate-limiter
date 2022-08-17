@@ -11,6 +11,11 @@ namespace RateLimiter.Factories
             return conditionConfiguration switch
             {
                 RegionConditionConfiguration regionConditionConfiguration => new RegionCondition(regionConditionConfiguration.Region),
+                IsClientAuthenticatedConditionConfiguration isClientAuthenticatedConditionConfiguration => 
+                    new IsClientAuthenticatedCondition(isClientAuthenticatedConditionConfiguration.IsClientAuthenticated),
+                HasRoleConditionConfiguration hasRoleConditionConfiguration => new HasRoleCondition(hasRoleConditionConfiguration.Role),
+                HasSubscriptionConditionConfiguration hasSubscriptionConditionConfiguration => 
+                    new HasSubscriptionCondition(hasSubscriptionConditionConfiguration.HasSubscription),
                 _ => throw new InvalidCastException()
             };
         }

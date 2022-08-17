@@ -4,6 +4,6 @@ namespace RateLimiter.Models.Configuration.Rules
 {
     public abstract class RuleConfiguration
     {
-        public RuleType RuleType { get; set; }
+        public RuleType Type { get; set; }
     }
 }

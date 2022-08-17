@@ -4,6 +4,6 @@ namespace RateLimiter.Models.Configuration.Conditions
 {
     public abstract class ConditionConfiguration
     {
-        public ConditionType ConditionType { get; set; }
+        public ConditionType Type { get; set; }
     }
 }
