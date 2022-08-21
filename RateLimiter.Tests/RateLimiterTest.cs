@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System;
+using FluentAssertions;
+using NUnit.Framework;
+using RateLimiter.Exceptions;
 
 namespace RateLimiter.Tests
 {
@@ -6,9 +9,44 @@ namespace RateLimiter.Tests
     public class RateLimiterTest
     {
         [Test]
-        public void Example()
+        public void GivenRuleAWith5RequestsPerMinute_When5RequestsSentIn1Minute_ThenPassAllRequests()
         {
-            Assert.IsTrue(true);
+            // Arrange
+            var sut = new LimitedService();
+
+            // Act
+            Action action = () =>
+            {
+                sut.SampleServiceOne("TokenA");
+                sut.SampleServiceOne("TokenA");
+                sut.SampleServiceOne("TokenA");
+                sut.SampleServiceOne("TokenA");
+                sut.SampleServiceOne("TokenA");
+            };
+
+            // Assert
+            action.Should().NotThrow();
+        }
+
+        [Test]
+        public void GivenRuleAWith5RequestsPerMinute_When6RequestsSentIn1Minute_ThenThrowException()
+        {
+            // Arrange
+            var sut = new LimitedService();
+
+            // Act
+            Action action = () =>
+            {
+                sut.SampleServiceOne("TokenA");
+                sut.SampleServiceOne("TokenA");
+                sut.SampleServiceOne("TokenA");
+                sut.SampleServiceOne("TokenA");
+                sut.SampleServiceOne("TokenA");
+                sut.SampleServiceOne("TokenA");
+            };
+
+            // Assert
+            action.Should().NotThrow<RequestsOutOfLimitException>();
         }
     }
 }
