@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RateLimiter.Exceptions;
 using RateLimiter.Rules;
 
 namespace RateLimiter.RuleEngines
 {
     public class RuleEngine
     {
-        private static List<IRule> Rules { get; set; } = null!;
+        private List<IRule> Rules { get; set; } = null!;
         private static RuleEngineModes Mode { get; set; }
 
         private RuleEngine(List<IRule> rules, RuleEngineModes mode)
@@ -39,21 +40,20 @@ namespace RateLimiter.RuleEngines
             }
         }
 
-        // TODO: Need to Implement most restrictive algorithm
-        private static void ExecuteMostRestrictive(string token)
+        private void ExecuteMostRestrictive(string token)
         {
             if (Rules.Any(rule => !rule.Execute(token)))
             {
-                throw new Exception("Limit Exceeded");
+                throw new RequestsOutOfLimitException("Limit Exceeded");
             }
         }
 
         // TODO: Need to Implement least restrictive algorithm
-        private static void ExecuteLeastRestrictive(string token)
+        private void ExecuteLeastRestrictive(string token)
         {
-            foreach (var rule in Rules)
+            if (Rules.All(rule => !rule.Execute(token)))
             {
-                rule.Execute(token);
+                throw new RequestsOutOfLimitException("Limit Exceeded");
             }
         }
     }

@@ -26,7 +26,7 @@ namespace RateLimiter.Rules
 
             if (lastRequest == null)
             {
-                var ruleData = new RuleAStore()
+                var ruleData = new RuleAStore
                 {
                     RequestTimeSpan = DateTime.Now,
                     RemainingRequestsInTimeSpan = RequestsPerPeriod,
