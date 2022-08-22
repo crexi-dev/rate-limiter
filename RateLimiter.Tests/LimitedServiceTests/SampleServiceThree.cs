@@ -12,7 +12,7 @@ namespace RateLimiter.Tests.LimitedServiceTests
         // This might be relative to the issue: https://github.com/nunit/nunit/issues/1081
         [Test]
         public void
-            Given3RequestsIn2MinutesForUsBasedAnd1RequestIn3MinutesForEuBased_WhenInAllowedRange_ThenPassAllRequests()
+            Given3RequestsIn10SecondsForUsBasedAnd1RequestIn5SecondsForEuBased_WhenInAllowedRange_ThenPassAllRequests()
         {
             // Arrange
             DataStore.DataStore.ClearDataStore();
@@ -33,7 +33,7 @@ namespace RateLimiter.Tests.LimitedServiceTests
         
         [Test]
         public void
-            Given4RequestsIn2MinutesForUsBased_WhenUsRequestsAreNotInAllowedRange_ThenReject()
+            Given4RequestsIn10SecondsForUsBased_WhenUsRequestsAreNotInAllowedRange_ThenReject()
         {
             // Arrange
             DataStore.DataStore.ClearDataStore();
@@ -54,7 +54,7 @@ namespace RateLimiter.Tests.LimitedServiceTests
         
         [Test]
         public void
-            Given4RequestsIn2MinutesForUsBasedAnd1RequestIn3MinutesForEuBased_WhenUsIsNotInRangeAndEuIsInRange_ThenRejectUsAndPassEu()
+            Given4RequestsIn10SecondsForUsBasedAnd1RequestIn5SecondsForEuBased_WhenUsIsNotInRangeAndEuIsInRange_ThenRejectUsAndPassEu()
         {
             // Arrange
             DataStore.DataStore.ClearDataStore();

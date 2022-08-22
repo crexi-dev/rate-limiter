@@ -37,7 +37,7 @@ namespace RateLimiter.Rules
             }
 
             if (lastRequest.RemainingRequestsInTimeSpan == 1 &&
-                (DateTime.Now - lastRequest.RequestTimeSpan).Minutes < Period)
+                (DateTime.Now - lastRequest.RequestTimeSpan).Seconds < Period)
             {
                 return false;
             }

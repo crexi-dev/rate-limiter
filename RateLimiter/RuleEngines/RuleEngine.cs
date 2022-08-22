@@ -48,7 +48,6 @@ namespace RateLimiter.RuleEngines
             }
         }
 
-        // TODO: Need to Implement least restrictive algorithm
         private void ExecuteLeastRestrictive(string token)
         {
             if (Rules.All(rule => !rule.Execute(token)))

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
 using RateLimiter.Exceptions;
@@ -13,7 +14,7 @@ namespace RateLimiter.Tests.LimitedServiceTests
         public class SampleServiceTwoX
         {
             [Test]
-            public void GivenRuleBWith1MinuteTimeSpan_WhenOnly1RequestComesIn_ThenPassTheRequest()
+            public void GivenRuleBWith10SecondsTimeSpan_WhenOnly1RequestComesIn_ThenPassTheRequest()
             {
                 // Arrange
                 DataStore.DataStore.ClearDataStore();
@@ -30,7 +31,7 @@ namespace RateLimiter.Tests.LimitedServiceTests
             } 
             
             [Test]
-            public void GivenRuleBWith1MinuteTimeSpan_When2RequestComeIn_ThenReject()
+            public void GivenRuleBWith10SecondsTimeSpan_When2RequestComeIn_ThenReject()
             {
                 // Arrange
                 DataStore.DataStore.ClearDataStore();
@@ -45,6 +46,25 @@ namespace RateLimiter.Tests.LimitedServiceTests
 
                 // Assert
                 action.Should().Throw<RequestsOutOfLimitException>();
+            } 
+            
+            [Test]
+            public void GivenRuleBWith10SecondsTimeSpan_When2RequestsWith10SecondsTimeDifferenceComeIn_ThenPassRequests()
+            {
+                // Arrange
+                DataStore.DataStore.ClearDataStore();
+                var sut = new LimitedService();
+
+                // Act
+                Action action = () =>
+                {
+                    sut.SampleServiceTwo("TokenA");
+                    Thread.Sleep(11000);
+                    sut.SampleServiceTwo("TokenA");
+                };
+
+                // Assert
+                action.Should().NotThrow();
             } 
         }
     }

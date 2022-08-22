@@ -8,12 +8,12 @@ namespace RateLimiter
     public class LimitedService
     {
         // These numbers can be defined in a configuration setting file
-        private const int Period = 1;
+        private const int Period = 10;
         private const int AllowedRequests = 5;
 
-        private const int UsBasedPeriod = 2;
+        private const int UsBasedPeriod = 10;
         private const int UsBasedAllowedNumberOfRequests = 3;
-        private const int EuBasedPeriod = 3;
+        private const int EuBasedPeriod = 5;
 
         private readonly RuleEngine _ruleEngine1;
         private readonly RuleEngine _ruleEngine2;

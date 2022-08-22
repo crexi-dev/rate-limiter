@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
 using RateLimiter.Exceptions;
@@ -13,7 +14,7 @@ namespace RateLimiter.Tests.LimitedServiceTests
         public class SampleServiceOneX
         {
             [Test]
-            public void GivenRuleAWith5RequestsPerMinute_When5RequestsSentIn1Minute_ThenPassAllRequests()
+            public void GivenRuleAWith5RequestsIn10Seconds_When5RequestsSentIn10Seconds_ThenPassAllRequests()
             {
                 // Arrange
                 DataStore.DataStore.ClearDataStore();
@@ -34,7 +35,7 @@ namespace RateLimiter.Tests.LimitedServiceTests
             }
             
             [Test]
-            public void GivenRuleAWith5RequestsPerMinute_When5RequestsSentIn1MinuteWithDifferentTokensComeIn_ThenPassAllRequests()
+            public void GivenRuleAWith5RequestsIn10Seconds_When5RequestsSentIn10SecondsWithDifferentTokensComeIn_ThenPassAllRequests()
             {
                 // Arrange
                 DataStore.DataStore.ClearDataStore();
@@ -58,7 +59,7 @@ namespace RateLimiter.Tests.LimitedServiceTests
             }
 
             [Test]
-            public void GivenRuleAWith5RequestsPerMinute_When6RequestsSentIn1Minute_ThenThrowException()
+            public void GivenRuleAWith5RequestsIn10Seconds_When6RequestsSentIn10Seconds_ThenThrowException()
             {
                 // Arrange
                 DataStore.DataStore.ClearDataStore();
@@ -77,6 +78,29 @@ namespace RateLimiter.Tests.LimitedServiceTests
 
                 // Assert
                 action.Should().Throw<RequestsOutOfLimitException>();
+            }
+            
+            [Test]
+            public void GivenRuleAWith5RequestsIn10SecondsAnd1RequestAfter10Seconds_When6RequestsSentInMoreThan10Seconds_ThenPassRequests()
+            {
+                // Arrange
+                DataStore.DataStore.ClearDataStore();
+                var sut = new LimitedService();
+
+                // Act
+                Action action = () =>
+                {
+                    sut.SampleServiceOne("TokenA");
+                    sut.SampleServiceOne("TokenA");
+                    sut.SampleServiceOne("TokenA");
+                    sut.SampleServiceOne("TokenA");
+                    sut.SampleServiceOne("TokenA");
+                    Thread.Sleep(10000);
+                    sut.SampleServiceOne("TokenA");
+                };
+
+                // Assert
+                action.Should().NotThrow();
             }
         }
     }

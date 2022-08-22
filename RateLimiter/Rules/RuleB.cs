@@ -24,16 +24,17 @@ namespace RateLimiter.Rules
             {
                 var request = new DataStore.RuleBStore()
                 {
-                    LastRequestTimeSpan = DateTime.Now,
+                    LastRequestDateTime = DateTime.Now,
                     Token = token
                 };
                 DataStore.DataStore.RuleBStores.Add(request);
                 return true;
             }
 
-            if ((DateTime.Now - lastRequest.LastRequestTimeSpan).Minutes > Period)
+            if ((DateTime.Now - lastRequest.LastRequestDateTime).Seconds > Period)
             {
-                lastRequest.LastRequestTimeSpan = DateTime.Now;
+                lastRequest.LastRequestDateTime = DateTime.Now;
+                return true;
             }
 
             return false;
