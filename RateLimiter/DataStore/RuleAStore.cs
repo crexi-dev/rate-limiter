@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RateLimiter.DataStore
@@ -7,6 +8,7 @@ namespace RateLimiter.DataStore
     {
         void InsertTokenInformation(string token, DateTime lastRequestDateTime, int remainingRequests);
         RuleAStore? GetRuleAByToken(string token);
+        void UpdateToken(string token, int remainingRequestCount);
     }
 
     public class RuleAStore : IRuleAStore
@@ -28,6 +30,15 @@ namespace RateLimiter.DataStore
         public RuleAStore? GetRuleAByToken(string token)
         {
             return DataStore.RuleAStores.SingleOrDefault(x => x.Token == token);
+        }
+
+        public void UpdateToken(string token, int remainingRequestCount)
+        {
+            var tokenInfo = GetRuleAByToken(token);
+
+            if (tokenInfo == null) throw new KeyNotFoundException("Token does not exist in the datastore");
+            
+            tokenInfo.RemainingRequests = remainingRequestCount;
         }
     }
 }

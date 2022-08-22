@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using RateLimiter.DataStore;
 
 namespace RateLimiter.Rules
@@ -32,7 +31,7 @@ namespace RateLimiter.Rules
 
             if ((DateTime.Now - lastRequest.LastRequestDateTime).Seconds > Period)
             {
-                lastRequest.LastRequestDateTime = DateTime.Now;
+                _ruleBStore.UpdateRuleBTokenInfo(token, DateTime.Now);
                 return true;
             }
 
