@@ -9,10 +9,13 @@ namespace RateLimiter.Rules
         private int Period { get; }
         private int RequestsPerPeriod { get; }
 
+        private readonly IRuleAStore _ruleAStore;
+        
         private RuleA(int period, int requestsPerPeriod)
         {
             Period = period;
             RequestsPerPeriod = requestsPerPeriod;
+            _ruleAStore = new RuleAStore();
         }
         
         public static RuleA Configure(int period, int requestsPerPeriod)
@@ -22,27 +25,21 @@ namespace RateLimiter.Rules
 
         public bool Execute(string token)
         {
-            var lastRequest = DataStore.DataStore.RuleAStores.FirstOrDefault(x => x.Token == token);
+            var lastRequest = _ruleAStore.GetRuleAByToken(token);
 
             if (lastRequest == null)
             {
-                var ruleData = new RuleAStore
-                {
-                    RequestTimeSpan = DateTime.Now,
-                    RemainingRequestsInTimeSpan = RequestsPerPeriod,
-                    Token = token
-                };
-                DataStore.DataStore.RuleAStores.Add(ruleData);
+                _ruleAStore.InsertTokenInformation(token, DateTime.Now, RequestsPerPeriod);
                 return true;
             }
 
-            if (lastRequest.RemainingRequestsInTimeSpan == 1 &&
-                (DateTime.Now - lastRequest.RequestTimeSpan).Seconds < Period)
+            if (lastRequest.RemainingRequests == 1 &&
+                (DateTime.Now - lastRequest.LastRequestDateTime).Seconds < Period)
             {
                 return false;
             }
 
-            lastRequest.RemainingRequestsInTimeSpan--;
+            lastRequest.RemainingRequests--;
             return true;
         }
     }

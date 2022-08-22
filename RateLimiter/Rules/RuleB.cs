@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using RateLimiter.DataStore;
 
 namespace RateLimiter.Rules
 {
@@ -7,9 +8,12 @@ namespace RateLimiter.Rules
     {
         private int Period { get; set; }
 
+        private readonly IRuleBStore _ruleBStore;
+
         private RuleB(int period)
         {
             Period = period;
+            _ruleBStore = new RuleBStore();
         }
 
         public static RuleB Configure(int period)
@@ -19,15 +23,10 @@ namespace RateLimiter.Rules
 
         public bool Execute(string token)
         {
-            var lastRequest = DataStore.DataStore.RuleBStores.SingleOrDefault(x => x.Token == token);
+            var lastRequest = _ruleBStore.GetRuleAByToken(token);
             if (lastRequest == null)
             {
-                var request = new DataStore.RuleBStore()
-                {
-                    LastRequestDateTime = DateTime.Now,
-                    Token = token
-                };
-                DataStore.DataStore.RuleBStores.Add(request);
+                _ruleBStore.InsertTokenInformation(token, DateTime.Now);
                 return true;
             }
 
