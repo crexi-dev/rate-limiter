@@ -22,7 +22,7 @@ namespace RateLimiter.Rules
 
         public bool Execute(string token)
         {
-            var lastRequest = _ruleBStore.GetRuleAByToken(token);
+            var lastRequest = _ruleBStore.GetByToken(token);
             if (lastRequest == null)
             {
                 _ruleBStore.InsertTokenInformation(token, DateTime.Now);

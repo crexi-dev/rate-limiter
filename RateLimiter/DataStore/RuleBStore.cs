@@ -7,7 +7,7 @@ namespace RateLimiter.DataStore
     public interface IRuleBStore
     {
         void InsertTokenInformation(string token, DateTime lastRequestDateTime);
-        RuleBStore? GetRuleAByToken(string token);
+        RuleBStore? GetByToken(string token);
         void UpdateRuleBTokenInfo(string token, DateTime lastRequestDateTime);
     }
 
@@ -25,14 +25,14 @@ namespace RateLimiter.DataStore
             });
         }
 
-        public RuleBStore? GetRuleAByToken(string token)
+        public RuleBStore? GetByToken(string token)
         {
             return DataStore.RuleBStores.SingleOrDefault(x => x.Token == token);
         }
 
         public void UpdateRuleBTokenInfo(string token, DateTime lastRequestDateTime)
         {
-            var tokenInfo = GetRuleAByToken(token);
+            var tokenInfo = GetByToken(token);
             if (tokenInfo == null) throw new KeyNotFoundException("Token does not exist in the datastore");
             tokenInfo.LastRequestDateTime = lastRequestDateTime;
         }

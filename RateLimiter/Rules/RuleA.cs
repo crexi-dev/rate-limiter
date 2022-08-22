@@ -24,7 +24,7 @@ namespace RateLimiter.Rules
 
         public bool Execute(string token)
         {
-            var lastRequest = _ruleAStore.GetRuleAByToken(token);
+            var lastRequest = _ruleAStore.GetByToken(token);
 
             if (lastRequest == null)
             {
