@@ -26,6 +26,8 @@ namespace RateLimiter.ApiMiddleware
         {
             try
             {
+                // Used Auth header- as real implementation of rate limit
+                // logic is not a part of the task as it's written in the description 
                 var token = httpContext.Request.Headers["Authorization"];
                 var endpoint = httpContext.Features.Get<IEndpointFeature>()?.Endpoint;
                 var rateLimiterAttributes = endpoint?.Metadata.OfType<RateLimiterAttribute>().ToList();

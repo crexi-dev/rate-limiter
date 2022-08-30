@@ -48,7 +48,7 @@ namespace API.Extensions
             services.AddOptions<InMemoryCacheOptions>()
                 .Configure(x =>
                 {
-                    x.InspirationTimeSpan = TimeSpan.FromMinutes(5);
+                    x.ExpirationTimeSpan = TimeSpan.FromMinutes(5);
                 });
         }
     }

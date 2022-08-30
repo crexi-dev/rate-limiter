@@ -25,7 +25,7 @@ namespace RateLimiter.InMemoryCache
         public void AddOrUpdateEntity<T>(string key, T entity)
             where T : class
         {
-            _memoryCache.Set(key, entity, _memoryCacheOptions.InspirationTimeSpan);
+            _memoryCache.Set(key, entity, _memoryCacheOptions.ExpirationTimeSpan);
         }
 
         public T GetEntity<T>(string key)

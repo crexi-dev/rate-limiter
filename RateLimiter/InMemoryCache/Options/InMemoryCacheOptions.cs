@@ -6,6 +6,6 @@ namespace RateLimiter.InMemoryCache.Options
     [ExcludeFromCodeCoverage]
     public class InMemoryCacheOptions
     {
-        public TimeSpan InspirationTimeSpan { get; set; }
+        public TimeSpan ExpirationTimeSpan { get; set; }
     }
 }
