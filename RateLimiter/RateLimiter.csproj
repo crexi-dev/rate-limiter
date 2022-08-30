@@ -7,4 +7,17 @@
     <Nullable>enable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="6.0.8" />
+    <PackageReference Include="System.Runtime.Caching" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Caching.Abstractions">
+      <HintPath>C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\5.0.0\ref\net5.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>  
