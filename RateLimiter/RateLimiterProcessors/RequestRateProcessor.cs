@@ -1,29 +1,30 @@
 ﻿using RateLimiter.Models;
 using RateLimiter.Models.Options;
-using RateLimiter.Repositories;
+using RateLimiter.RateLimiterProcessors.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace RateLimiter.RateLimiterStrategies
+namespace RateLimiter.RateLimiterProcessors
 {
-    public class RequestRateStrategy : IRateLimiterStrategy
+    public class RequestRateProcessor : IRateLimiterProcessor
     {
         private readonly RequestRateOptions options;
 
-        public RequestRateStrategy(RequestRateOptions options)
+        public RequestRateProcessor(RequestRateOptions options)
         {
             this.options = options;
         }
 
-        public RateLimiterStrategyResponse Process(List<DateTime> requestTimes)
+        public ProcessorName Name => ProcessorName.RequestRate;
+
+        public RateLimiterStrategyResponse Process(IList<DateTime> requestTimes)
         {
             var mostRecent = requestTimes.Max();
             var startTime = mostRecent.Subtract(options.RequestTimespan);
             var requestsWithinTimespan = requestTimes.Count(ts => ts >= startTime);
 
-            var processedClientRequest = new RateLimiterStrategyResponse(nameof(RequestRateStrategy));
+            var processedClientRequest = new RateLimiterStrategyResponse(nameof(RequestRateProcessor));
             if (requestsWithinTimespan > options.MaxNumberOfRequests)
             {
                 processedClientRequest.IsSuccess = false;

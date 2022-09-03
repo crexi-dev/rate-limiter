@@ -1,29 +1,32 @@
 ﻿using RateLimiter.Models;
 using RateLimiter.Models.Options;
+using RateLimiter.RateLimiterProcessors.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RateLimiter.RateLimiterStrategies
+namespace RateLimiter.RateLimiterProcessors
 {
-    public class LastCallTimeSpanStrategy : IRateLimiterStrategy
+    public class LastCallTimeSpanProcessor : IRateLimiterProcessor
     {
         private readonly LastCallTimeSpanOptions options;
 
-        public LastCallTimeSpanStrategy(LastCallTimeSpanOptions options)
+        public LastCallTimeSpanProcessor(LastCallTimeSpanOptions options)
         {
             this.options = options;
         }
 
-        public RateLimiterStrategyResponse Process(List<DateTime> requestTimes)
+        public ProcessorName Name => ProcessorName.LastCallTimeSpan;
+
+        public RateLimiterStrategyResponse Process(IList<DateTime> requestTimes)
         {
             var orderedRequestTimes = requestTimes.OrderByDescending(r => r).ToList();
-            var second = requestTimes.OrderByDescending(r => r).FirstOrDefault();
-            var first = requestTimes.OrderByDescending(r => r).Skip(1).FirstOrDefault();
+            var second = orderedRequestTimes.FirstOrDefault();
+            var first = orderedRequestTimes.Skip(1).FirstOrDefault();
 
             TimeSpan durationBetweenRequests = second.Subtract(first);
 
-            var processedClientRequest = new RateLimiterStrategyResponse(nameof(RequestRateStrategy));
+            var processedClientRequest = new RateLimiterStrategyResponse(nameof(RequestRateProcessor));
             if (durationBetweenRequests < options.MinRequestTimespan)
             {
                 processedClientRequest.IsSuccess = false;

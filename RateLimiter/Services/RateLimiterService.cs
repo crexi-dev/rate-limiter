@@ -1,30 +1,34 @@
 ﻿using RateLimiter.Models;
-using RateLimiter.RateLimiterStrategies;
-using RateLimiter.Repositories;
+using RateLimiter.RateLimiterProcessors;
+using RateLimiter.Stores;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RateLimiter.Services
 {
     public class RateLimiterService
     {
-        private readonly IClientRequestRepository clientRequestRepository;
-        private readonly List<IRateLimiterStrategy> rateLimiterStrategies;
+        private readonly ICacheProvider clientRequestRepository;
+        private readonly IList<IRateLimiterProcessor> rateLimiterProcessors = new List<IRateLimiterProcessor>();
 
 
-        public RateLimiterService(IClientRequestRepository clientRequestRepository, List<IRateLimiterStrategy> rateLimiterStrategies)
+        public RateLimiterService(ICacheProvider clientRequestRepository, IEnumerable<IRateLimiterProcessor> rateLimiterProcessors, Config config)
         {
             this.clientRequestRepository = clientRequestRepository;
-            this.rateLimiterStrategies = rateLimiterStrategies;
+            foreach (var name in config.ActiveProcessorNames)
+            {
+                this.rateLimiterProcessors = rateLimiterProcessors.Where(prc => prc.Name.ToString().Equals(name, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
         }
 
-        public List<RateLimiterStrategyResponse> ProcessRequest(string clientId, DateTime requestTime)
+        public List<RateLimiterStrategyResponse> ProcessRequest(string clientId, List<DateTime> requestTimes)
         {
-            var requestTimes = clientRequestRepository.Add(clientId, requestTime);
+            clientRequestRepository.Set(clientId, requestTimes);
             var responses = new List<RateLimiterStrategyResponse>();
-            foreach (var strategy in rateLimiterStrategies)
+            foreach (var processor in rateLimiterProcessors)
             {
-                responses.Add(strategy.Process(requestTimes));
+                responses.Add(processor.Process(requestTimes));
             }
 
             return responses;
