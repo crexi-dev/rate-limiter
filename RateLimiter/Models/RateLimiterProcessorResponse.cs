@@ -2,12 +2,12 @@
 {
     public class RateLimiterProcessorResponse
     {
-        public RateLimiterProcessorResponse(string? rateLimitStrategy)
+        public RateLimiterProcessorResponse(string? rateLimitProcessor)
         {
-            RateLimitStrategy = rateLimitStrategy;
+            RateLimterProcessor = rateLimitProcessor;
         }
 
-        public string? RateLimitStrategy { get; set; } = string.Empty;
+        public string? RateLimterProcessor { get; set; } = string.Empty;
         public bool IsSuccess { get; set; } = true;
         public string? Message { get; set; } = string.Empty;
         

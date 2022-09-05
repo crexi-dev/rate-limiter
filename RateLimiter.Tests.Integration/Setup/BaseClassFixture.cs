@@ -3,19 +3,19 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using RateLimiter.Models.Options;
 
-namespace RateLimiter.Tests.Integration
+namespace RateLimiter.Tests.Integration.Setup
 {
     public class BaseClassFixture : IClassFixture<RateLimiterWebApplicationFactory>
     {
         public HttpClient HttpClient;
-        
+
         public ActiveProcessorsOptions ActiveProcessorsOptions { get; set; }
         public LastCallTimeSpanOptions LastCallTimeSpanOptions { get; set; }
         public RequestRateOptions RequestRateOptions { get; set; }
 
         protected BaseClassFixture(RateLimiterWebApplicationFactory factory)
         {
-            this.HttpClient = factory.WithWebHostBuilder(builder =>
+            HttpClient = factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureAppConfiguration((context, conf) =>
                 {
@@ -23,13 +23,13 @@ namespace RateLimiter.Tests.Integration
                 });
             }).CreateClient(options: new WebApplicationFactoryClientOptions
             {
-                BaseAddress = new System.Uri("https://localhost:44362"),
+                BaseAddress = new Uri("https://localhost:44362"),
             });
 
             var config = InitConfiguration();
-            this.ActiveProcessorsOptions = config.Get<ActiveProcessorsOptions>();
-            this.LastCallTimeSpanOptions = config.Get<LastCallTimeSpanOptions>();
-            this.RequestRateOptions = config.Get<RequestRateOptions>();
+            ActiveProcessorsOptions = config.Get<ActiveProcessorsOptions>();
+            LastCallTimeSpanOptions = config.Get<LastCallTimeSpanOptions>();
+            RequestRateOptions = config.Get<RequestRateOptions>();
         }
 
         private static IConfiguration InitConfiguration()

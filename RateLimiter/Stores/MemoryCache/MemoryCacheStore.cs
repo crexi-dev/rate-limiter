@@ -22,7 +22,5 @@ namespace RateLimiter.Stores.MemoryCache
         {
             memoryCache.Set(key, value);
         }
-
-
     }
 }

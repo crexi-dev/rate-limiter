@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 
-namespace RateLimiter.Tests.Integration
+namespace RateLimiter.Tests.Integration.Setup
 {
     public class RateLimiterWebApplicationFactory : WebApplicationFactory<Program>
     {

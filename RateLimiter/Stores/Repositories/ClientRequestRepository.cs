@@ -22,15 +22,15 @@ namespace RateLimiter.Stores.Repositories
 
         public void Set<T>(string clientId, T newRequestTimes) where T : class
         {
-            bool clientExists = ClientRequests.TryGetValue(clientId, out List<DateTime> requestTimes);
+            bool clientExists = ClientRequests.TryGetValue(clientId, out _);
             if (!clientExists)
             {
-                ClientRequests.Add(clientId, requestTimes);
+                ClientRequests.Add(clientId, newRequestTimes as List<DateTime>);
             }
 
             if (clientExists)
             {
-                ClientRequests[clientId] = requestTimes;
+                ClientRequests[clientId] = newRequestTimes as List<DateTime>;
             }
         }
 

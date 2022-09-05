@@ -1,3 +1,5 @@
+using RateLimiter.Tests.Integration.Setup;
+
 namespace RateLimiter.Tests.Integration
 {
     public class RateLimiterTests : BaseClassFixture
