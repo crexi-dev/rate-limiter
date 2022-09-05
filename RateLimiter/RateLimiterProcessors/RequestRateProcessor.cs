@@ -21,7 +21,7 @@ namespace RateLimiter.RateLimiterProcessors
         public RateLimiterProcessorResponse Process(IList<DateTime> requestTimes)
         {
             var mostRecent = requestTimes.Max();
-            var startTime = mostRecent.Subtract(options.RequestTimespanInMilliseconds);
+            var startTime = mostRecent.Subtract(TimeSpan.FromMilliseconds(options.RequestTimespanInMilliseconds));
             var requestsWithinTimespan = requestTimes.Count(ts => ts >= startTime);
 
             var processedClientRequest = new RateLimiterProcessorResponse(nameof(RequestRateProcessor));

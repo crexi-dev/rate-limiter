@@ -13,7 +13,6 @@ namespace RateLimiter.RateLimiterProcessors
 
         public LastCallTimeSpanProcessor(IOptions<LastCallTimeSpanOptions> options)
         {
-
             this.options = options.Value;
         }
 
@@ -27,14 +26,14 @@ namespace RateLimiter.RateLimiterProcessors
 
             TimeSpan durationBetweenRequests = second.Subtract(first);
 
-            var processedClientRequest = new RateLimiterProcessorResponse(nameof(RequestRateProcessor));
-            if (durationBetweenRequests < options.MinRequestTimespanInMilliseconds)
+            var response = new RateLimiterProcessorResponse(nameof(RequestRateProcessor));
+            if (durationBetweenRequests < TimeSpan.FromMilliseconds(options.MinRequestTimespanInMilliseconds))
             {
-                processedClientRequest.IsSuccess = false;
-                processedClientRequest.Message = "Minimum timespan between requests violated";
+                response.IsSuccess = false;
+                response.Message = "Minimum timespan between requests violated";
             }
 
-            return processedClientRequest;
+            return response;
         }
     }
 }

@@ -6,6 +6,6 @@ namespace RateLimiter.Services
 {
     public interface IRateLimiterService
     {
-        IList<RateLimiterProcessorResponse> ProcessRequest(string clientId);
+        IList<RateLimiterProcessorResponse> ProcessRequest(string clientId, DateTime newRequestTime);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using RateLimiter.Middleware;
 using RateLimiter.RateLimiterProcessors;
@@ -7,7 +6,6 @@ using RateLimiter.Services;
 using RateLimiter.Stores;
 using RateLimiter.Stores.MemoryCache;
 using RateLimiter.Stores.Repositories;
-using System.Reflection;
 
 namespace RateLimiter
 {
@@ -20,10 +18,10 @@ namespace RateLimiter
             services.AddSingleton<IClientRequestRepository, ClientRequestRepository>();
             services.AddSingleton<IMemoryCacheStore, MemoryCacheStore>();
             // Processors
-            services.AddScoped<IRateLimiterProcessor, LastCallTimeSpanProcessor>();
-            services.AddScoped<IRateLimiterProcessor, RequestRateProcessor>();
+            services.AddSingleton<IRateLimiterProcessor, LastCallTimeSpanProcessor>();
+            services.AddSingleton<IRateLimiterProcessor, RequestRateProcessor>();
             // Services
-            services.AddScoped<IRateLimiterService, RateLimiterService>();
+            services.AddSingleton<IRateLimiterService, RateLimiterService>();
 
             return services;
         }

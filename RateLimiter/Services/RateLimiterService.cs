@@ -13,13 +13,11 @@ namespace RateLimiter.Services
     {
         private readonly ICacheProvider clientRequestRepository;
         private readonly IList<IRateLimiterProcessor> rateLimiterProcessors = new List<IRateLimiterProcessor>();
-        private readonly IOptions<ActiveProcessorsOptions>? options;
-
 
         public RateLimiterService(ICacheProvider clientRequestRepository, IEnumerable<IRateLimiterProcessor> rateLimiterProcessors, IOptions<ActiveProcessorsOptions>? options = null)
         {
             this.clientRequestRepository = clientRequestRepository;
-            this.options = options;
+            var names = options?.Value.ActiveProcessorNames;
             foreach (var name in options?.Value.ActiveProcessorNames)
             {
                 this.rateLimiterProcessors = rateLimiterProcessors
@@ -28,10 +26,17 @@ namespace RateLimiter.Services
             }
         }
 
-        public IList<RateLimiterProcessorResponse> ProcessRequest(string clientId)
+        public IList<RateLimiterProcessorResponse> ProcessRequest(string clientId, DateTime newRequestTime)
         {
             var requestTimes = clientRequestRepository.Get<List<DateTime>>(clientId);
+            if (requestTimes == null)
+            {
+                requestTimes = new List<DateTime>();
+            }
+
+            requestTimes.Add(newRequestTime);
             clientRequestRepository.Set(clientId, requestTimes);
+
             var responses = new List<RateLimiterProcessorResponse>();
             foreach (var processor in rateLimiterProcessors)
             {

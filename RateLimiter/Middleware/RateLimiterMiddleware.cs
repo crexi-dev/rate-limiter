@@ -24,7 +24,8 @@ namespace RateLimiter.Middleware
 
         public async Task InvokeAsync(HttpContext context, IOptions<ActiveProcessorsOptions>? apOptions = null)
         {
-            if (apOptions?.Value.ActiveProcessorNames == null || apOptions?.Value.ActiveProcessorNames.Count == 0)
+            var timestamp = DateTime.UtcNow; // Looks like getting context.Timestamp (deprecated) is pretty awful 
+            if (apOptions?.Value.ActiveProcessorNames == null || apOptions?.Value.ActiveProcessorNames.Length == 0)
             {
                 await next(context);
             }
@@ -37,14 +38,14 @@ namespace RateLimiter.Middleware
                 clientId = context.Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? throw new InvalidOperationException("Unable to obatain IP address");
             }
 
-            var rlResponses = rateLimiterService.ProcessRequest(clientId);
+            var rlResponses = rateLimiterService.ProcessRequest(clientId, timestamp);
             if (rlResponses == null || rlResponses.Count == 0)
             {
                 await next(context);
             }
 
             var failedResponses = rlResponses.Where(res => !res.IsSuccess).ToList();
-            if (failedResponses.Count == 0)
+            if (failedResponses.Count > 0)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
                 return;
@@ -56,6 +57,11 @@ namespace RateLimiter.Middleware
         private TokenClaims? GetTokenClaims(HttpContext context)
         {
             var bearerToken = context.Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            if (string.IsNullOrEmpty(bearerToken))
+            {
+                return null;
+            }
+
             var claims = AuthHelpers.GetTokenClaims(bearerToken);
             if (string.IsNullOrEmpty(claims.ClientId) || string.IsNullOrEmpty(claims.Region))
             {
