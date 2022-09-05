@@ -4,6 +4,8 @@ namespace RateLimiter.Models.Options
 {
     public class LastCallTimeSpanOptions
     {
+        public const string Position = "LastCallTimeSpan";
+
         public TimeSpan MinRequestTimespan { get; set; } = TimeSpan.FromMilliseconds(250);
     }
 }

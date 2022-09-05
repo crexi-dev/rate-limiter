@@ -1,4 +1,4 @@
-﻿namespace RateLimiter.RateLimiterProcessors.Models
+﻿namespace RateLimiter.Models
 {
     public enum ProcessorName
     {

@@ -1,5 +1,4 @@
 ﻿using RateLimiter.Models;
-using RateLimiter.RateLimiterProcessors.Models;
 using System;
 using System.Collections.Generic;
 
@@ -9,6 +8,6 @@ namespace RateLimiter.RateLimiterProcessors
     {
         ProcessorName Name { get; }
 
-        RateLimiterStrategyResponse Process(IList<DateTime> requestTimes);
+        RateLimiterProcessorResponse Process(IList<DateTime> requestTimes);
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace RateLimiter.Models
 {
-    public class RateLimiterStrategyResponse
+    public class RateLimiterProcessorResponse
     {
-        public RateLimiterStrategyResponse(string? rateLimitStrategy)
+        public RateLimiterProcessorResponse(string? rateLimitStrategy)
         {
             RateLimitStrategy = rateLimitStrategy;
         }

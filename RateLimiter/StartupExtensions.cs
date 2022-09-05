@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using RateLimiter.RateLimiterProcessors;
+using RateLimiter.Services;
 using RateLimiter.Stores;
 using RateLimiter.Stores.MemoryCache;
 using RateLimiter.Stores.Repositories;
@@ -9,13 +11,16 @@ namespace RateLimiter
     {
         public static IServiceCollection AddInMemoryRateLimiting(this IServiceCollection services)
         {
-            // https://devkimchi.com/2020/07/01/5-ways-injecting-multiple-instances-of-same-interface-on-aspnet-core/
+            // Stores
             services.AddScoped<ICacheProvider, MemoryCacheStore>(); // switch via ClientRequestRepository or MemoryCacheStore
             services.AddSingleton<IClientRequestRepository, ClientRequestRepository>();
             services.AddScoped<IMemoryCacheStore, MemoryCacheStore>();
-            //services.AddSingleton<IClientPolicyStore, MemoryCacheClientPolicyStore>();
-            //services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
-            //services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+            // Processors
+            services.AddScoped<IRateLimiterProcessor, LastCallTimeSpanProcessor>();
+            services.AddScoped<IRateLimiterProcessor, RequestRateProcessor>();
+            // Services
+            services.AddScoped<IRateLimiterService, RateLimiterService>();
+
             return services;
         }
     }
