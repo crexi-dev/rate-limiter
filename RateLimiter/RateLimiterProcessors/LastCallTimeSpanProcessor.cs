@@ -28,7 +28,7 @@ namespace RateLimiter.RateLimiterProcessors
             TimeSpan durationBetweenRequests = second.Subtract(first);
 
             var processedClientRequest = new RateLimiterProcessorResponse(nameof(RequestRateProcessor));
-            if (durationBetweenRequests < options.MinRequestTimespan)
+            if (durationBetweenRequests < options.MinRequestTimespanInMilliseconds)
             {
                 processedClientRequest.IsSuccess = false;
                 processedClientRequest.Message = "Minimum timespan between requests violated";

@@ -13,10 +13,10 @@ namespace RateLimiter.Services
     {
         private readonly ICacheProvider clientRequestRepository;
         private readonly IList<IRateLimiterProcessor> rateLimiterProcessors = new List<IRateLimiterProcessor>();
-        private readonly IOptions<ActiveProcessorsOptions> options;
+        private readonly IOptions<ActiveProcessorsOptions>? options;
 
 
-        public RateLimiterService(ICacheProvider clientRequestRepository, IEnumerable<IRateLimiterProcessor> rateLimiterProcessors, IOptions<ActiveProcessorsOptions> options = null)
+        public RateLimiterService(ICacheProvider clientRequestRepository, IEnumerable<IRateLimiterProcessor> rateLimiterProcessors, IOptions<ActiveProcessorsOptions>? options = null)
         {
             this.clientRequestRepository = clientRequestRepository;
             this.options = options;

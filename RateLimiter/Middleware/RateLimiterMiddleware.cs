@@ -22,7 +22,7 @@ namespace RateLimiter.Middleware
             this.next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, IOptions<ActiveProcessorsOptions> apOptions = null)
+        public async Task InvokeAsync(HttpContext context, IOptions<ActiveProcessorsOptions>? apOptions = null)
         {
             if (apOptions?.Value.ActiveProcessorNames == null || apOptions?.Value.ActiveProcessorNames.Count == 0)
             {
