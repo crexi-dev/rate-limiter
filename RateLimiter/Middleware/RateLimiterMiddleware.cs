@@ -35,7 +35,9 @@ namespace RateLimiter.Middleware
             var clientId = claims?.ClientId;
             if (string.IsNullOrEmpty(clientId))
             {
-                clientId = context.Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? throw new InvalidOperationException("Unable to obatain IP address");
+                clientId = context.Request.HttpContext.Connection.RemoteIpAddress?.ToString() 
+                    ?? context.Request.Headers["X-Real-IP"].ToString()
+                    ?? throw new InvalidOperationException("Unable to obatain IP address");
             }
 
             var rlResponses = rateLimiterService.ProcessRequest(clientId, timestamp);

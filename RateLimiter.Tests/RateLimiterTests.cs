@@ -3,7 +3,7 @@
 namespace RateLimiter.Tests
 {
     [TestFixture]
-    public class RateLimiterTest
+    public class RateLimiterTests
     {
         [Test]
         public void Example()
