@@ -18,11 +18,13 @@ namespace RateLimiter.Services
         {
             this.cache = cache;
             var names = options?.Value.ActiveProcessorNames;
-            foreach (var name in options?.Value.ActiveProcessorNames)
+            foreach (var name in names)
             {
-                this.rateLimiterProcessors = rateLimiterProcessors
-                    .Where(prc => prc.Name.ToString().Equals(name, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+                var rateLimiterProcessor = rateLimiterProcessors.FirstOrDefault(prc => prc.Name.ToString().Equals(name, StringComparison.OrdinalIgnoreCase));
+                if (rateLimiterProcessor != null)
+                {
+                    this.rateLimiterProcessors.Add(rateLimiterProcessor);
+                }
             }
         }
 
