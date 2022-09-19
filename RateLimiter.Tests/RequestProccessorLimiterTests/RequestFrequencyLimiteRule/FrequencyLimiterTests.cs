@@ -28,7 +28,7 @@ namespace RateLimiter.Tests.RequestProccessorLimiterTests.RequestFrequencyLimite
 
             for(int i = 0; i < 100; i++)
             {
-                tasks.Add(testObject.DoRequestAsync(50));
+                tasks.Add(testObject.DoRequestAsync(new Request() { ProcessDurationMs = 50 }));
             }
 
             Task.WaitAll(tasks.ToArray());
@@ -50,14 +50,14 @@ namespace RateLimiter.Tests.RequestProccessorLimiterTests.RequestFrequencyLimite
 
             for (int i = 0; i < 50; i++)
             {
-                tasks.Add(testObject.DoRequestAsync(50));
+                tasks.Add(testObject.DoRequestAsync(new Request() { ProcessDurationMs = 50 }));
             }
 
             Thread.Sleep(100);
 
             for (int i = 0; i < 50; i++)
             {
-                tasks.Add(testObject.DoRequestAsync(50));
+                tasks.Add(testObject.DoRequestAsync(new Request() { ProcessDurationMs = 50 }));
             }
 
             Task.WaitAll(tasks.ToArray());

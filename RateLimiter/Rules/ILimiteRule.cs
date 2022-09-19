@@ -6,6 +6,6 @@ namespace RateLimiter.Rules
 {
     public interface ILimiteRule
     {
-        bool CanPassNow(object request);
+        bool CanPassNow(Request request);
     }
 }

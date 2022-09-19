@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using RateLimiter.Rules;
+using System.Threading.Tasks;
 
 namespace RateLimiter
 {
@@ -7,6 +8,6 @@ namespace RateLimiter
     /// </summary>
     public interface IRequestProcessor
     {
-        Task<Response> DoRequestAsync(object request);
+        Task<Response> DoRequestAsync(Request request);
     }
 }

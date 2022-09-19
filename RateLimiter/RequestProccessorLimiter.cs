@@ -29,7 +29,7 @@ namespace RateLimiter
             rules.Add(rule);
         }
 
-        public async Task<Response> DoRequestAsync(object request)
+        public async Task<Response> DoRequestAsync(Request request)
         {
             bool result = true;
 

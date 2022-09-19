@@ -15,7 +15,7 @@ namespace RateLimiter.Rules
             lastRequestTime = DateTime.Now.AddMilliseconds(-miliseconds);
         }
 
-        public bool CanPassNow(object request)
+        public bool CanPassNow(Request request)
         {
             lock (syncObject)
             {

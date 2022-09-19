@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using RateLimiter.Rules;
+using System.Threading.Tasks;
 
 namespace RateLimiter
 {
@@ -9,9 +10,9 @@ namespace RateLimiter
         /// </summary>
         /// <param name="request"></param>
         /// <returns>The response with processing result</returns>
-        public async Task<Response> DoRequestAsync(object request)
+        public async Task<Response> DoRequestAsync(Request request)
         {
-            await Task.Delay((int)request);
+            await Task.Delay(request.ProcessDurationMs);
             return new Response() { IsSuccessful = true };
         }
     }
