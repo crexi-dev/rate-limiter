@@ -1,18 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>RateLimiter.Tests</AssemblyName>
     <RootNamespace>RateLimiter.Tests</RootNamespace>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Configurations>Release;Debug</Configurations>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="NSubstitute" Version="4.4.0" />
+    <PackageReference Include="xunit" Version="2.4.2" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RateLimiter\RateLimiter.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <None Remove="NSubstitute" />
+    <None Remove="xunit" />
   </ItemGroup>
 </Project>  
