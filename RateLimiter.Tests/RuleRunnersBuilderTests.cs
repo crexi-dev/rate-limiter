@@ -161,5 +161,43 @@ namespace RateLimiter.Tests
             runners.Should().NotBeEmpty();
             runners.Should().AllBeOfType<TimeSpanSinceLastCallRuleRunner>();
         }
+
+        [Fact]
+        public void Configuring_RequestsPerTimeSpan_AndLastCallRules_Returns_Correct_RuleRunners()
+        {
+            var mockRequestsPerTimeSpanCountCacheService = new Mock<ICacheService<RequestsPerTimeSpanCount>>();
+            var mockTimeSpanSinceLastCallCacheService = new Mock<ICacheService<TimeSpanSinceLastCall>>();
+            var reqPerTimeSpanRule = new RequestsPerTimeSpanRule
+            {
+                TimeSpan = TimeSpan.FromSeconds(60),
+                AllowedNumberOfRequests = 60
+            };
+            var timeSinceRule = new TimeSpanSinceLastCallRule
+            {
+                TimeSpan = TimeSpan.FromSeconds(1)
+            };
+            var rateLimitRule = new RateLimitRule
+            {
+                RequestsPerTimeSpanRule = reqPerTimeSpanRule,
+                TimeSpanSinceLastCallRule = timeSinceRule
+            };
+            var options = new RateLimitRuleOptions
+            {
+                Rules = new Dictionary<string, RateLimitRule>
+                {
+                    { "Orders", rateLimitRule}
+                }
+            };
+
+
+            var builder = new RuleRunnersBuilder(mockRequestsPerTimeSpanCountCacheService.Object, mockTimeSpanSinceLastCallCacheService.Object);
+
+            var runners = builder.GetRuleRunners(options, new ClientRequest { Region = "US", ClientKey = "Client_1", Resource = "Orders" });
+
+            runners.Should().NotBeEmpty();
+            runners.Should().HaveCount(2);
+            runners.Should().Contain(r => r.GetType() == typeof(RequestsPerTimeSpanRuleRunner));
+            runners.Should().Contain(r => r.GetType() == typeof(TimeSpanSinceLastCallRuleRunner));
+        }
     }
 }

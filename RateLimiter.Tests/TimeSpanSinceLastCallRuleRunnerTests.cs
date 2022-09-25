@@ -1,6 +1,11 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 using Moq;
+using RateLimiter.Middleware;
 using RateLimiter.Models;
 using RateLimiter.RuleRunners;
 using RateLimiter.Services;
@@ -15,6 +20,30 @@ namespace RateLimiter.Tests
         [Fact]
         public async Task RequestsThatViolateTimespanSinceLastCall_Fails()
         {
+            var headers = new System.Collections.Generic.Dictionary<string, StringValues>
+            {
+                { "myHeaderKey", "myHeaderValue" },
+            };
+            var headerDictionary = new HeaderDictionary(headers);
+            var requestFeature = new HttpRequestFeature()
+            {
+                Headers = headerDictionary,
+            };
+            var features = new FeatureCollection();
+
+            features.Set<IHttpRequestFeature>(requestFeature);
+            var httpContext = new DefaultHttpContext(features);
+            var authServiceMock = new Mock<IAuthenticationService>();
+            var serviceProviderMock = new Mock<IServiceProvider>();
+            serviceProviderMock
+                .Setup(_ => _.GetService(It.IsAny<Type>()))
+                .Returns(authServiceMock.Object);
+
+            httpContext.RequestServices = serviceProviderMock.Object;
+
+            var resolver = new ClientRequestResolver();
+
+            var cr = await resolver.ResolveClientRequestAsync(httpContext);
 
             var clientRequest = new ClientRequest
             {
