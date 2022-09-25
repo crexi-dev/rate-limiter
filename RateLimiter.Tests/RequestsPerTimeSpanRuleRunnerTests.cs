@@ -15,7 +15,6 @@ namespace RateLimiter.Tests
         [Fact]
         public async Task RequestsThatExceedConfiguredCountForTheSameClient_Fails()
         {
-
             var clientRequest = new ClientRequest
             {
                 Resource = "Orders",
@@ -59,7 +58,6 @@ namespace RateLimiter.Tests
         [Fact]
         public async Task RequestsThatDoesntExceedCountInTimeSpan_Succeeds_Others_Fails()
         {
-
             var clientRequest = new ClientRequest
             {
                 Resource = "Orders",
@@ -140,7 +138,6 @@ namespace RateLimiter.Tests
         [Fact]
         public async Task RequestsThatDoesntExceedConfiguredCountForTheSameClient_Succeeds()
         {
-
             var clientRequest = new ClientRequest
             {
                 Resource = "Orders",
