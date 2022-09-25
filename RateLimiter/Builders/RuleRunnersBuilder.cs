@@ -31,10 +31,10 @@ namespace RateLimiter.Builders
 			{
 				var regionRule = options.Rules[request.Resource].RegionBasedRules.Where(regionRule => regionRule.Region == request.Region).First();
 
-				if (regionRule.RuleType == RuleType.RequestsPerTimeSpanRule && options.Rules[request.Resource].RequestsPerTimeSpanRule != null)
+				if (regionRule.RuleType == RuleType.RequestsPerTimeSpanRule && options.Rules[request.Resource].RequestsPerTimeSpanRules?.Any() == true)
 				{
-					var rule = options.Rules[request.Resource].RequestsPerTimeSpanRule;
-					runners.Add(new RequestsPerTimeSpanRuleRunner(rule, _requestsPerTimeSpanCountCacheService));
+					var rules = options.Rules[request.Resource].RequestsPerTimeSpanRules;
+					rules.ForEach(rule => runners.Add(new RequestsPerTimeSpanRuleRunner(rule, _requestsPerTimeSpanCountCacheService)));
 					return runners;
 				}
 				else if (regionRule.RuleType == RuleType.TimeSpanSinceLastCallRule && options.Rules[request.Resource].TimeSpanSinceLastCallRule != null)
@@ -45,10 +45,10 @@ namespace RateLimiter.Builders
 				}
 			}
 
-			if (options.Rules[request.Resource].RequestsPerTimeSpanRule != null)
+			if (options.Rules[request.Resource].RequestsPerTimeSpanRules?.Any() == true)
 			{
-				var rule = options.Rules[request.Resource].RequestsPerTimeSpanRule;
-				runners.Add(new RequestsPerTimeSpanRuleRunner(rule, _requestsPerTimeSpanCountCacheService));
+				var rules = options.Rules[request.Resource].RequestsPerTimeSpanRules;
+				rules.ForEach(rule => runners.Add(new RequestsPerTimeSpanRuleRunner(rule, _requestsPerTimeSpanCountCacheService)));
 			}
 
 			if (options.Rules[request.Resource].TimeSpanSinceLastCallRule != null)

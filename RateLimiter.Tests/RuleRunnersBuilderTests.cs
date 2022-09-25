@@ -6,6 +6,7 @@ using RateLimiter.RuleRunners;
 using RateLimiter.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace RateLimiter.Tests
@@ -73,7 +74,7 @@ namespace RateLimiter.Tests
             };
             var rateLimitRule = new RateLimitRule
             {
-                RequestsPerTimeSpanRule = reqPerTimeSpanRule,
+                RequestsPerTimeSpanRules = new List<RequestsPerTimeSpanRule> { reqPerTimeSpanRule },
                 TimeSpanSinceLastCallRule = timeSinceRule,
                 RegionBasedRules = new List<RegionBasedRule>
                 {
@@ -113,7 +114,7 @@ namespace RateLimiter.Tests
             };
             var rateLimitRule = new RateLimitRule
             {
-                RequestsPerTimeSpanRule = reqPerTimeSpanRule
+                RequestsPerTimeSpanRules = new List<RequestsPerTimeSpanRule> { reqPerTimeSpanRule },
             };
             var options = new RateLimitRuleOptions
             {
@@ -178,7 +179,7 @@ namespace RateLimiter.Tests
             };
             var rateLimitRule = new RateLimitRule
             {
-                RequestsPerTimeSpanRule = reqPerTimeSpanRule,
+                RequestsPerTimeSpanRules = new List<RequestsPerTimeSpanRule> { reqPerTimeSpanRule },
                 TimeSpanSinceLastCallRule = timeSinceRule
             };
             var options = new RateLimitRuleOptions
@@ -198,6 +199,51 @@ namespace RateLimiter.Tests
             runners.Should().HaveCount(2);
             runners.Should().Contain(r => r.GetType() == typeof(RequestsPerTimeSpanRuleRunner));
             runners.Should().Contain(r => r.GetType() == typeof(TimeSpanSinceLastCallRuleRunner));
+        }
+
+        [Fact]
+        public void Stacking_RequestsPerTimeSpanRules_Returns_Correct_RuleRunners()
+        {
+            var mockRequestsPerTimeSpanCountCacheService = new Mock<ICacheService<RequestsPerTimeSpanCount>>();
+            var mockTimeSpanSinceLastCallCacheService = new Mock<ICacheService<TimeSpanSinceLastCall>>();
+            var reqPerTimeSpanRule1 = new RequestsPerTimeSpanRule
+            {
+                TimeSpan = TimeSpan.FromSeconds(60),
+                AllowedNumberOfRequests = 60
+            };
+            var reqPerTimeSpanRule2 = new RequestsPerTimeSpanRule
+            {
+                TimeSpan = TimeSpan.FromMinutes(60),
+                AllowedNumberOfRequests = 200
+            };
+            var timeSinceRule = new TimeSpanSinceLastCallRule
+            {
+                TimeSpan = TimeSpan.FromSeconds(1)
+            };
+            var rateLimitRule = new RateLimitRule
+            {
+                RequestsPerTimeSpanRules = new List<RequestsPerTimeSpanRule> { reqPerTimeSpanRule1, reqPerTimeSpanRule2 },
+                TimeSpanSinceLastCallRule = timeSinceRule
+            };
+            var options = new RateLimitRuleOptions
+            {
+                Rules = new Dictionary<string, RateLimitRule>
+                {
+                    { "Orders", rateLimitRule}
+                }
+            };
+
+
+            var builder = new RuleRunnersBuilder(mockRequestsPerTimeSpanCountCacheService.Object, mockTimeSpanSinceLastCallCacheService.Object);
+
+            var runners = builder.GetRuleRunners(options, new ClientRequest { Region = "US", ClientKey = "Client_1", Resource = "Orders" });
+
+            runners.Should().NotBeEmpty();
+            runners.Should().HaveCount(3);
+            runners.Should().Contain(r => r.GetType() == typeof(RequestsPerTimeSpanRuleRunner));
+            runners.Should().Contain(r => r.GetType() == typeof(TimeSpanSinceLastCallRuleRunner));
+
+            runners.Count(r => r.GetType() == typeof(RequestsPerTimeSpanRuleRunner)).Should().Be(2);
         }
     }
 }

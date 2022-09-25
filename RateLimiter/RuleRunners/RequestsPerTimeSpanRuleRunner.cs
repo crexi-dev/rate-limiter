@@ -17,7 +17,7 @@ namespace RateLimiter.RuleRunners
 
 		public async Task<RuleRunResult> RunAsync(ClientRequest request)
 		{
-			var cacheKey = request.RequestsPerTimeSpanRuleCacheKey();
+			var cacheKey = request.RequestsPerTimeSpanRuleCacheKey(_rule.TimeSpan);
 			if (!await _cacheService.ExistsAsync(cacheKey))
 			{
 				await _cacheService.AddAsync(cacheKey, new RequestsPerTimeSpanCount { StartTime = DateTimeOffset.UtcNow, Count = 1 });
