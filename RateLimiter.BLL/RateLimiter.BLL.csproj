@@ -1,17 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <AssemblyName>RateLimiter.Tests</AssemblyName>
-        <RootNamespace>RateLimiter.Tests</RootNamespace>
+        <RootNamespace>RateLimiter</RootNamespace>
         <LangVersion>default</LangVersion>
         <Nullable>enable</Nullable>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageId>RateLimiter.BLL</PackageId>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\RateLimiter.BLL\RateLimiter.BLL.csproj"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2"/>
-        <PackageReference Include="xunit" Version="2.4.2"/>
+        <ProjectReference Include="..\RateLimiter.DAL\RateLimiter.DAL.csproj"/>
     </ItemGroup>
 </Project>  
