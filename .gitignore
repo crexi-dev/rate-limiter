@@ -2,3 +2,9 @@
 packages
 bin 
 obj
+.idea
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
