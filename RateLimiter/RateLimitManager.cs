@@ -7,12 +7,12 @@ using System.Linq;
 
 namespace RateLimiter
 {
-    internal class RateLimitManager
+    public class RateLimitManager
     {
-        public List<Client> Clients { get; set; } = new List<Client>();
-        public List<ClientPolicies> Policies { get; set; } = new List<ClientPolicies>();
+        //public List<Client> Clients { get; set; } = new List<Client>();
+        public List<ClientRules> Rules { get; set; } = new List<ClientRules>();
 
-        private readonly MemoryCache _cache = MemoryCache.Default;
+        private Dictionary<string, LimitCounter> clientCounters = new Dictionary<string, LimitCounter>();
 
         public struct LimitCounter
         {
@@ -21,35 +21,42 @@ namespace RateLimiter
             public double Count { get; set; }
         }
 
-        public RateLimitManager(List<Client> clients, List<ClientPolicies> policies) 
+        public RateLimitManager(List<ClientRules> rules) 
         { 
-            Clients = clients;
-            Policies = policies;
+            //Clients = clients;
+            Rules = rules;
         }
 
-        public bool IsAllowed(string clientId, int requestCount) 
+        public RateLimitManager() { }
+
+        public bool IsAllowed(string clientId) 
         {
-            ClientPolicies cp = Policies.Where(p => p.ClientId == clientId).FirstOrDefault();
-            foreach (LimitPolicy policy in cp.Policies.ClientRules) 
+            ClientRules cr = Rules.Where(r => r.ClientId == clientId).FirstOrDefault();
+            if (cr != null && cr.Rules != null) 
             {
-                foreach (LimitRule rule in policy.Rules) 
+                foreach (LimitRule rule in cr.Rules)
                 {
-                    if (rule.MaxRequests > 0)
+                    if (clientCounters.ContainsKey(clientId))
                     {
-                        LimitCounter counter = (LimitCounter)_cache.Get(clientId);
-                        if (counter.Timestamp + rule.PeriodTimespan.Value < DateTime.UtcNow)
+                        LimitCounter counter = (LimitCounter)clientCounters.GetValueOrDefault(clientId);
+                        if (counter.Timestamp + rule.PeriodTimespan.Value < DateTime.UtcNow || counter.Count < rule.MaxRequests)
                         {
                             counter.Timestamp = DateTime.UtcNow;
+                            counter.Count++;
+                            clientCounters[clientId] = counter;
                             continue;
                         }
-                        if (counter.Count > rule.MaxRequests)
+                        if (rule.WaitPeriod || counter.Count >= rule.MaxRequests)
                         {
                             return false;
                         }
                     }
-                    else 
+                    else
                     {
-                        return false;
+                        LimitCounter counter = new LimitCounter();
+                        counter.Timestamp = DateTime.UtcNow;
+                        counter.Count = 1;
+                        clientCounters.Add(clientId, counter);
                     }
                 }
             }
@@ -57,42 +64,29 @@ namespace RateLimiter
         }
     }
 
-    internal class LimitOptions
-    {
-        public int StatusCode { get; set; } = 429;
-        public string Message { get; set; }
-    }
-
-    internal class Client 
-    { 
-        public string AccessToken { get; set; }
-        public string Name { get; set; }
-        public string ClientId { get; set; }
-    }
-
-    internal class LimitRule 
+    public class LimitRule 
     {
         public string Period { get; set; }
 
         public TimeSpan? PeriodTimespan { get; set; }
 
-        public double MaxRequests { get; set; }
+        public int MaxRequests { get; set; }
+
+        public string Endpoint { get; set; } 
+
+        public bool WaitPeriod { get; set; }
 
     }
 
-    internal class LimitPolicy 
-    {
-        public List<LimitRule> Rules { get; set; } = new List<LimitRule>();
-    }
-
-    internal class LimitPolicies 
-    {
-        public List<LimitPolicy> ClientRules { get; set; }
-    }
-
-    internal class ClientPolicies 
+    public class ClientRules 
     {
         public string ClientId { get; set; }
-        public LimitPolicies Policies { get; set; }
+        public List<LimitRule> Rules { get; set; } = new List<LimitRule>();
+
+        public ClientRules(string clientId, List<LimitRule> rules)
+        {
+            ClientId = clientId;
+            Rules = rules;
+        }
     }
 }
