@@ -22,7 +22,7 @@ namespace RateLimiter.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            // compute identity from request
+            // Get identity from request
             var clientId = context.GetClientId();
 
             var clientRequest = new ClientRequest()
@@ -33,7 +33,7 @@ namespace RateLimiter.Middleware
                 ClientId = clientId,
             };
 
-            // check if corresponding limit rules
+            // Check if client request should be processed or blocked by rate limit rules
             var isRequestValid = await _rateLimitService.ValidateRequest(clientRequest);
 
             if (!isRequestValid)

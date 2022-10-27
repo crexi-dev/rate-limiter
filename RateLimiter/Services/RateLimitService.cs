@@ -25,11 +25,6 @@ namespace RateLimiter
             _rules = rules?.Value;
         }
 
-        /// <summary>
-        /// returns false if any of rules validation failed, otherwise true
-        /// </summary>
-        /// <param name="clientRequest"></param>
-        /// <returns></returns>
         public async Task<bool> ValidateRequest(ClientRequest clientRequest)
         {
             // If checking rate limiter is disabled return true
@@ -38,10 +33,10 @@ namespace RateLimiter
                 return true;
             }
 
-            // Get all rules related to current resource
+            // Get all rules related to current resource and client 
             var rules = GetAllRules(clientRequest);
 
-            // If no rule was defined for current resource return true
+            // If no rule was defined for current resource and client return true
             if (rules.Count == 0)
             {
                 return true;
@@ -52,13 +47,13 @@ namespace RateLimiter
             
             var requests = await _cache.GetAsync(clientRequest);
 
-            // If Client has not made any request to current resource yet return true
+            // If Client has not yet made any request to current resource return true
             if (requests.Count == 0 || requests == null)
             {
                 return true;
             }
 
-            // Validate all rules and break if any of them fails
+            // Validate all rules and return false if any of them fails
             foreach (var rule in rules)
             {
                 var isValid = rule.IsValid(requests);

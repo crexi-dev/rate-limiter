@@ -6,7 +6,7 @@ namespace RateLimiter.Models
 {
     public class ClientRequest
     {
-        // endpoint
+        // Endpoint
         public string Resource { get; set; }
 
         // ClientId from httpContext
@@ -15,7 +15,7 @@ namespace RateLimiter.Models
         // Time When request was made
         public DateTime RequestTime { get; set; }
 
-        // httpVerb
+        // HttpVerb
         public string Method { get; set; }
     }
 }
