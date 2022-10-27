@@ -26,7 +26,7 @@ namespace RateLimiter.Tests
     public class RateLimiterTest
     {
         private ICacheStore _cacheStore;
-        private RateLimitMiddleware middleware;
+        private RateLimitMiddleware _middleware;
         private IRateLimitService _rateLimiterService;
         private Mock<IOptions<RateLimitConfigurationOptions>> _rules;
 
@@ -71,7 +71,7 @@ namespace RateLimiter.Tests
 
             this._rateLimiterService = new RateLimitService(_cacheStore, _rules.Object);
 
-            this.middleware = new RateLimitMiddleware(next: (innerHttpContext) =>
+            this._middleware = new RateLimitMiddleware(next: (innerHttpContext) =>
             {
                 return Task.CompletedTask;
             }, _rateLimiterService);
@@ -93,7 +93,7 @@ namespace RateLimiter.Tests
             context.User = new GenericPrincipal(identity, new string[] { "CLIENT" });
 
             // Act
-            await middleware.Invoke(context);
+            await _middleware.Invoke(context);
 
             // Assert
             Assert.AreNotEqual(context.Response.StatusCode, (int)HttpStatusCode.TooManyRequests);
@@ -115,7 +115,7 @@ namespace RateLimiter.Tests
             context.User = new GenericPrincipal(identity, new string[] { "CLIENT" });
 
             // Act
-            await middleware.Invoke(context);
+            await _middleware.Invoke(context);
 
             // Assert
             Assert.AreEqual(context.Response.StatusCode, (int)HttpStatusCode.TooManyRequests);
@@ -137,7 +137,7 @@ namespace RateLimiter.Tests
             context.User = new GenericPrincipal(identity, new string[] { "CLIENT" });
 
             // Act
-            await middleware.Invoke(context);
+            await this._middleware.Invoke(context);
 
             // Assert
             Assert.AreEqual(context.Response.StatusCode, (int)HttpStatusCode.TooManyRequests);
@@ -160,7 +160,7 @@ namespace RateLimiter.Tests
             context.User = new GenericPrincipal(identity, new string[] { "CLIENT" });
 
             // Act
-            await middleware.Invoke(context);
+            await this._middleware.Invoke(context);
 
             // Assert
             Assert.AreNotEqual(context.Response.StatusCode, (int)HttpStatusCode.TooManyRequests);
@@ -182,7 +182,7 @@ namespace RateLimiter.Tests
             context.User = new GenericPrincipal(identity, new string[] { "CLIENT" });
 
             // Act
-            await middleware.Invoke(context);
+            await this._middleware.Invoke(context);
 
             // Assert
             Assert.AreNotEqual(context.Response.StatusCode, (int)HttpStatusCode.TooManyRequests);
