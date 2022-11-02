@@ -5,8 +5,8 @@ namespace RateLimiter.Models.Request
 {
     public class ClientRequest
     {
-        public string? ClientId { get; set; } = Guid.NewGuid().ToString();
+        public Guid ClientId { get; set; } = Guid.NewGuid();
 
-        public ClientLocation Location { get; set; }
+        public DateTime RequestDate { get; set; }
     }
 }
