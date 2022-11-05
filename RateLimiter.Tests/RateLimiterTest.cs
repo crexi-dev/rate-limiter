@@ -2,72 +2,101 @@
 using System;
 using System.Collections.Generic;
 using Xunit;
-using Moq;
 using Microsoft.Extensions.Caching.Memory;
 using RateLimiter.Repository;
 
+
 namespace RateLimiter.Tests
 {
-    public class RateLimiterTest
+    public class when_using_request_rate_limiter
     {
-        static MemoryCache _mockMemoryCache;
-        public RateLimiterTest()
+        static MemoryCache _memoryCache;
+        static RulesRepository _rulesRepo;
+        static EventsRepository _eventsRepo;
+        static RulesConfigService _rulesConfigService;
+        static RulesProcessorService _rulesProcessorService;
+
+        public when_using_request_rate_limiter()
         {
+            _memoryCache = new MemoryCache(new MemoryCacheOptions());
+
+            _rulesRepo = new RulesRepository(_memoryCache);
+            _eventsRepo = new EventsRepository(_memoryCache);
+
+            _rulesConfigService = new RulesConfigService(_rulesRepo);
+            _rulesProcessorService = new RulesProcessorService(_eventsRepo, _rulesRepo);
 
 
-            _mockMemoryCache = new MemoryCache(new MemoryCacheOptions());
-        }
-        [Fact]
-        public async void Example()
-        {
-
-        //    var mockRulesProvider = new Mock<IRulesMemoryRepository>();
-
-            //  new ResourceLimiterMiddleware()
-
-
-            //object expectedValue = null;
-            //mockMemoryCache.Setup(x => x.TryGetValue(It.IsAny<object>(), out expectedValue))
-            //.Returns(true);
-
-            //RulePerRequest rulePerRequest = new RulePerRequest { NumberOfRequests = 3, timeSpan = TimeSpan.FromMilliseconds(5000) };
-            //RulePerTimeSpan rulePerTimeSpan = new RulePerTimeSpan { timeSpan = TimeSpan.FromMilliseconds(1) };
-            //List<ILimitRule> rules = new List<ILimitRule> { rulePerRequest, rulePerTimeSpan };
-            //await new RulesConfigService(_mockMemoryCache).SetRules("/", rules);
-
-
-            //RulePerTimeSpan rulePerTimeSpanOntoken = new RulePerTimeSpan { timeSpan = TimeSpan.FromMilliseconds(5000) };
-            //List<ILimitRule> rulesOnToken = new List<ILimitRule> { rulePerTimeSpanOntoken };
-            //await new RulesConfigService(_mockMemoryCache).SetRules("tkn001", rulesOnToken);
         }
 
-
-        [Fact]
-        public void PassingTest()
+        [Theory]
+        [InlineData(1000, 1, 0, true)]
+        [InlineData(1000, 5, 1000, false)]
+        [InlineData(1000, 10, 1100, true)]
+        public void then_simple_rule_should_work_on_given_endpoint(int rulePerTimespanWindow, int requestCount, int requestInterval, bool expected)
         {
 
-            var RulesConfigKey = "rule:/";
-            List<IRateLimitRule> existingRules = null;
+            string ruleKey = "/myuri"; // fake endpoint
 
-            _mockMemoryCache.TryGetValue(RulesConfigKey, out existingRules);
-                            
 
-            if (existingRules != null)
+            // configure rule to limit requests on endpoint(/myuri) within ruleWindow(milliseconds)
+            RulePerTimeSpan rulePerTimeSpan = new() { TimeSpanInMilliseconds = rulePerTimespanWindow };
+            List<IRateLimitRule> rules = new() { rulePerTimeSpan };
+            _rulesConfigService.SetRules(ruleKey, rules);
+
+
+            RequestEventGenerator(ruleKey, requestCount, requestInterval);
+
+            var result = _rulesProcessorService.IsValidLimit(new List<string> { ruleKey });
+
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(3, 1000, 1, 0, true)]
+        [InlineData(50, 1000, 105, 1000, false)]
+        [InlineData(10, 1000, 10, 1100, true)]
+        [InlineData(2, 100, 15, 100, false)]
+        [InlineData(35, 5000, 35, 4000, false)]
+        public void then_set_of_different_rules_should_work_on_multiple_keys(int numberOfRequestsToCheck, int rulePerTimespanWindow, int requestCount, int requestInterval, bool expected)
+        {
+
+
+            string ruleKey_endpoint = "/differentURI"; // fake endpoint
+            string ruleKey_Token = "GciOiJIUzI1NiIsI"; // fake token
+
+
+            // configure rule to limit requests on endpoint(/myuri) within rule window(milliseconds)
+            RulePerTimeSpan rulePerTimeSpan = new() { TimeSpanInMilliseconds = rulePerTimespanWindow };
+            _rulesConfigService.SetRules(ruleKey_endpoint, new() { rulePerTimeSpan });
+
+
+            // configure different rules on header parameter(token) withing rule window and limit requests per timespan
+            RulePerRequest rulePerRequestOnToken = new() { NumberOfRequests = numberOfRequestsToCheck, TimeSpanInMilliseconds = rulePerTimespanWindow };
+            RulePerTimeSpan rulePerTimeSpanOntoken = new RulePerTimeSpan { TimeSpanInMilliseconds = rulePerTimespanWindow };
+            _rulesConfigService.SetRules(ruleKey_endpoint, new() { rulePerRequestOnToken, rulePerTimeSpanOntoken });
+
+            RequestEventGenerator(ruleKey_endpoint, requestCount, requestInterval);
+            RequestEventGenerator(ruleKey_Token, requestCount, requestInterval);
+
+            var result = _rulesProcessorService.IsValidLimit(new List<string> { ruleKey_endpoint, ruleKey_Token });
+
+            Assert.Equal(expected, result);
+
+        }
+
+
+        private void RequestEventGenerator(string ruleKey, int requestCount, double requestInterval)
+        {
+
+            var date = DateTimeOffset.UtcNow;
+            for (int i = 0; i < requestCount; i++)
             {
-                Assert.Equal(4, Add(2, 2));
-            } 
-
-                
+                _rulesProcessorService.AddRequestEvent(ruleKey, new() { RequestDate = date });
+                date = date.AddMilliseconds(requestInterval);
+            }
         }
 
-        [Fact]
-        public void FailingTest()
-        {
-            Assert.Equal(5, Add(2, 2));
-        }
-        int Add(int x, int y)
-        {
-            return x + y;
-        }
+
     }
 }
