@@ -1,4 +1,69 @@
-﻿**Rate-limiting pattern**
+# RateLimiter
+RateLimiter library is a middleware component implementation of rate limiting on API resources with configurability and extendability features. Current version contains rules for limiting certain requests per timespan and limiting within fixed time window.
+
+This project is the response of given task at the end of this document.
+
+
+
+## Glossary for custom terms
+
+| Term             | Description                                                                |
+| ----------------- | ------------------------------------------------------------------ |
+| Rule Key | Dimension's value for rule evaluation. i.e. Endpoint: /books, Region: EU, Token, User, etc... |
+| Request Event Store |Memory store to keep all requests(DateTime value only) per Rule Key for further analysis in rules|
+| Rule | Set of criteria and function for checking if events is matched on it |
+
+
+## Features
+
+- Define rate limit rules
+- Attach rules on Rule Keys
+- Update rate limit rules on runtime
+
+**Extendability**
+- Define new Rule Keys
+- Create new rules
+
+## Main Processes
+
+
+![Processes](https://user-images.githubusercontent.com/1499726/200251479-7eb24c94-02af-4b4b-828d-7f5bb444430f.jpg)
+
+## Configure Rules on Rule Keys
+
+- In the solution there is WorkerService for rules initialization from application.json and rules can be configured easily. 
+
+**Example:**
+
+```json
+  "RateLimiterRules": {
+    "RulesSettings": [{
+            "Key": "tkn001",
+            "Rules": [{
+                "RulePerTimeSpan": {
+                    "TimeSpanInMilliseconds": 5000
+                }
+            }]
+        },
+        {
+            "Key": "/books",
+            "Rules": [{
+                "RulePerRequest": {
+                    "TimeSpanInMilliseconds": 500,
+                    "NumberOfRequests": 3
+                },
+                "RulePerTimeSpan": {
+                    "TimeSpanInMilliseconds": 1000
+                }
+            }]
+        }
+    ]
+}
+```
+
+Origin Task
+------
+**Rate-limiting pattern**
 
 Rate limiting involves restricting the number of requests that can be made by a client.
 A client is identified with an access token, which is used for every request to a resource.
