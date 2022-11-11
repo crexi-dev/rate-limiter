@@ -1,16 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter", "RateLimiter\RateLimiter.csproj", "{36F4BDC6-D3DA-403A-8DB7-0C79F94B938F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter", "RateLimiter\RateLimiter.csproj", "{9CCAC83C-C86E-4595-B2B7-598D3D3DEC26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Tests", "RateLimiter.Tests\RateLimiter.Tests.csproj", "{C4F9249B-010E-46BE-94B8-DD20D82F1E60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{66D6E7C6-3A12-4992-B9BE-BA8F292A963E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9B206889-9841-4B5E-B79B-D5B2610CCCFF}"
-	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.AspNetCore", "RateLimiter.AspNetCore\RateLimiter.AspNetCore.csproj", "{6B8F6E5A-4301-42CB-B948-3B78E646E9D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Tests", "RateLimiter.Tests\RateLimiter.Tests.csproj", "{278700CE-0B9F-42F5-A24C-950BD861DE1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,19 +14,21 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{36F4BDC6-D3DA-403A-8DB7-0C79F94B938F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{36F4BDC6-D3DA-403A-8DB7-0C79F94B938F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{36F4BDC6-D3DA-403A-8DB7-0C79F94B938F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{36F4BDC6-D3DA-403A-8DB7-0C79F94B938F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {67D05CB6-8603-4C96-97E5-C6CEFBEC6134}
+		{9CCAC83C-C86E-4595-B2B7-598D3D3DEC26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CCAC83C-C86E-4595-B2B7-598D3D3DEC26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CCAC83C-C86E-4595-B2B7-598D3D3DEC26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CCAC83C-C86E-4595-B2B7-598D3D3DEC26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66D6E7C6-3A12-4992-B9BE-BA8F292A963E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66D6E7C6-3A12-4992-B9BE-BA8F292A963E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66D6E7C6-3A12-4992-B9BE-BA8F292A963E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66D6E7C6-3A12-4992-B9BE-BA8F292A963E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B8F6E5A-4301-42CB-B948-3B78E646E9D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B8F6E5A-4301-42CB-B948-3B78E646E9D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B8F6E5A-4301-42CB-B948-3B78E646E9D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B8F6E5A-4301-42CB-B948-3B78E646E9D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{278700CE-0B9F-42F5-A24C-950BD861DE1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{278700CE-0B9F-42F5-A24C-950BD861DE1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{278700CE-0B9F-42F5-A24C-950BD861DE1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{278700CE-0B9F-42F5-A24C-950BD861DE1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
