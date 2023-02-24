@@ -1,15 +1,15 @@
-﻿namespace RateLimiter.Configuration
+﻿using System.Collections.Concurrent;
+using System.Runtime.InteropServices.ComTypes;
+
+namespace RateLimiter.Configuration
 {
     public class RateLimiterOptions
     {
-        public IResourceOptions For(string resourceName)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+        private readonly ConcurrentDictionary<string, ResourceRuleSet> _rules = new ();
 
-    public interface IResourceOptions
-    {
-        IResourceOptions AddRule<TRule>(TRule rule);
+        public IResourceRuleSet For(string resourceName)
+        {
+            return _rules.GetOrAdd(resourceName, key => new ResourceRuleSet());
+        }
     }
 }

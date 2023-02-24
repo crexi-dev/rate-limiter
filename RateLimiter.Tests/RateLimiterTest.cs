@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Authentication.ExtendedProtection;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using RateLimiter.Configuration;
@@ -11,7 +12,7 @@ namespace RateLimiter.Tests
     public class RateLimiterTest
     {
         [Test]
-        public void BasicRequestsPerTimestamp()
+        public async Task BasicRequestsPerTimestamp()
         {
             var testResource = "test-resource";
 
@@ -32,7 +33,7 @@ namespace RateLimiter.Tests
 
             var testToken = $"{Guid.NewGuid()}";
 
-            Assert.That(rateLimiter.Check(testResource, testToken), Is.True);
+            Assert.That(await rateLimiter.Check(testResource, testToken), Is.True);
         }
     }
 }

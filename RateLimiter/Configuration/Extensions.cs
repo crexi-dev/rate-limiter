@@ -20,6 +20,8 @@ namespace RateLimiter.Configuration
 
             services.AddSingleton(options);
 
+            services.AddSingleton<IRateLimiter, RateLimiter>();
+
             return services;
         }
     }
