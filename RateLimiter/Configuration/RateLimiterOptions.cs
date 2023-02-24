@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 
 namespace RateLimiter.Configuration
 {
@@ -8,6 +9,11 @@ namespace RateLimiter.Configuration
 
         public IResourceRuleSet For(string resourceName)
         {
+            if (string.IsNullOrWhiteSpace(resourceName))
+            {
+                throw new ArgumentNullException(nameof(resourceName));
+            }
+
             return _rules.GetOrAdd(resourceName, key => new ResourceRuleSet());
         }
 
