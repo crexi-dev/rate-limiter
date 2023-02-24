@@ -6,6 +6,6 @@ namespace RateLimiter
 {
     public interface IRateLimiter
     {
-        Task<bool> Check(string resource, string token);
+        bool Check(string resource, string token);
     }
 }

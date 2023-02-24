@@ -12,7 +12,7 @@ namespace RateLimiter.Tests
     public class RateLimiterTest
     {
         [Test]
-        public async Task BasicRequestsPerTimestamp()
+        public async Task BasicRequestsPerTimeSpanShouldPass()
         {
             var testResource = "test-resource";
 
@@ -33,7 +33,26 @@ namespace RateLimiter.Tests
 
             var testToken = $"{Guid.NewGuid()}";
 
-            Assert.That(await rateLimiter.Check(testResource, testToken), Is.True);
+            Assert.That(rateLimiter.Check(testResource, testToken), Is.True);
+            Assert.That(rateLimiter.Check(testResource, testToken), Is.False);
         }
+
+        [Test]
+        public async Task EmptyConfigurationShouldPass()
+        {
+            var testResource = "test-resource";
+            var testToken = $"{Guid.NewGuid()}";
+
+            var services = new ServiceCollection();
+
+            services.AddRateLimiter(_ => { });
+
+            var sp = services.BuildServiceProvider();
+
+            var rateLimiter = sp.GetRequiredService<IRateLimiter>();
+
+            Assert.That(rateLimiter.Check(testResource, testToken), Is.True);
+        }
+
     }
 }

@@ -20,7 +20,11 @@ namespace RateLimiter.Configuration
 
             services.AddSingleton(options);
 
-            services.AddSingleton<IRateLimiter, RateLimiter>();
+            // The registry holds shared state so there should be the only one instance
+            services.AddSingleton<AccessRegistry>();
+
+            // Rate limiter has no shared state so can be transient
+            services.AddTransient<IRateLimiter, RateLimiter>();
 
             return services;
         }
