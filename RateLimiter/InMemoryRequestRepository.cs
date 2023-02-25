@@ -26,6 +26,7 @@ namespace RateLimiter
             }
             requestLogs.Add(new RequestLog { RequestTime = requestTime, Region = region });
         }
+
         public List<RequestLog> GetRequestsByTimeSpan(string username, string resource, TimeSpan interval)
         {
             var key = GetKey(username, resource);

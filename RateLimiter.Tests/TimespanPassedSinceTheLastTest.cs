@@ -21,7 +21,7 @@ namespace RateLimiter.Tests
             var strategy = new TimespanPassedSinceTheLastStrategy(TimeSpan.FromSeconds(10), timeService.Object);
 
             //Action
-            var result = strategy.IsRequestAllowed("john", "x", requestRepository.Object);
+            var result = strategy.IsRequestAllowed("john", "x", requestRepository.Object,"");
 
             //Assert
             Assert.IsTrue(result);
@@ -41,7 +41,7 @@ namespace RateLimiter.Tests
             var strategy = new TimespanPassedSinceTheLastStrategy(TimeSpan.FromSeconds(10), timeService.Object);
 
             //Action
-            var result = strategy.IsRequestAllowed("john", "x", requestRepository.Object);
+            var result = strategy.IsRequestAllowed("john", "x", requestRepository.Object,"");
 
             //Assert
             Assert.IsFalse(result);
@@ -61,7 +61,7 @@ namespace RateLimiter.Tests
             var strategy = new TimespanPassedSinceTheLastStrategy(TimeSpan.FromSeconds(10), timeService.Object);
 
             //Action
-            var result = strategy.IsRequestAllowed("john", "x", requestRepository.Object);
+            var result = strategy.IsRequestAllowed("john", "x", requestRepository.Object,"");
 
             //Assert
             Assert.IsTrue(result);

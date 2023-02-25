@@ -8,6 +8,7 @@ namespace RateLimiter.Tests
     [TestFixture]
     public class RateLimiterTest
     {
+        
         [Test]
         public void TryMakeRequest_Returns_False_When_There_Is_No_Strategy()
         {
@@ -29,9 +30,9 @@ namespace RateLimiter.Tests
             var rateLimitStrategy1 = new Mock<IRateLimitStrategy>();
             var rateLimitStrategy2 = new Mock<IRateLimitStrategy>();
 
-            rateLimitStrategy1.Setup(t => t.IsRequestAllowed(It.IsAny<string>(), It.IsAny<string>(), requestRepository.Object))
+            rateLimitStrategy1.Setup(t => t.IsRequestAllowed(It.IsAny<string>(), It.IsAny<string>(), requestRepository.Object,It.IsAny<string>()))
                     .Returns(true);
-            rateLimitStrategy2.Setup(t => t.IsRequestAllowed(It.IsAny<string>(), It.IsAny<string>(), requestRepository.Object))
+            rateLimitStrategy2.Setup(t => t.IsRequestAllowed(It.IsAny<string>(), It.IsAny<string>(), requestRepository.Object, It.IsAny<string>()))
                     .Returns(true);
 
             var limiter = new RateLimiter(requestRepository.Object);
@@ -50,9 +51,9 @@ namespace RateLimiter.Tests
             var rateLimitStrategy1 = new Mock<IRateLimitStrategy>();
             var rateLimitStrategy2 = new Mock<IRateLimitStrategy>();
 
-            rateLimitStrategy1.Setup(t => t.IsRequestAllowed(It.IsAny<string>(), It.IsAny<string>(), requestRepository.Object))
+            rateLimitStrategy1.Setup(t => t.IsRequestAllowed(It.IsAny<string>(), It.IsAny<string>(), requestRepository.Object, It.IsAny<string>()))
                     .Returns(true);
-            rateLimitStrategy2.Setup(t => t.IsRequestAllowed(It.IsAny<string>(), It.IsAny<string>(), requestRepository.Object))
+            rateLimitStrategy2.Setup(t => t.IsRequestAllowed(It.IsAny<string>(), It.IsAny<string>(), requestRepository.Object, It.IsAny<string>()))
                     .Returns(false);
 
             var limiter = new RateLimiter(requestRepository.Object);
