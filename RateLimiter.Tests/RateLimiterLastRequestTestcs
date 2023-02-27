@@ -1,0 +1,70 @@
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
+
+namespace RateLimiter.Tests
+{
+    [TestFixture]
+    public class RateLimiterLastRequestTestcs
+    {
+        private IRateLimiterService _rateLimiterService = default!;
+        private readonly string _resource = "/api/like";
+
+        [OneTimeSetUp]
+        public void TestInitialize()
+        {
+            var services = new ServiceCollection();
+            services.AddMemoryCache();
+
+            services.AddRateLimiter(options =>
+            {
+                options.Resource(_resource).Add(new FixedWindowRateLimit
+                {
+                    //10 seconds passed since the last call;
+                    PermitLimit = 1,
+                    Window = TimeSpan.FromMilliseconds(10)
+                });
+            });
+            var serviceProvider = services.BuildServiceProvider();
+            var memoryCache = serviceProvider.GetService<IMemoryCache>();
+            _rateLimiterService = serviceProvider.GetRequiredService<IRateLimiterService>();
+        }
+
+        [Test]
+        public async Task Good()
+        {
+            var token = $"{Guid.NewGuid()}";
+            Assert.That(_rateLimiterService.Validate(_resource, token), Is.True);
+            await Task.Delay(20);
+            Assert.That(_rateLimiterService.Validate(_resource, token), Is.True);
+        }
+
+        [Test]
+        public async Task Bad()
+        {
+            var token = $"{Guid.NewGuid()}";
+            Assert.That(_rateLimiterService.Validate(_resource, token), Is.True);
+            await Task.Delay(1);
+            Assert.That(_rateLimiterService.Validate(_resource, token), Is.False);
+        }
+
+        [Test]
+        public async Task Multiple()
+        {
+            var token = $"{Guid.NewGuid()}";
+            Assert.That(_rateLimiterService.Validate(_resource, token), Is.True);
+            await Task.Delay(10);
+            Assert.That(_rateLimiterService.Validate(_resource, token), Is.True);
+            await Task.Delay(11);
+            Assert.That(_rateLimiterService.Validate(_resource, token), Is.True);
+            await Task.Delay(12);
+            Assert.That(_rateLimiterService.Validate(_resource, token), Is.True);
+            await Task.Delay(13);
+            Assert.That(_rateLimiterService.Validate(_resource, token), Is.True);
+            await Task.Delay(5);
+            Assert.That(_rateLimiterService.Validate(_resource, token), Is.False);
+        }
+    }
+}
