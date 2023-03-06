@@ -10,7 +10,7 @@ namespace RateLimiter
 {
     public class RateLimiter
     {
-        private static ConcurrentDictionary<string, ConcurrentQueue<DateTime>> _requests = new ConcurrentDictionary<string, ConcurrentQueue<DateTime>>();
+        private static ConcurrentDictionary<string, ConcurrentDictionary<string, ConcurrentQueue<DateTime>>> _requests = new ConcurrentDictionary<string, ConcurrentDictionary<string, ConcurrentQueue<DateTime>>>();
         private IResourceRepository _resourceRepository;
         private IClientRepository _clientRepository;
 
@@ -34,9 +34,12 @@ namespace RateLimiter
             var now = DateTime.UtcNow;
 
             if (!_requests.ContainsKey(userToken))
-                _requests.TryAdd(userToken, new ConcurrentQueue<DateTime>());
+                _requests.TryAdd(userToken, new ConcurrentDictionary<string, ConcurrentQueue<DateTime>>());
 
-            _requests.TryGetValue(userToken, out var queue);
+            if (!_requests[userToken].ContainsKey(path))
+                _requests[userToken].TryAdd(path, new ConcurrentQueue<DateTime>());
+
+            _requests[userToken].TryGetValue(path, out var queue);
 
             while (queue.TryPeek(out var oldest) && (now - oldest) > rules[0].Period)
             {
@@ -50,7 +53,7 @@ namespace RateLimiter
             {
                 var period = rule.Period;
                 var count = 0;
-                foreach (var usedTime in _requests[userToken])
+                foreach (var usedTime in queue)
                 {
                     if ((now - usedTime) <= period)
                         count++;
