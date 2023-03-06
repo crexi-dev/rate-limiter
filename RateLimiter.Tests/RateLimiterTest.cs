@@ -120,14 +120,14 @@ namespace RateLimiter.Tests
 
         [Test]
         [TestCase("TestToken6")]
-        public void CanMakeRequest_WithWhenAllRuleFails_ReturnFalse(string token)
+        public void CanMakeRequest_WithWhenOneRuleWithLessTimePeriodFails_ReturnFalse(string token)
         {
             _clientRepository
                 .Setup(x => x.GetRulesOfResource(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(new System.Collections.Generic.List<Model.RateLimiterRule>
                 {
-                   Model.RateLimiterRule.Create(TimeSpan.FromMinutes(3),1),
-                   Model.RateLimiterRule.Create(TimeSpan.FromMinutes(2),1)
+                   Model.RateLimiterRule.Create(TimeSpan.FromMinutes(3),2),
+                   Model.RateLimiterRule.Create(TimeSpan.FromMinutes(1),1)
                 });
 
             var rateLimiter = new RateLimiter(_clientRepository.Object);

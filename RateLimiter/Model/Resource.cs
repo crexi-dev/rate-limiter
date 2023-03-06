@@ -20,7 +20,7 @@ namespace RateLimiter.Model
             var existingRule = Rules.FirstOrDefault(x => x.Period == rule.Period && x.Limit == rule.Limit);
 
             if (existingRule != null)
-                throw new System.Exception($"Resource with Path :{Path} already contain rule with Limit:{rule.Limit} and Period:{rule.Period}");
+                throw new System.Exception($"Resource with Path :{Path} already contain rule with Limit:{rule.Limit} and Period:{rule.Period}");        
 
             Rules.Add(rule);
         }

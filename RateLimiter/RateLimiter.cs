@@ -38,16 +38,25 @@ namespace RateLimiter
 
             _requests.TryGetValue(userToken, out var queue);
 
+            while (queue.TryPeek(out var oldest) && (now - oldest) > rules[0].Period)
+            {
+                queue.TryDequeue(out _);
+            }
+
+            if (queue.Count >= rules[0].Limit)
+                return false;
+
             foreach (var rule in rules)
             {
-                while (queue.TryPeek(out var oldest) && (now - oldest) > rule.Period)
+                var period = rule.Period;
+                var count = 0;
+                foreach (var usedTime in _requests[userToken])
                 {
-                    queue.TryDequeue(out _);
-                }
+                    if ((now - usedTime) <= period)
+                        count++;
 
-                if (queue.Count >= rule.Limit)
-                {
-                    return false;
+                    if (count >= rule.Limit)
+                        return false;
                 }
             }
 
