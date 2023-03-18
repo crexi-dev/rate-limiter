@@ -3,5 +3,16 @@
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+      <HintPath>..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\6.0.12\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Features">
+      <HintPath>..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\6.0.12\ref\net6.0\Microsoft.AspNetCore.Http.Features.dll</HintPath>
+    </Reference>
+
+	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
 </Project>  
