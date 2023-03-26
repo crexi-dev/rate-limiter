@@ -1,0 +1,26 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5f652a94_002D84c5_002D4508_002D817f_002D0681925ebaf1/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.Test&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=863b292d_002Ded70_002D47de_002Db4d2_002D19c40b1fb6c0/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.Test&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=bea74d42_002D5104_002D4033_002D82f3_002D0c65349ef42d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.NoRulesForToken&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.AllRequestsAreProhibited&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.ThreeRequestPerMinute&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.MinuteSinceLastRequest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.NoRulesAtAll&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.NoRulesForToken_Ok&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.RequestPerMinute_ThreeOk_OneOutOfCount&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.RequestPerMinute_ThreeOk_OneOutOfTime&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.DelayRule_Fail&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net6.0::RateLimiter.Tests.RateLimiterTest.ManyRequests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
