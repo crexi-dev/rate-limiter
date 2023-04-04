@@ -1,16 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter", "RateLimiter\RateLimiter.csproj", "{36F4BDC6-D3DA-403A-8DB7-0C79F94B938F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RateLimiter", "RateLimiter\RateLimiter.csproj", "{36F4BDC6-D3DA-403A-8DB7-0C79F94B938F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Tests", "RateLimiter.Tests\RateLimiter.Tests.csproj", "{C4F9249B-010E-46BE-94B8-DD20D82F1E60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RateLimiter.Tests", "RateLimiter.Tests\RateLimiter.Tests.csproj", "{C4F9249B-010E-46BE-94B8-DD20D82F1E60}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9B206889-9841-4B5E-B79B-D5B2610CCCFF}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Contracts", "RateLimiter.Contracts\RateLimiter.Contracts.csproj", "{7CB2984F-290C-4917-A00E-54D46433A96F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimiter.Core", "RateLimiter.Core\RateLimiter.Core.csproj", "{E4AA5795-4128-45FB-ACB2-6612D7F1C8A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +30,14 @@ Global
 		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4F9249B-010E-46BE-94B8-DD20D82F1E60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CB2984F-290C-4917-A00E-54D46433A96F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CB2984F-290C-4917-A00E-54D46433A96F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CB2984F-290C-4917-A00E-54D46433A96F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CB2984F-290C-4917-A00E-54D46433A96F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4AA5795-4128-45FB-ACB2-6612D7F1C8A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4AA5795-4128-45FB-ACB2-6612D7F1C8A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4AA5795-4128-45FB-ACB2-6612D7F1C8A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4AA5795-4128-45FB-ACB2-6612D7F1C8A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
