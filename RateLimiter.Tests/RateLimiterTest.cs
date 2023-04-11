@@ -10,7 +10,7 @@ public class RateLimiterTest
     public void TenRequestsPerTenSeconds()
     {
         string token = Guid.NewGuid().ToString();
-        var rateLimiter = new RateLimiter(t => new RateLimiterQueue()
+        var rateLimiter = new RateLimiter<string>(t => new RateLimiterQueue()
             .EnableRateLimit(10, new TimeSpan(0, 0, 10)));
         Assert.True(rateLimiter.Check(token, new DateTime(2023, 4, 11, 0, 0, 0, 0)));
         Assert.True(rateLimiter.Check(token, new DateTime(2023, 4, 11, 0, 0, 0, 1)));
@@ -31,7 +31,7 @@ public class RateLimiterTest
     public void OneSecondPeriod()
     {
         string token = Guid.NewGuid().ToString();
-        var rateLimiter = new RateLimiter(t => new RateLimiterQueue()
+        var rateLimiter = new RateLimiter<string>(t => new RateLimiterQueue()
             .EnablePeriodLimit(new TimeSpan(0, 0, 1)));
         Assert.True(rateLimiter.Check(token, new DateTime(2023, 4, 11, 0, 0, 0, 0)));
         Assert.False(rateLimiter.Check(token, new DateTime(2023, 4, 11, 0, 0, 0, 1)));
@@ -44,7 +44,7 @@ public class RateLimiterTest
     public void TenRequestPerTenSecondsWithOneSecondPeriod()
     {
         string token = Guid.NewGuid().ToString();
-        var rateLimiter = new RateLimiter(t => new RateLimiterQueue()
+        var rateLimiter = new RateLimiter<string>(t => new RateLimiterQueue()
             .EnableRateLimit(5, new TimeSpan(0, 0, 10))
             .EnablePeriodLimit(new TimeSpan(0, 0, 1)));
         Assert.True(rateLimiter.Check(token, new DateTime(2023, 4, 11, 0, 0, 0, 0)));
@@ -68,7 +68,7 @@ public class RateLimiterTest
     {
         string usToken = $"US-{Guid.NewGuid()}";
         string euToken = $"EU-{Guid.NewGuid()}";
-        var rateLimiter = new RateLimiter(t =>
+        var rateLimiter = new RateLimiter<string>(t =>
         {
             if (t.StartsWith("US"))
             {

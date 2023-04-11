@@ -69,18 +69,19 @@ namespace RateLimiter
         }
     }
 
-    public class RateLimiter
+    public class RateLimiter<T>
+        where T : notnull
     {
-        private Func<string, RateLimiterQueue> buildQueue;
+        private Func<T, RateLimiterQueue> buildQueue;
 
-        private Dictionary<string, RateLimiterQueue> rateLimits = new();
+        private Dictionary<T, RateLimiterQueue> rateLimits = new();
 
-        public RateLimiter(Func<string, RateLimiterQueue> buildQueue)
+        public RateLimiter(Func<T, RateLimiterQueue> buildQueue)
         {
             this.buildQueue = buildQueue;
         }
 
-        public bool Check(string token, DateTime timestamp)
+        public bool Check(T token, DateTime timestamp)
         {
             if (!this.rateLimits.ContainsKey(token))
             {
