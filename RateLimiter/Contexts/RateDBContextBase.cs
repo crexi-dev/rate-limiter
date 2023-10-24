@@ -14,5 +14,15 @@ namespace RateLimiter.Contexts
         {
 
         }
+
+        DbSet<RequestHistoryEModel> RequestHistories { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<RequestHistoryEModel>()
+                        .HasKey(nameof(RequestHistoryEModel.Id));
+        }
     }
 }
