@@ -15,5 +15,7 @@ namespace RateLimiter.RateLimitHandlers
         IRateLimitHandler<TClientIdentity, TResponse> SetNext(IRateLimitHandler<TClientIdentity, TResponse> handler);
 
         Task<TResponse> CheckLimit(TClientIdentity client);
+
+        Task<TResponse> ToNext(TClientIdentity client);
     }
 }

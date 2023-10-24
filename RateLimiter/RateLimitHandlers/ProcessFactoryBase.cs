@@ -27,15 +27,15 @@ namespace RateLimiter.RateLimitHandlers
             _eUBasedTokensHandler = eUBasedTokensHandler;
         }
 
-        protected internal virtual IRateLimitHandler<TClientIdentity, TResponse> CrateChain<TRateLimitHandler, TClientIdentity, TResponse>()
-            where TRateLimitHandler : IRateLimitHandler<TClientIdentity, TResponse>
-            where TClientIdentity : IClientRequestIdentity
-            where TResponse : IQuotaResponse
+        protected internal virtual RateLimitHandlerBase<IClientRequestIdentity, QuotaExceededResponse> CrateChain<TRateLimitHandler, TClientIdentity, TResponse>()//IRateLimitHandler<TClientIdentity, TResponse>
+                                                                                                                                                                  //where TRateLimitHandler : IRateLimitHandler<TClientIdentity, TResponse>
+                                                                                                                                                                  //where TClientIdentity : IClientRequestIdentity
+                                                                                                                                                                  //where TResponse : IQuotaResponse
         {
             _xRequestsPerTimespan.SetNext(_lastCallHandler)
                                  .SetNext(_usBasedTokensHandler)
                                  .SetNext(_eUBasedTokensHandler);
-            return (IRateLimitHandler<TClientIdentity, TResponse>)_xRequestsPerTimespan;
+            return _xRequestsPerTimespan;
         }
 
         public virtual async Task<IQuotaResponse> Check<TClientIdentity>(TClientIdentity client) 
