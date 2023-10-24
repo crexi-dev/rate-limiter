@@ -19,11 +19,16 @@ namespace RateLimiter.Extensions
         {
             services.Configure<RateLimitOptions>(Configuration.GetSection(RateLimitOptions.SectionName));
             services.AddScoped<ICacheService, CacheService>();
-            services.AddScoped<RateDBContextBase, RateDBContext>();
+            
             services.ConfigureRateLimitHandlers();
             return services;
         }
-        
+
+        public static void ConfigureDbContext(this IServiceCollection services)
+        { 
+            services.AddScoped<RateDBContextBase>(); 
+        }
+
         private static IServiceCollection ConfigureRateLimitHandlers(this IServiceCollection services)
         {
             //TO DO - IRateLimitHandler

@@ -39,7 +39,7 @@ namespace RateLimiter.Tests
             var services = new ServiceCollection();
             var config = GetIConfigurationRoot(reset);
             services.ConfigureRateLimiter(config);
-            services.AddDbContext<RateDBContextBase, RateDBContext>(db => db.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+            services.AddDbContext<RateDBContextBase>(db => db.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             _provider = services.BuildServiceProvider();
             return _provider;
