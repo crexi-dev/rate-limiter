@@ -22,7 +22,7 @@ namespace RateLimiter.Models
         {
             var now = DateTime.Now;
 
-            if ((now - _lastRequestTime).TotalMinutes < period)
+            if ((now - _lastRequestTime).TotalSeconds < period)
             {
                 if (_counter >= limit)
                 {

@@ -24,9 +24,8 @@ namespace RateLimiter.Models
         public bool IsAllowed(int period)
         {
             DateTime now = DateTime.Now;
-            if ((now - _lastRequestTime).TotalMinutes < period)
+            if ((now - _lastRequestTime).TotalSeconds < period)
             {
-                _lastRequestTime = now;
                 return false;
             }
             else

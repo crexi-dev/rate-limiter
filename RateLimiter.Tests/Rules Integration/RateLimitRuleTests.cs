@@ -13,7 +13,7 @@ namespace RateLimiter.Tests.Rules
         [TestCase("test2")]
         public void RateLimitRule_LimitPeriod_Success(string token)
         {
-            var model = new Models.RateLimitRuleModel { Endpoint = "api/test", RequestLimit = 2, RequestPeriod = 1 };
+            var model = new Models.RateLimitRuleModel { Endpoint = "api/test", RequestLimit = 2, RequestPeriod = 60 };
             var limitperiod = new LimitPeriodRule(SingletonProvider.ServiceProvider.GetService<IMemoryCache>());
 
 
@@ -26,7 +26,7 @@ namespace RateLimiter.Tests.Rules
         [TestCase("test2")]
         public void RateLimitRule_Request_Interval_Success(string token)
         {
-            var model = new Models.RateLimitRuleModel { Endpoint = "api/test", RequestPeriod = 1 };
+            var model = new Models.RateLimitRuleModel { Endpoint = "api/test", RequestPeriod = 20 };
             var intervalRule = new RequestIntervalRule(SingletonProvider.ServiceProvider.GetService<IMemoryCache>());
 
 
