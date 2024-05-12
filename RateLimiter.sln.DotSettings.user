@@ -1,0 +1,6 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=201b1cc2_002Dc234_002D4cc8_002Da377_002Db0e95c72a998/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Concurrent_Requests_Should_Throttle_Properly" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;NUnit3x::C4F9249B-010E-46BE-94B8-DD20D82F1E60::net8.0::RateLimiter.Tests.RateLimitingMiddlewareTests&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

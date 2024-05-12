@@ -1,0 +1,22 @@
+{
+  "RateLimiting": {
+    "GeneralRules": [
+      {
+        "Name": "GeneralRule",
+        "MaxRequests": 2,
+        "TimeSpanSeconds": 10
+      }
+    ],
+    "CountrySpecificRules": [
+      {
+        "Country": "US",
+        "MaxRequests": 3,
+        "TimeSpanSeconds": 15
+      },
+      {
+        "Country": "EU",
+        "TimeBetweenRequestsSeconds": 5
+      }
+    ]
+  }
+}
