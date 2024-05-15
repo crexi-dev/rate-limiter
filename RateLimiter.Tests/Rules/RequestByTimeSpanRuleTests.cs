@@ -8,7 +8,7 @@ public class RequestByTimeSpanRuleTest
 {
     [TestCase(100, 120, ExpectedResult = false)]
     [TestCase(120, 100, ExpectedResult = true)]
-    public bool Validate_RequestNumberMoreThanConfigured_False(int requestLimit, int requestNumber)
+    public bool Validate(int requestLimit, int requestNumber)
     {
         // Arrange
         var rule = new RequestByTimeSpanRule(requestLimit);
