@@ -1,4 +1,6 @@
-using RateLimiter;
+using RateLimiter.Rules;
+
+namespace RateLimiter.Repositories;
 
 public interface IRuleRepository
 {

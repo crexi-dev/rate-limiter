@@ -1,20 +1,18 @@
-using System;
 using System.Collections;
-using RateLimiter.Rules;
 
 namespace RateLimiter.Rules;
-public class RuleCollection : CollectionBase
+public class RuleCollection
 {
-    public RuleCollection()
-    {
-        
+    private readonly Rule[] _rules;
+
+    public RuleCollection(Rule[] rules){
+        _rules = rules;
     }
-    
-    public bool ValidateRules(Request token)
+    public bool ValidateRules(Request request)
     {
-        foreach (Rule rule in this)
+        foreach (Rule rule in _rules)
         {
-            if (!rule.Validate(token))
+            if (!rule.Validate(request))
             {
                 return false;
             }

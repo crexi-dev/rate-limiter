@@ -1,5 +1,6 @@
 using RateLimiter.Rules.RuleInfo;
 
+namespace RateLimiter.Rules;
 public class RegionBasedRule<T> : Rule<RegionBasedInfo<T>> where T : Info
 {
     private readonly string _region;

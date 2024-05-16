@@ -1,4 +1,5 @@
 
+using RateLimiter.Rules;
 using RateLimiter.Rules.RuleInfo;
 
 public class TimeSpanFromTheLastCallRule : Rule<TimeSpanFromTheLastCallInfo>

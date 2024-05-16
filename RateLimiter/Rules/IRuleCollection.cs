@@ -1,7 +1,7 @@
 using System.Collections;
 
 namespace RateLimiter.Rules;
-public interface IRuleCollection : ICollection
+public interface IRuleCollection
 {
-    bool ValidateRules(Request token);
+    bool Validate(Request request);
 }

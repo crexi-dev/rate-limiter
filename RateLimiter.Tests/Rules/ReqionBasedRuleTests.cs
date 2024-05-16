@@ -1,5 +1,6 @@
 using Moq;
 using NUnit.Framework;
+using RateLimiter.Rules;
 using RateLimiter.Rules.RuleInfo;
 
 namespace RateLimiter.Tests.Rules

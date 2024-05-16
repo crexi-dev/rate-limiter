@@ -1,3 +1,5 @@
+using RateLimiter.Repositories;
+
 namespace RateLimiter;
 public class RequestValidator
 {
@@ -13,7 +15,7 @@ public class RequestValidator
     public bool Validate(Request request)
     {
         var ruleCollection = _ruleRepository.GetRules(request.Token);
-        var validationResult = ruleCollection.Validate(request.Token);
+        var validationResult = ruleCollection.Validate(request);
         _requestLogRepository.Log(request, validationResult);
         return validationResult;
     }
