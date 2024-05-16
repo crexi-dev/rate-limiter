@@ -1,3 +1,5 @@
+using RateLimiter.Models;
+
 namespace RateLimiter.Repositories;
 public interface IRequestLogRepository
 {

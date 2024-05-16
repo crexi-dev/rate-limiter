@@ -1,3 +1,4 @@
+using RateLimiter.Models;
 using RateLimiter.Repositories;
 
 namespace RateLimiter;

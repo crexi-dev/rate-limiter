@@ -1,3 +1,5 @@
+using RateLimiter.Models;
+
 namespace RateLimiter.Rules;
 public interface IRule<T> where T : Info
 {
