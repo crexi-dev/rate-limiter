@@ -3,9 +3,9 @@ using RateLimiter.Rules.RuleInfo;
 public class RegionBasedRule<T> : Rule<RegionBasedInfo<T>> where T : Info
 {
     private readonly string _region;
-    private readonly Rule<T> _rule;
+    private readonly IRule<T> _rule;
 
-    public RegionBasedRule(string region, Rule<T> rule)
+    public RegionBasedRule(string region, IRule<T> rule)
     {
         _region = region;
         _rule = rule;
@@ -16,7 +16,7 @@ public class RegionBasedRule<T> : Rule<RegionBasedInfo<T>> where T : Info
     {
         if (info.Region != _region)
         {
-            return false;
+            return true;
         }
 
         return _rule.Validate(info.InnerRuleInfo);
