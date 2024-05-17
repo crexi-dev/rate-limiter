@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using RateLimiter.Rules.RuleInfo;
+using RateLimiter.Models;
 
 namespace RateLimiter.Tests.Rules
 {
@@ -14,7 +14,7 @@ namespace RateLimiter.Tests.Rules
             var rule = new TimeSpanFromTheLastCallRule(expectedTimeSpan);
 
             // Act
-            var result = rule.Validate(new TimeSpanFromTheLastCallInfo{ActualTime = actualTimeSpan});
+            var result = rule.Validate(new Request());
 
             // Assert
             return result;

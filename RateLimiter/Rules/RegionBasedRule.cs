@@ -1,26 +1,26 @@
-using RateLimiter.Rules.RuleInfo;
+using RateLimiter.Models;
 
 namespace RateLimiter.Rules;
-public class RegionBasedRule<T> : Rule<RegionBasedInfo<T>> where T : Info
+public class RegionBasedRule : Rule, IRule
 {
     private readonly string _region;
-    private readonly IRule<T> _rule;
+    
+    private IRule _innerRule;
 
-    public RegionBasedRule(string region, IRule<T> rule)
+    public RegionBasedRule(string region, IRule innerRule)
     {
         _region = region;
-        _rule = rule;
+        _innerRule = innerRule;
     }
 
-
-    public override bool Validate(RegionBasedInfo<T> info)
+    public override bool Validate(Request request)
     {
-        if (info.Region != _region)
+        if (request.Token?.Reqion != _region)
         {
             return true;
         }
 
-        return _rule.Validate(info.InnerRuleInfo);
+        return _innerRule.Validate(request);
     }
 
 }

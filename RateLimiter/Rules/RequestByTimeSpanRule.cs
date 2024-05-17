@@ -1,19 +1,20 @@
-﻿using System;
+﻿using RateLimiter.Models;
+using System;
 
 namespace RateLimiter.Rules
 {
-    public class RequestByTimeSpanRule
+    public class RequestByTimeSpanRule : IRule 
     {
         private int _requestLimit;
 
-        public RequestByTimeSpanRule(int requestLimit)
+        public RequestByTimeSpanRule(int requestLimit, int timeSpan)
         {
             _requestLimit = requestLimit;
         }
 
-        public bool Validate(int requestNumber)
+        public bool Validate(Request request)
         {
-            return _requestLimit > requestNumber;
+            return true;
         }
     }
 }

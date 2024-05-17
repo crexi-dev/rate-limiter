@@ -9,4 +9,9 @@ public class RequestByTimeSpanRuleTemplate : IRuleTemplate
     {
         return typeof(RequestByTimeSpanRuleTemplateParams);
     }
+
+    public Type GetRuleConstructorType()
+    {
+        return typeof(RequestByTimeSpanRuleConstructor);
+    }
 }

@@ -15,7 +15,7 @@ namespace RateLimiter
             return new List<IRuleTemplate>
             {
                 new RequestByTimeSpanRuleTemplate(),
-                new ReqionBasedRuleTemplate(),
+                new RegionBasedRuleTemplate(),
                 new TimeSpanFromLastCallRuleTemplate()
             };
         }

@@ -7,6 +7,6 @@ namespace RateLimiter.Repositories;
 
 public interface IRuleRepository
 {
-    IRuleCollection GetRules(Token token);
+    IRuleCollection GetRules(string Resource, Token token);
     void Save(string resource, Guid clientId, IRuleTemplate ruleTemplate, RuleTemplateParams ruleParams);
 }

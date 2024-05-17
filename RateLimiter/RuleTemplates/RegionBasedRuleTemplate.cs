@@ -1,18 +1,20 @@
 ﻿using System;
+using RateLimiter.Rules;
 using RateLimiter.RuleTemplates.Params;
 
 namespace RateLimiter.RuleTemplates
 {
-    internal class TimeSpanFromLastCallRuleTemplate : IRuleTemplate
+    internal class RegionBasedRuleTemplate : IRuleTemplate
     {
+        
         public Type GetParamsType()
         {
-            return typeof(TimeSpanFromLastCallRuleTemplateParams);
+            return typeof(RegionBasedRuleTemplateParams);
         }
 
         public Type GetRuleConstructorType()
         {
-            throw new NotImplementedException();
+            return typeof(RegionBasedRuleConstructor);
         }
     }
 }

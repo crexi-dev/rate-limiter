@@ -1,8 +1,7 @@
-
+using RateLimiter.Models;
 using RateLimiter.Rules;
-using RateLimiter.Rules.RuleInfo;
 
-public class TimeSpanFromTheLastCallRule : Rule<TimeSpanFromTheLastCallInfo>
+public class TimeSpanFromTheLastCallRule : IRule
 {
     private int _expectedTimeSpan;
 
@@ -11,8 +10,8 @@ public class TimeSpanFromTheLastCallRule : Rule<TimeSpanFromTheLastCallInfo>
         _expectedTimeSpan = expectedTimeSpan;
     }
 
-    public override bool Validate(TimeSpanFromTheLastCallInfo info)
+    public bool Validate(Request request)
     {
-        return info.ActualTime > _expectedTimeSpan;
+        return false;
     }
 }

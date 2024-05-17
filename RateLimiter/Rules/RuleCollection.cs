@@ -1,15 +1,16 @@
 using System.Collections;
+using System.Collections.Generic;
 using RateLimiter.Models;
 
 namespace RateLimiter.Rules;
-public class RuleCollection
+public class RuleCollection : IRuleCollection
 {
-    private readonly Rule[] _rules;
+    private readonly IEnumerable<IRule> _rules;
 
-    public RuleCollection(Rule[] rules){
+    public RuleCollection(IEnumerable<IRule> rules){
         _rules = rules;
     }
-    public bool ValidateRules(Request request)
+    public bool Validate(Request request)
     {
         foreach (Rule rule in _rules)
         {
