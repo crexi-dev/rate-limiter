@@ -1,8 +1,9 @@
-﻿using RateLimiter.Repositories;
-using RateLimiter.Rules;
+﻿using RateLimiter.Exceptions;
+using RateLimiter.Repositories;
+using RateLimiter.RuleTemplates;
 using RateLimiter.RuleTemplates.Params;
 
-namespace RateLimiter.RuleTemplates
+namespace RateLimiter.Rules.Constructors
 {
     internal class RegionBasedRuleConstructor : IRuleConstructor
     {
@@ -14,7 +15,7 @@ namespace RateLimiter.RuleTemplates
         }
         public IRule Construct(RuleTemplateParams templateParams)
         {
-            if(templateParams is RegionBasedRuleTemplateParams validParams)
+            if (templateParams is RegionBasedRuleTemplateParams validParams)
             {
                 return new RegionBasedRule(validParams.Region, _ruleFactory.Create(validParams.InnerRule));
             }

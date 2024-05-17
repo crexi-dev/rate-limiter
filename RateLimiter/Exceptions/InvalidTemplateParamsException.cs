@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace RateLimiter.RuleTemplates
+namespace RateLimiter.Exceptions
 {
     [Serializable]
     internal class InvalidTemplateParamsException : Exception

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using RateLimiter.RuleTemplates;
 using RateLimiter.RuleTemplates.Params;
 
-namespace RateLimiter
+namespace RateLimiter.RuleTemplates
 {
     public interface IRuleTemplateDetector
     {

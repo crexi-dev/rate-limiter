@@ -1,4 +1,5 @@
 ﻿using System;
+using RateLimiter.Rules.Constructors;
 using RateLimiter.RuleTemplates.Params;
 
 namespace RateLimiter.RuleTemplates;

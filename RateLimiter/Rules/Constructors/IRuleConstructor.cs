@@ -1,7 +1,7 @@
 ﻿using RateLimiter.Rules;
 using RateLimiter.RuleTemplates;
 
-namespace RateLimiter.Repositories
+namespace RateLimiter.Rules.Constructors
 {
     public interface IRuleConstructor
     {
