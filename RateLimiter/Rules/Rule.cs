@@ -6,6 +6,11 @@ public interface IRule<T> where T : Info
     bool Validate(T info);
 }
 
+public interface IRule
+{
+    bool Validate(object info);
+}
+
 public abstract class Rule{
     public abstract bool Validate(Request token);
 }

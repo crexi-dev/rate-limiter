@@ -1,14 +1,19 @@
-﻿using RateLimiter.Rules;
+﻿using RateLimiter.Repositories;
+using RateLimiter.Rules;
+using RateLimiter.RuleTemplates;
+using System;
 
 namespace RateLimiter;
 
 public class RuleBuilder
 {
     private readonly IRuleTemplateDetector _ruleTemplateDetector;
+    private readonly IRuleRepository _ruleRepository;
 
-    public RuleBuilder(IRuleTemplateDetector ruleTemplateDetector)
+    public RuleBuilder(IRuleTemplateDetector ruleTemplateDetector, IRuleRepository ruleRepository)
     {
         _ruleTemplateDetector = ruleTemplateDetector;
+        _ruleRepository = ruleRepository;
     }
     public RuleTemplateCollection GetTemplates()
     {
@@ -16,8 +21,9 @@ public class RuleBuilder
         return new RuleTemplateCollection(ruleTemplates);
     }
 
-    public void AssingRules(string resource, RuleCollection rules)
+    // Change to result
+    public void Add(string resource, Guid clientId, IRuleTemplate ruleTemplate, RuleTemplateParams ruleParams)
     {
-
+        _ruleRepository.Save(resource, clientId, ruleTemplate, ruleParams);
     }
 }
