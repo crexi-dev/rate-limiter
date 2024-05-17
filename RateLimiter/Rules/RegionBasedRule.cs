@@ -1,4 +1,7 @@
+using RateLimiter.Guards;
 using RateLimiter.Models;
+using RateLimiter.Rules.Info;
+using System;
 
 namespace RateLimiter.Rules;
 public class RegionBasedRule : Rule, IRule
@@ -13,14 +16,16 @@ public class RegionBasedRule : Rule, IRule
         _innerRule = innerRule;
     }
 
-    public override bool Validate(Request request)
+    public override bool Validate(RuleRequestInfo? requestInfo)
     {
-        if (request.Token?.Reqion != _region)
+        var info = (RegionBasedRuleInfo?)requestInfo ?? throw new ArgumentNullException(nameof(requestInfo));
+        if (info.Region != _region)
         {
             return true;
         }
 
-        return _innerRule.Validate(request);
+        
+        return _innerRule.Validate(info?.InnerRuleInfo);
     }
 
 }

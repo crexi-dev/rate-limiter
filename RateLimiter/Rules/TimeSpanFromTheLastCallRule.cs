@@ -1,3 +1,4 @@
+using RateLimiter.Guards;
 using RateLimiter.Models;
 using RateLimiter.Rules;
 
@@ -10,8 +11,10 @@ public class TimeSpanFromTheLastCallRule : IRule
         _expectedTimeSpan = expectedTimeSpan;
     }
 
-    public bool Validate(Request request)
+    public bool Validate(RuleRequestInfo? requestInfo)
     {
-        return false;
+        Guard.RequestInfoType<TimeSpanFromTheLastCallRuleInfo>(requestInfo);
+        var info = (TimeSpanFromTheLastCallRuleInfo)requestInfo;
+        return _expectedTimeSpan < info.ActualTimeSpan;
     }
 }

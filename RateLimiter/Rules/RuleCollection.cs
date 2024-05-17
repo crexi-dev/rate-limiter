@@ -1,20 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using RateLimiter.Models;
+using RateLimiter.Repositories;
 
 namespace RateLimiter.Rules;
 public class RuleCollection : IRuleCollection
 {
-    private readonly IEnumerable<IRule> _rules;
+    private readonly IEnumerable<ValidateReadyRule> _validateReadyRules;
 
-    public RuleCollection(IEnumerable<IRule> rules){
-        _rules = rules;
+    public RuleCollection(IEnumerable<ValidateReadyRule> validateReadyRules){
+        _validateReadyRules = validateReadyRules;
     }
     public bool Validate(Request request)
     {
-        foreach (Rule rule in _rules)
+        foreach (ValidateReadyRule validateReadyRule in _validateReadyRules)
         {
-            if (!rule.Validate(request))
+            if (!validateReadyRule.Rule.Validate(validateReadyRule.RequestConverter.Convert(request)))
             {
                 return false;
             }
@@ -23,4 +25,10 @@ public class RuleCollection : IRuleCollection
         return true;
        
     }
+}
+
+public interface IValidateReadyRule
+{
+    IRule Rule { get; }
+    IRequestConverter RequestConverter { get; }
 }

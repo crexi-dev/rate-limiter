@@ -14,7 +14,7 @@ namespace RateLimiter.Tests.Rules
             var rule = new TimeSpanFromTheLastCallRule(expectedTimeSpan);
 
             // Act
-            var result = rule.Validate(new Request());
+            var result = rule.Validate(new TimeSpanFromTheLastCallRuleInfo(actualTimeSpan));
 
             // Assert
             return result;

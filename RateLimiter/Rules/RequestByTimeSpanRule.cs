@@ -1,4 +1,6 @@
-﻿using RateLimiter.Models;
+﻿using RateLimiter.Guards;
+using RateLimiter.Models;
+using RateLimiter.Rules.Info;
 using System;
 
 namespace RateLimiter.Rules
@@ -7,14 +9,17 @@ namespace RateLimiter.Rules
     {
         private int _requestLimit;
 
-        public RequestByTimeSpanRule(int requestLimit, int timeSpan)
+        public RequestByTimeSpanRule(int requestLimit)
         {
             _requestLimit = requestLimit;
         }
 
-        public bool Validate(Request request)
+        public bool Validate(RuleRequestInfo? requestInfo)
         {
-            return true;
+            Guard.RequestInfoType<RequestByTimeSpanRuleInfo>(requestInfo);
+            var info = (RequestByTimeSpanRuleInfo)requestInfo;
+            return _requestLimit < info.Requests;
+            
         }
     }
 }

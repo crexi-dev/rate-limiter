@@ -1,5 +1,4 @@
 ﻿using RateLimiter.Repositories;
-using RateLimiter.Rules;
 using RateLimiter.RuleTemplates;
 using System;
 

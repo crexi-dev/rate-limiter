@@ -2,4 +2,4 @@
 
 namespace RateLimiter.Repositories;
 
-internal record RuleValue(IRuleTemplate Template, RuleTemplateParams Params);
+public record RuleValue(IRuleTemplate Template, RuleTemplateParams Params);

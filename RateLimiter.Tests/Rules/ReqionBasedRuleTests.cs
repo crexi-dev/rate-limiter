@@ -2,6 +2,7 @@ using Moq;
 using NUnit.Framework;
 using RateLimiter.Models;
 using RateLimiter.Rules;
+using RateLimiter.Rules.Info;
 using System;
 
 namespace RateLimiter.Tests.Rules;
@@ -26,8 +27,8 @@ public class ReqionBasedRuleTests
     {
         // Arrange
         const string region = US;
-        var regionBasedInfo = new Request { Resource = "1", Token = {ClientId = Guid.NewGuid(), Reqion = region } };
-        _innerRule.Setup(x => x.Validate(It.IsAny<Request>())).Returns(true);
+        var regionBasedInfo = new RegionBasedRuleInfo { Region = region  };
+        _innerRule.Setup(x => x.Validate(It.IsAny<RuleRequestInfo>())).Returns(true);
         // Act
         
         var result = _USRegionBasedRule.Validate(regionBasedInfo);
@@ -41,8 +42,8 @@ public class ReqionBasedRuleTests
     {
         // Arrange
         const string region = EU;
-        var regionBasedInfo = new Request { Resource = "1", Token = { ClientId = Guid.NewGuid(), Reqion = region } };
-        _innerRule.Setup(x => x.Validate(It.IsAny<Request>())).Returns(false);
+        var regionBasedInfo = new RegionBasedRuleInfo { Region = region };
+        _innerRule.Setup(x => x.Validate(It.IsAny<RuleRequestInfo>())).Returns(true);
 
         // Act
         var result = _USRegionBasedRule.Validate(regionBasedInfo);

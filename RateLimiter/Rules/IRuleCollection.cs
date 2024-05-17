@@ -1,4 +1,3 @@
-using System.Collections;
 using RateLimiter.Models;
 
 namespace RateLimiter.Rules;

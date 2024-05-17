@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using RateLimiter.Models;
 using RateLimiter.Rules;
+using RateLimiter.Rules.Info;
 
 namespace RateLimiter.Tests.Rules;
 
@@ -12,8 +13,8 @@ public class RequestByTimeSpanRuleTest
     public bool Validate(int requestLimit, int timeSpan, int actualValueInTimeSpan)
     {
         // Arrange
-        var rule = new RequestByTimeSpanRule(requestLimit, timeSpan);
-        var request = new Request();
+        var rule = new RequestByTimeSpanRule(requestLimit);
+        var request = new RequestByTimeSpanRuleInfo();
         // Act
         var result = rule.Validate(request);
 
