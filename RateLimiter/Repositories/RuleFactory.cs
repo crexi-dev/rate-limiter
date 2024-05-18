@@ -1,7 +1,6 @@
-﻿using RateLimiter.Rules;
-using RateLimiter.Rules.Constructors;
+﻿using RateLimiter.Repositories.Detectors;
+using RateLimiter.Rules;
 using RateLimiter.RuleTemplates;
-using System;
 
 namespace RateLimiter.Repositories;
 
@@ -20,9 +19,4 @@ internal class RuleFactory : IRuleFactory
         var ruleConstructor = _ruleConstructorDetector.GetConstructor(constructorType);
         return ruleConstructor.Construct(value.Params);
     }
-}
-
-public interface IRuleConstructorDetector
-{
-    IRuleConstructor GetConstructor(Type constructorType);
 }

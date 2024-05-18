@@ -16,7 +16,7 @@ public class RuleCollection : IRuleCollection
     {
         foreach (ValidateReadyRule validateReadyRule in _validateReadyRules)
         {
-            if (!validateReadyRule.Rule.Validate(validateReadyRule.RequestConverter.Convert(request)))
+            if (!validateReadyRule.Rule.Validate(validateReadyRule.RequestConverter.Convert(request, validateReadyRule.TemplateParams)))
             {
                 return false;
             }

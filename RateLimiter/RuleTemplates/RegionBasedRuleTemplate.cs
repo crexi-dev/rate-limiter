@@ -2,6 +2,7 @@
 using RateLimiter.Rules;
 using RateLimiter.Rules.Constructors;
 using RateLimiter.RuleTemplates.Params;
+using RateLimiter.RuleTemplates.RequestConverters;
 
 namespace RateLimiter.RuleTemplates
 {
@@ -11,6 +12,11 @@ namespace RateLimiter.RuleTemplates
         public Type GetParamsType()
         {
             return typeof(RegionBasedRuleTemplateParams);
+        }
+
+        public Type GetRequestConverterType()
+        {
+            return typeof(RegionBasedRequestConverter);
         }
 
         public Type GetRuleConstructorType()

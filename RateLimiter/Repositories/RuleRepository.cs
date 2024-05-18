@@ -24,7 +24,7 @@ internal class RuleRepository : IRuleRepository
         List<ValidateReadyRule> rules = new();
         if(_storage.TryGetValue(new RuleKey(resource, token.ClientId), out RuleValue? value))
         {
-            rules.Add(new ValidateReadyRule(_ruleFactory.Create(value), _requestConverterFactory.Create(value)) );
+            rules.Add(new ValidateReadyRule(_ruleFactory.Create(value), _requestConverterFactory.Create(value), value.Params) );
         }
         return new RuleCollection(rules);
     }

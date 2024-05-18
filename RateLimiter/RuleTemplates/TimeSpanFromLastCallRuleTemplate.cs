@@ -10,6 +10,11 @@ namespace RateLimiter.RuleTemplates
             return typeof(TimeSpanFromLastCallRuleTemplateParams);
         }
 
+        public Type GetRequestConverterType()
+        {
+            throw new NotImplementedException();
+        }
+
         public Type GetRuleConstructorType()
         {
             throw new NotImplementedException();
