@@ -15,6 +15,7 @@ public class TimeSpanFromTheLastCallRule : IRule
     {
         Guard.NotNull(requestInfo, nameof(requestInfo));
         CustomGuard.IsValidRuleRequestInfoType<TimeSpanFromTheLastCallRuleInfo>(requestInfo.GetType());
+
         var info = (TimeSpanFromTheLastCallRuleInfo)requestInfo;
         return _expectedTimeSpan < info.ActualTimeSpan;
     }
