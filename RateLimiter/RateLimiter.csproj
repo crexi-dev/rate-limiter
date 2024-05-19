@@ -4,4 +4,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Guard.Net" Version="3.0.0" />
+  </ItemGroup>
 </Project>  

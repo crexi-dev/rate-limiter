@@ -9,7 +9,7 @@ namespace RateLimiter.Repositories;
 
 internal class RuleRepository : IRuleRepository
 {
-    private readonly ConcurrentDictionary<RuleKey, RuleValue> _storage = new ConcurrentDictionary<RuleKey, RuleValue>();
+    private readonly ConcurrentDictionary<RuleKey, List<RuleValue>> _storage = new ConcurrentDictionary<RuleKey, List<RuleValue>>();
     private IRuleFactory _ruleFactory;
     private readonly IRequestConverterFactory _requestConverterFactory;
 
@@ -22,9 +22,13 @@ internal class RuleRepository : IRuleRepository
     public IRuleCollection GetRules(string resource, Token token)
     {
         List<ValidateReadyRule> rules = new();
-        if(_storage.TryGetValue(new RuleKey(resource, token.ClientId), out RuleValue? value))
+        if(_storage.TryGetValue(new RuleKey(resource, token.ClientId), out List<RuleValue>? values))
         {
-            rules.Add(new ValidateReadyRule(_ruleFactory.Create(value), _requestConverterFactory.Create(value), value.Params) );
+            foreach (var value in values) 
+            {
+                rules.Add(new ValidateReadyRule(_ruleFactory.Create(value), _requestConverterFactory.Create(value), value.Params));
+            }
+            
         }
         return new RuleCollection(rules);
     }
@@ -32,6 +36,13 @@ internal class RuleRepository : IRuleRepository
     public void Save(string resource, Guid clientId, IRuleTemplate ruleTemplate, RuleTemplateParams ruleParams)
     {
         RuleValue newValue = new(ruleTemplate, ruleParams);
-        _storage.AddOrUpdate(new RuleKey(resource, clientId), newValue, (key, existing) => newValue);
+        var key = new RuleKey(resource, clientId);
+        lock (_storage) { }
+        if(!_storage.TryGetValue(key, out var ruleList))
+        {
+            ruleList = new List<RuleValue>();
+        }
+        ruleList.Add(newValue);
+        _storage.AddOrUpdate(new RuleKey(resource, clientId), ruleList, (key, existing) => { existing.Add(newValue); return existing; });
     }
 }

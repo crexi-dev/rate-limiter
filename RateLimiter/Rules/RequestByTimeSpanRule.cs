@@ -1,7 +1,6 @@
-﻿using RateLimiter.Guards;
-using RateLimiter.Models;
+﻿using GuardNet;
+using RateLimiter.CustomGuards;
 using RateLimiter.Rules.Info;
-using System;
 
 namespace RateLimiter.Rules
 {
@@ -16,7 +15,11 @@ namespace RateLimiter.Rules
 
         public bool Validate(RuleRequestInfo? requestInfo)
         {
-            Guard.RequestInfoType<RequestByTimeSpanRuleInfo>(requestInfo);
+            Guard.NotNull(requestInfo, nameof(requestInfo));
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            CustomGuard.IsValidRuleRequestInfoType<RequestByTimeSpanRuleInfo>(requestInfo.GetType());
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            
             var info = (RequestByTimeSpanRuleInfo)requestInfo;
             return _requestLimit < info.Requests;
             

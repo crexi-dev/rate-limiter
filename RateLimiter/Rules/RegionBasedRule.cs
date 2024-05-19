@@ -1,7 +1,5 @@
-using RateLimiter.Guards;
-using RateLimiter.Models;
+using GuardNet;
 using RateLimiter.Rules.Info;
-using System;
 
 namespace RateLimiter.Rules;
 public class RegionBasedRule : Rule, IRule
@@ -18,7 +16,12 @@ public class RegionBasedRule : Rule, IRule
 
     public override bool Validate(RuleRequestInfo? requestInfo)
     {
-        var info = (RegionBasedRuleInfo?)requestInfo ?? throw new ArgumentNullException(nameof(requestInfo));
+        Guard.NotNull(requestInfo, nameof(requestInfo));
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+        Guard.For(() => requestInfo.GetType().IsAssignableTo(typeof(RegionBasedRuleInfo)), new InvalidRuleInfoTypeException());
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+        var info = (RegionBasedRuleInfo?)requestInfo;
         if (info.Region != _region)
         {
             return true;

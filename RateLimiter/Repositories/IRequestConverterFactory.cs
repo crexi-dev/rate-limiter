@@ -31,3 +31,11 @@ public class RequestConverterFactory : IRequestConverterFactory
 
     }
 }
+
+public class RequestConverterDetector : IRequestConverterDetector
+{
+    public IRequestConverter Construct(IRequestLogRepository requestLogRepository)
+    {
+        throw new NotImplementedException();
+    }
+}

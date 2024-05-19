@@ -7,15 +7,13 @@ public class RequestValidator
 {
     private readonly IRuleRepository _ruleRepository;
     private readonly IRequestLogRepository _requestLogRepository;
-    private readonly IRequestConverterFinder _requestConverterFinder;
+
 
     public RequestValidator(IRuleRepository ruleRepository, 
-        IRequestLogRepository requestLogRepository, 
-        IRequestConverterFinder requestConverterFinder)
+        IRequestLogRepository requestLogRepository)
     {
         _ruleRepository = ruleRepository;
         _requestLogRepository = requestLogRepository;
-        _requestConverterFinder = requestConverterFinder;
     }
 
     public bool Validate(Request request)
@@ -27,7 +25,3 @@ public class RequestValidator
         return validationResult;
     }
 }
-public interface IRequestConverterFinder
-{
-
-} 

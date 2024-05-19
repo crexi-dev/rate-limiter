@@ -1,5 +1,5 @@
-using RateLimiter.Guards;
-using RateLimiter.Models;
+using GuardNet;
+using RateLimiter.CustomGuards;
 using RateLimiter.Rules;
 
 public class TimeSpanFromTheLastCallRule : IRule
@@ -13,7 +13,8 @@ public class TimeSpanFromTheLastCallRule : IRule
 
     public bool Validate(RuleRequestInfo? requestInfo)
     {
-        Guard.RequestInfoType<TimeSpanFromTheLastCallRuleInfo>(requestInfo);
+        Guard.NotNull(requestInfo, nameof(requestInfo));
+        CustomGuard.IsValidRuleRequestInfoType<TimeSpanFromTheLastCallRuleInfo>(requestInfo.GetType());
         var info = (TimeSpanFromTheLastCallRuleInfo)requestInfo;
         return _expectedTimeSpan < info.ActualTimeSpan;
     }

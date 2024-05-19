@@ -1,6 +1,8 @@
 ﻿using RateLimiter.Models;
 using RateLimiter.Repositories;
 using RateLimiter.Rules;
+using RateLimiter.Rules.Info;
+using RateLimiter.RuleTemplates.Params;
 
 namespace RateLimiter.RuleTemplates.RequestConverters;
 
@@ -15,6 +17,14 @@ public class RequestByTimeSpanRuleRequestConverter : IRequestConverter
 
     public RuleRequestInfo Convert(Request request, RuleTemplateParams templateParams)
     {
-        throw new System.NotImplementedException();
+        var currentParameters = templateParams as RequestByTimeSpanRuleTemplateParams;
+        if(currentParameters is null)
+        {
+            throw new InvalidRuleTemplateParamsException();
+        }
+
+        var requestNumber = _requestLogRepository
+            .GetRequestNumber(request.Resource, request.Timestamp, request.Token.ClientId, currentParameters.TimeSpanInSeconds);
+        return new RequestByTimeSpanRuleInfo { Requests = requestNumber };
     }
 }
