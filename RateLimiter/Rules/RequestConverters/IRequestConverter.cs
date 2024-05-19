@@ -2,7 +2,7 @@
 using RateLimiter.Rules;
 using RateLimiter.RuleTemplates;
 
-namespace RateLimiter.Repositories
+namespace RateLimiter.Rules.RequestConverters
 {
     public interface IRequestConverter
     {

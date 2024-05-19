@@ -2,6 +2,7 @@
 using RateLimiter.Repositories;
 using RateLimiter.Rules;
 using RateLimiter.Rules.Info;
+using RateLimiter.Rules.RequestConverters;
 using RateLimiter.RuleTemplates.Params;
 
 namespace RateLimiter.RuleTemplates.RequestConverters;

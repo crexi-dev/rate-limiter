@@ -6,9 +6,9 @@ namespace RateLimiter.CustomGuards
 {
     public static class CustomGuard
     {
-        public static void IsValidRuleRequestInfoType<T>(Type current)
+        public static void IsValidRuleRequestInfoType<T>(object current)
         { 
-            Guard.For(() => current.IsAssignableTo(typeof(T)), new InvalidRuleRequestInfoTypeException());
+            Guard.For(() => typeof(T).IsInstanceOfType(current), new InvalidRuleRequestInfoTypeException());
         }
     }
 }

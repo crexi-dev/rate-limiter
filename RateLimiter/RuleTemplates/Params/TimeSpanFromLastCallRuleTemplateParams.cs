@@ -1,6 +1,6 @@
 ﻿namespace RateLimiter.RuleTemplates.Params
 {
-    internal class TimeSpanFromLastCallRuleTemplateParams
+    public class TimeSpanFromLastCallRuleTemplateParams : RuleTemplateParams
     {
     }
 }

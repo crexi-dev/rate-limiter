@@ -1,6 +1,6 @@
 ﻿using Moq;
 using NUnit.Framework;
-using RateLimiter.Repositories;
+using RateLimiter.Exceptions;
 using RateLimiter.Repositories.Detectors;
 using RateLimiter.Rules;
 using RateLimiter.Rules.Constructors;

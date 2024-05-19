@@ -21,8 +21,7 @@ namespace RateLimiter.Rules
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             
             var info = (RequestByTimeSpanRuleInfo)requestInfo;
-            return _requestLimit < info.Requests;
-            
+            return _requestLimit > info.Requests;
         }
     }
 }

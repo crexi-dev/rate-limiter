@@ -1,4 +1,5 @@
-﻿using RateLimiter.Rules.Constructors;
+﻿using RateLimiter.Exceptions;
+using RateLimiter.Rules.Constructors;
 using System;
 
 namespace RateLimiter.Repositories.Detectors;

@@ -12,13 +12,12 @@ namespace RateLimiter.Tests
         [OneTimeSetUp]
         public void SetUpFixture()
         {
-            _unity.RegisterType<IRuleTemplateDetector, DefaultRuleTemplateDetector>();
-            _unity.RegisterSingleton<IRuleRepository, RuleRepository>();
-            _unity.RegisterType<IRuleFactory, RuleFactory>();
-            _unity.RegisterType<IRuleConstructorDetector, RuleConstructorDetector>();
-            _unity.RegisterType<IRequestConverterFactory, RequestConverterFactory>();
-            _unity.RegisterType<IRequestLogRepository, RequestLogRepository>();
-            _unity.RegisterType<IRequestConverterDetector, RequestConverterDetector>();
+            
+        }
+
+        public void ConfigureUnityForResolveAPIClasses()
+        {
+
         }
 
         [Test]

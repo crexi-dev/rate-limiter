@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using RateLimiter.Models;
 using RateLimiter.Repositories;
@@ -25,10 +23,4 @@ public class RuleCollection : IRuleCollection
         return true;
        
     }
-}
-
-public interface IValidateReadyRule
-{
-    IRule Rule { get; }
-    IRequestConverter RequestConverter { get; }
 }

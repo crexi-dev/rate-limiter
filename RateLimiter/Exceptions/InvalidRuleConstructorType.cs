@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace RateLimiter.Repositories
+namespace RateLimiter.Exceptions
 {
     [Serializable]
     internal class InvalidRuleConstructorType : Exception

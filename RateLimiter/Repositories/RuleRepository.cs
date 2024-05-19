@@ -1,5 +1,6 @@
 ﻿using RateLimiter.Models;
 using RateLimiter.Rules;
+using RateLimiter.Rules.RequestConverters;
 using RateLimiter.RuleTemplates;
 using System;
 using System.Collections.Concurrent;

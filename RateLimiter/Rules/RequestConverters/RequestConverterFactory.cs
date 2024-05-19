@@ -1,11 +1,7 @@
 ﻿using System;
+using RateLimiter.Repositories;
 
-namespace RateLimiter.Repositories;
-
-public interface IRequestConverterFactory
-{
-    IRequestConverter Create(RuleValue value);
-}
+namespace RateLimiter.Rules.RequestConverters;
 
 public class RequestConverterFactory : IRequestConverterFactory
 {
@@ -22,20 +18,10 @@ public class RequestConverterFactory : IRequestConverterFactory
     public IRequestConverter Create(RuleValue value)
     {
         var template = value.Template;
-        var templateParams = value.Params;
 
         Type converterType = template.GetRequestConverterType();
-        var requestConverter = _requestConverterDetector.Construct(_requestLogRepository);
-
+        var requestConverter = _requestConverterDetector.Construct(converterType, _requestLogRepository);
         return requestConverter;
 
-    }
-}
-
-public class RequestConverterDetector : IRequestConverterDetector
-{
-    public IRequestConverter Construct(IRequestLogRepository requestLogRepository)
-    {
-        throw new NotImplementedException();
     }
 }
