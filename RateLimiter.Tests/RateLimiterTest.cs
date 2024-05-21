@@ -44,20 +44,20 @@ namespace RateLimiter.Tests
             Assert.AreEqual(HttpStatusCode.TooManyRequests, tooManyRequestsResult.StatusCode);
         }
 
-        //[Test]
-        //public async Task Get_CalledThreeTimesForLongTimeSpan_ReturnsOk()
-        //{
-        //    for (int i = 0; i < 3; i++)
-        //    {
-        //        await MakeApiCall();
-        //        await Task.Delay(5000);
-        //    }
+        [Test]
+        public async Task Get_CalledThreeTimesForLongTimeSpan_ReturnsOk()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                await MakeApiCall();
+                await Task.Delay(5000);
+            }
 
-        //    var tooManyRequestsResult = await MakeApiCall();
+            var tooManyRequestsResult = await MakeApiCall();
 
-        //    Assert.IsInstanceOf<HttpResponseMessage>(tooManyRequestsResult);
-        //    Assert.AreEqual(HttpStatusCode.OK, tooManyRequestsResult.StatusCode);
-        //}
+            Assert.IsInstanceOf<HttpResponseMessage>(tooManyRequestsResult);
+            Assert.AreEqual(HttpStatusCode.OK, tooManyRequestsResult.StatusCode);
+        }
 
         private static async Task<HttpResponseMessage> MakeApiCall()
         {
