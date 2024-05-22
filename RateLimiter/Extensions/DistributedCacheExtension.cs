@@ -1,6 +1,7 @@
 ﻿namespace RateLimiter.Extensions;
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ using Newtonsoft.Json;
 
 public static class DistributedCacheExtension
 {
-    public async static Task<ConsumptionData?> GetCustomerConsumptionDataFromContextAsync(
+    public static async Task<List<ConsumptionData>?> GetCustomerConsumptionDataFromContextAsync(
         this IDistributedCache cache,
         HttpContext context,
         CancellationToken cancellation = default)
@@ -22,17 +23,17 @@ public static class DistributedCacheExtension
         if (result is null)
             return null;
 
-        return JsonConvert.DeserializeObject<ConsumptionData>(result);
+        return JsonConvert.DeserializeObject<List<ConsumptionData>>(result);
     }
 
-    public async static Task SetCacheValueAsync(
+    public static async Task SetCacheValueAsync(
         this IDistributedCache cache,
         string key,
-        ConsumptionData? customerRequests,
+        List<ConsumptionData> customerRequests,
         CancellationToken cancellation = default)
     {
         // If the customer does not yet have consumption data, we will create his record, starting the count at one request
-        customerRequests ??= new ConsumptionData(DateTime.UtcNow, 1);
+        customerRequests.Add(new ConsumptionData(DateTime.UtcNow));
 
         await cache.SetStringAsync(key, JsonConvert.SerializeObject(customerRequests), cancellation);
     }

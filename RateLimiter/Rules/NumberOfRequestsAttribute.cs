@@ -8,7 +8,11 @@ using Microsoft.Extensions.Caching.Distributed;
 using Extensions;
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using Models;
+using System.Linq;
 
 public class NumberOfRequestsAttribute : RateLimitAttribute
 {
@@ -25,8 +29,8 @@ public class NumberOfRequestsAttribute : RateLimitAttribute
 
     public override async Task<bool> ValidateAsync(IDistributedCache cache, HttpContext context)
     {
-        var consumptionData = await cache.GetCustomerConsumptionDataFromContextAsync(context);
-        var result = consumptionData != null && DateTime.UtcNow < consumptionData.LastResponse.AddSeconds(TimeWindowInSeconds) && consumptionData.NumberOfRequests < MaxRequests;
+        var consumptionData = await cache.GetCustomerConsumptionDataFromContextAsync(context) ?? new List<ConsumptionData>();
+        var result = consumptionData.Count(x => x.ResponseTime >= DateTime.UtcNow.AddSeconds(-1 * TimeWindowInSeconds)) < MaxRequests;
         return result;
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace RateLimiter;
 
+using System.Collections.Generic;
 using System.Linq;
 
 using Extensions;
@@ -9,6 +10,8 @@ using Microsoft.Extensions.Caching.Distributed;
 
 using System.Net;
 using System.Threading.Tasks;
+
+using Models;
 
 public class RateLimitMiddleware
 {
@@ -32,8 +35,8 @@ public class RateLimitMiddleware
             return;
         }
 
-        var consumptionData = await cache.GetCustomerConsumptionDataFromContextAsync(context);
-        if (rateLimitsAttributes != null && consumptionData != null)
+        var consumptionData = await cache.GetCustomerConsumptionDataFromContextAsync(context) ?? new List<ConsumptionData>();
+        if (rateLimitsAttributes != null)
         {
             if (rateLimitsAttributes.Any(x => !string.IsNullOrWhiteSpace(x.CountryCode)))
             {
@@ -49,8 +52,6 @@ public class RateLimitMiddleware
                     return;
                 }
             }
-
-            consumptionData.IncreaseRequests(consumptionData.NumberOfRequests + 1);
         }
 
         await cache.SetCacheValueAsync(context.GetCustomerKey(), consumptionData);
