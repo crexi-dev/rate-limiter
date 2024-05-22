@@ -12,6 +12,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Models;
+using RateLimiter.Storage;
 
 public class RateLimitMiddleware
 {
@@ -40,7 +41,7 @@ public class RateLimitMiddleware
         {
             if (rateLimitsAttributes.Any(x => !string.IsNullOrWhiteSpace(x.CountryCode)))
             {
-                var countryCode = "US"; // replace with fetch data from token
+                var countryCode = CountryCodeStorage.CountryCode; // replace with fetch data from token
                 rateLimitsAttributes = rateLimitsAttributes.Where(x => x.CountryCode == countryCode).ToList();
             }
 
