@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 
 namespace RateLimiter.Rules.Interfaces;
 
 public interface IRateLimitRule
 {
-    Task<bool> IsRequestAllowedAsync(string clientId, string region);
+    bool IsRequestAllowed(string clientToken, string resource, DateTime requestTime);
 }

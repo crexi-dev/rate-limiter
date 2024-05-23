@@ -1,6 +1,10 @@
-﻿namespace RateLimiter.Attributes;
+﻿using System;
 
-public class RateLimitAttribute
+namespace RateLimiter.Attributes;
+
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+public class RateLimitAttribute : Attribute
 {
-    
+    public int TimeWindowInSeconds { get; set; }
+    public int MaxRequests { get; set; }
 }

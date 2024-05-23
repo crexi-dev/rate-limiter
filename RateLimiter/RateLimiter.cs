@@ -1,45 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
 using RateLimiter.Rules.Interfaces;
 
 namespace RateLimiter;
 
 public class RateLimiter
 {
-    private readonly List<IRateLimitRule> _rules;
-    private readonly IMemoryCache _cache;
+    private readonly Dictionary<string, List<IRateLimitRule>> _resourceRules = new();
 
-    public RateLimiter(IMemoryCache cache)
+    public void AddRule(string resource, IRateLimitRule rule)
     {
-        _rules = new List<IRateLimitRule>();
-        _cache = cache;
-    }
-
-    public void AddRule(IRateLimitRule rule)
-    {
-        _rules.Add(rule);
-    }
-
-    public async Task<bool> IsRequestAllowedAsync(string clientId, string region)
-    {
-        var cacheKey = $"{clientId}:{region}:result";
-        if (_cache.TryGetValue(cacheKey, out bool cachedResult))
+        if (!_resourceRules.ContainsKey(resource))
         {
-            return cachedResult;
+            _resourceRules[resource] = new List<IRateLimitRule>();
         }
-        
-        var tasks = _rules.Select(rule => rule.IsRequestAllowedAsync(clientId, region));
-        var results = await Task.WhenAll(tasks);
-        var result = results.All(r => r);
 
-        _cache.Set(cacheKey, results, new MemoryCacheEntryOptions
+        _resourceRules[resource].Add(rule);
+    }
+
+    public bool IsRequestAllowed(string clientToken, string resource, DateTime requestTime)
+    {
+        if (!_resourceRules.ContainsKey(resource))
         {
-            AbsoluteExpirationRelativeToNow = _rules.Max(r => ((dynamic) r)._window ?? TimeSpan.FromMinutes(1))
-        });
+            return true;
+        }
 
-        return result;
+        foreach (var rule in _resourceRules[resource])
+        {
+            if (!rule.IsRequestAllowed(clientToken, resource, requestTime))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
