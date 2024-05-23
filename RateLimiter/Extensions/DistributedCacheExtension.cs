@@ -4,24 +4,22 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
+using RateLimiter.Models;
 
-namespace RateLimiter;
+namespace RateLimiter.Extensions;
 
 public static class DistributedCacheExtension
 {
-    public async static Task<ConsumptionData?> GetCustomerConsumptionDataFromContextAsync(
+    public static async Task<ConsumptionData?> GetCustomerConsumptionDataFromContextAsync(
         this IDistributedCache cache,
         HttpContext context,
         CancellationToken cancellation = default)
     {
         var result = await cache.GetStringAsync(context.GetCustomerKey(), cancellation);
-        if (result is null)
-            return null;
-
-        return JsonConvert.DeserializeObject<ConsumptionData>(result);
+        return result is null ? null : JsonConvert.DeserializeObject<ConsumptionData>(result);
     }
 
-    public async static Task SetCacheValueAsync(
+    public static async Task SetCacheValueAsync(
         this IDistributedCache cache,
         string key,
         ConsumptionData? customerRequests,

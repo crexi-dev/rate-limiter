@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using RateLimiter.Attributes;
 
-namespace RateLimiter;
+namespace RateLimiter.Extensions;
 
 public static class HttpContextExtension
 {

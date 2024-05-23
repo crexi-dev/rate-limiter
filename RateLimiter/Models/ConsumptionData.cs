@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RateLimiter;
+namespace RateLimiter.Models;
 
 public class ConsumptionData
 {
@@ -12,8 +12,8 @@ public class ConsumptionData
         NumberOfRequests = numberOfRequests;
     }
 
-    public DateTime LastResponse { get; private set; }
-    public int NumberOfRequests { get; private set; }
+    private DateTime LastResponse { get; set; }
+    private int NumberOfRequests { get; set; }
 
     public bool HasConsumedAllRequests(int timeWindowInSeconds, int maxRequests)
         => DateTime.UtcNow < LastResponse.AddSeconds(timeWindowInSeconds) && NumberOfRequests == maxRequests;
