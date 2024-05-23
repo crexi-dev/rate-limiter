@@ -4,11 +4,14 @@ using RateLimiter.Rules.Interfaces;
 
 namespace RateLimiter.Rules;
 
+/// <summary>
+/// Rule to limit the number of requests per timespan.
+/// </summary>
 public class XRequestsPerTimespanRule : IRateLimitRule
 {
     private readonly int _maxRequests;
     private readonly TimeSpan _timespan;
-    private readonly Dictionary<string, List<DateTime>> _clientRequests = new();
+    private readonly Dictionary<string, Queue<DateTime>> _clientRequests = new();
 
     public XRequestsPerTimespanRule(int maxRequests, TimeSpan timespan)
     {
@@ -20,17 +23,24 @@ public class XRequestsPerTimespanRule : IRateLimitRule
     {
         if (!_clientRequests.ContainsKey(clientToken))
         {
-            _clientRequests[clientToken] = new List<DateTime>();
+            _clientRequests[clientToken] = new Queue<DateTime>();
         }
 
-        _clientRequests[clientToken].RemoveAll(r => r < requestTime - _timespan);
+        var requests = _clientRequests[clientToken];
 
-        if (_clientRequests[clientToken].Count >= _maxRequests)
+        // Remove requests that are outside the timespan window
+        while (requests.Count > 0 && requests.Peek() < requestTime - _timespan)
+        {
+            requests.Dequeue();
+        }
+
+        if (requests.Count >= _maxRequests)
         {
             return false;
         }
 
-        _clientRequests[clientToken].Add(requestTime);
+        // Add the current request
+        requests.Enqueue(requestTime);
         return true;
     }
 }

@@ -4,6 +4,9 @@ using RateLimiter.Rules.Interfaces;
 
 namespace RateLimiter.Services;
 
+/// <summary>
+/// Class for managing rate limit rules.
+/// </summary>
 public class RateLimiter
 {
     private readonly Dictionary<string, List<IRateLimitRule>> _resourceRules = new();

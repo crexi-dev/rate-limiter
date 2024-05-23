@@ -4,6 +4,9 @@ using RateLimiter.Rules.Interfaces;
 
 namespace RateLimiter.Rules;
 
+/// <summary>
+/// Rule to limit requests based on a required timespan between requests.
+/// </summary>
 public class CertainTimespanPassedRule : IRateLimitRule
 {
     private readonly TimeSpan _requiredTimespan;

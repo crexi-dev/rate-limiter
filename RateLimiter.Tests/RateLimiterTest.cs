@@ -13,7 +13,7 @@ public class RateLimiterTests
     private string clientTokenUS;
     private string clientTokenEU;
     private DateTime requestTime;
-    private RateLimiter.Services.RateLimiter rateLimiter;
+    private Services.RateLimiter rateLimiter;
 
     [SetUp]
     public void Setup()
@@ -34,12 +34,9 @@ public class RateLimiterTests
         rateLimiter.AddRule("resource1", rule);
 
         Assert.IsTrue(rateLimiter.IsRequestAllowed(clientToken1, "resource1", requestTime, string.Empty));
-        Assert.IsTrue(rateLimiter.IsRequestAllowed(clientToken1, "resource1", requestTime.AddSeconds(10),
-            string.Empty));
-        Assert.IsTrue(rateLimiter.IsRequestAllowed(clientToken1, "resource1", requestTime.AddSeconds(20),
-            string.Empty));
-        Assert.IsFalse(rateLimiter.IsRequestAllowed(clientToken1, "resource1", requestTime.AddSeconds(30),
-            string.Empty));
+        Assert.IsTrue(rateLimiter.IsRequestAllowed(clientToken1, "resource1", requestTime.AddSeconds(10), string.Empty));
+        Assert.IsTrue(rateLimiter.IsRequestAllowed(clientToken1, "resource1", requestTime.AddSeconds(20), string.Empty));
+        Assert.IsFalse(rateLimiter.IsRequestAllowed(clientToken1, "resource1", requestTime.AddSeconds(30), string.Empty));
     }
 
     [Test]
@@ -49,10 +46,8 @@ public class RateLimiterTests
         rateLimiter.AddRule("resource2", rule);
 
         Assert.IsTrue(rateLimiter.IsRequestAllowed(clientToken2, "resource2", requestTime, string.Empty));
-        Assert.IsFalse(rateLimiter.IsRequestAllowed(clientToken2, "resource2", requestTime.AddSeconds(30),
-            string.Empty));
-        Assert.IsTrue(rateLimiter.IsRequestAllowed(clientToken2, "resource2", requestTime.AddMinutes(1),
-            string.Empty));
+        Assert.IsFalse(rateLimiter.IsRequestAllowed(clientToken2, "resource2", requestTime.AddSeconds(30), string.Empty));
+        Assert.IsTrue(rateLimiter.IsRequestAllowed(clientToken2, "resource2", requestTime.AddMinutes(1), string.Empty));
     }
 
     [Test]
@@ -64,14 +59,10 @@ public class RateLimiterTests
         rateLimiter.AddRule("resource3", certainTimespanRule);
 
         Assert.IsTrue(rateLimiter.IsRequestAllowed(clientToken3, "resource3", requestTime, string.Empty));
-        Assert.IsFalse(rateLimiter.IsRequestAllowed(clientToken3, "resource3", requestTime.AddSeconds(20),
-            string.Empty));
-        Assert.IsFalse(rateLimiter.IsRequestAllowed(clientToken3, "resource3", requestTime.AddSeconds(40),
-            string.Empty));
-        Assert.IsTrue(rateLimiter.IsRequestAllowed(clientToken3, "resource3",
-            requestTime.AddMinutes(1).AddSeconds(20), string.Empty));
-        Assert.IsFalse(rateLimiter.IsRequestAllowed(clientToken3, "resource3",
-            requestTime.AddMinutes(1).AddSeconds(40), string.Empty));
+        Assert.IsFalse(rateLimiter.IsRequestAllowed(clientToken3, "resource3", requestTime.AddSeconds(20), string.Empty));
+        Assert.IsFalse(rateLimiter.IsRequestAllowed(clientToken3, "resource3", requestTime.AddSeconds(40), string.Empty));
+        Assert.IsTrue(rateLimiter.IsRequestAllowed(clientToken3, "resource3", requestTime.AddMinutes(1).AddSeconds(20), string.Empty));
+        Assert.IsFalse(rateLimiter.IsRequestAllowed(clientToken3, "resource3", requestTime.AddMinutes(1).AddSeconds(40), string.Empty));
     }
 
     [Test]
