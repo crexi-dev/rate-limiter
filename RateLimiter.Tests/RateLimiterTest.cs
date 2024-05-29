@@ -23,16 +23,13 @@ public class RateLimiterTest
         // Arrange
         var mockDateTimeWrapper = new MockDateTimeWrapper();
         var ruleService = new RuleProvider(mockDateTimeWrapper)
-            .ForResource(ResourceName)
-                .ForRegion(UsRegion)
-                    .ApplyTimeSinceLastCallRule(TimeSpan.FromSeconds(1))
-                .ForRegion(EuRegion)
-                    .ApplyTimeSinceLastCallRule(TimeSpan.FromSeconds(2));
+            .AddRuleForResource(ResourceName, UsRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), mockDateTimeWrapper))
+            .AddRuleForResource(ResourceName, EuRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(2), mockDateTimeWrapper));
 
-        var rateLimitingService = new RateLimitingService(ruleService.GetRulesForResource(ResourceName));
+        var rateLimitingService = new RateLimitingService(ruleService);
 
         // Act & Assert
-        return rateLimitingService.IsRequestAllowed(token);
+        return rateLimitingService.IsRequestAllowed(ResourceName, token);
     }
 
     [Test]
@@ -41,18 +38,15 @@ public class RateLimiterTest
         // Arrange
         var mockDateTimeWrapper = new MockDateTimeWrapper();
         var ruleService = new RuleProvider(mockDateTimeWrapper)
-            .ForResource(ResourceName)
-                .ForRegion(UsRegion)
-                    .ApplyTimeSinceLastCallRule(TimeSpan.FromSeconds(1))
-                .ForRegion(EuRegion)
-                    .ApplyTimeSinceLastCallRule(TimeSpan.FromSeconds(2));
+            .AddRuleForResource(ResourceName, UsRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), mockDateTimeWrapper))
+            .AddRuleForResource(ResourceName, EuRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(2), mockDateTimeWrapper));
 
-        var rateLimitingService = new RateLimitingService(ruleService.GetRulesForResource(ResourceName));
+        var rateLimitingService = new RateLimitingService(ruleService);
 
         // Act
-        rateLimitingService.IsRequestAllowed(UsToken);
+        rateLimitingService.IsRequestAllowed(ResourceName, UsToken);
         mockDateTimeWrapper.UtcNow = mockDateTimeWrapper.UtcNow.AddSeconds(1);
-        var isAllowed = rateLimitingService.IsRequestAllowed(UsToken);
+        var isAllowed = rateLimitingService.IsRequestAllowed(ResourceName, UsToken);
 
         // Assert
         Assert.IsFalse(isAllowed);
@@ -65,16 +59,13 @@ public class RateLimiterTest
         // Arrange
         var mockDateTimeWrapper = new MockDateTimeWrapper();
         var ruleService = new RuleProvider(mockDateTimeWrapper)
-            .ForResource(ResourceName)
-                .ForRegion(UsRegion)
-                    .ApplyTimeSinceLastCallRule(TimeSpan.FromSeconds(1))
-                .ForRegion(EuRegion)
-                    .ApplyTimeSinceLastCallRule(TimeSpan.FromSeconds(2));
+            .AddRuleForResource(ResourceName, UsRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), mockDateTimeWrapper))
+            .AddRuleForResource(ResourceName, EuRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(2), mockDateTimeWrapper));
 
-        var rateLimitingService = new RateLimitingService(ruleService.GetRulesForResource(ResourceName));
+        var rateLimitingService = new RateLimitingService(ruleService);
 
         // Act
-        return rateLimitingService.IsRequestAllowed(token);
+        return rateLimitingService.IsRequestAllowed(ResourceName, token);
     }
 
     [Test]
@@ -83,24 +74,21 @@ public class RateLimiterTest
         // Arrange
         var mockDateTimeWrapper = new MockDateTimeWrapper();
         var ruleService = new RuleProvider(mockDateTimeWrapper)
-            .ForResource(ResourceName)
-                .ForRegion(UsRegion)
-                    .ApplyXRequestsPerTimespanRule(10, TimeSpan.FromSeconds(1))
-                .ForRegion(EuRegion)
-                    .ApplyXRequestsPerTimespanRule(5, TimeSpan.FromSeconds(2));
+            .ApplyXRequestsPerTimespanRule(ResourceName, UsRegion, 10, TimeSpan.FromSeconds(1))
+            .ApplyXRequestsPerTimespanRule(ResourceName, EuRegion, 5, TimeSpan.FromSeconds(2));
 
-        var rateLimitingService = new RateLimitingService(ruleService.GetRulesForResource(ResourceName));
+        var rateLimitingService = new RateLimitingService(ruleService);
 
         // Act & Assert
         for (int i = 0; i < 10; i++)
         {
-            Assert.IsTrue(rateLimitingService.IsRequestAllowed(UsToken));
+            Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
         }
 
-        Assert.IsFalse(rateLimitingService.IsRequestAllowed(UsToken));
+        Assert.IsFalse(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
 
         mockDateTimeWrapper.UtcNow = mockDateTimeWrapper.UtcNow.AddSeconds(2);
-        Assert.IsTrue(rateLimitingService.IsRequestAllowed(UsToken));
+        Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
     }
 
     [Test]
@@ -109,28 +97,25 @@ public class RateLimiterTest
         // Arrange
         var mockDateTimeWrapper = new MockDateTimeWrapper();
         var ruleService = new RuleProvider(mockDateTimeWrapper)
-            .ForResource(ResourceName)
-                .ForRegion(UsRegion)
-                    .ApplyXRequestsPerTimespanRule(10, TimeSpan.FromSeconds(1)) 
-                .ForRegion(EuRegion)
-                    .ApplyXRequestsPerTimespanRule(5, TimeSpan.FromSeconds(2));
-            
-        var rateLimitingService = new RateLimitingService(ruleService.GetRulesForResource(ResourceName));
+            .ApplyXRequestsPerTimespanRule(ResourceName, UsRegion, 10, TimeSpan.FromSeconds(1))
+            .ApplyXRequestsPerTimespanRule(ResourceName, EuRegion, 5, TimeSpan.FromSeconds(2));
+
+        var rateLimitingService = new RateLimitingService(ruleService);
 
         // Act & Assert
         for (int i = 0; i < 10; i++)
         {
-            Assert.IsTrue(rateLimitingService.IsRequestAllowed(UsToken));
+            Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
         }
 
-        Assert.IsFalse(rateLimitingService.IsRequestAllowed(UsToken));
+        Assert.IsFalse(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
 
         for (int i = 0; i < 5; i++)
         {
-            Assert.IsTrue(rateLimitingService.IsRequestAllowed(EuToken));
+            Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, EuToken));
         }
 
-        Assert.IsFalse(rateLimitingService.IsRequestAllowed(EuToken));
+        Assert.IsFalse(rateLimitingService.IsRequestAllowed(ResourceName, EuToken));
     }
 
     [Test]
@@ -139,28 +124,25 @@ public class RateLimiterTest
         // Arrange
         var mockDateTimeWrapper = new MockDateTimeWrapper();
         var ruleService = new RuleProvider(mockDateTimeWrapper)
-            .ForResource(ResourceName)
-                .ForRegion(UsRegion)
-                    .ApplyXRequestsPerTimespanRule(10, TimeSpan.FromSeconds(1))
-                .ForRegion(EuRegion)
-                    .ApplyTimeSinceLastCallRule(TimeSpan.FromSeconds(2));
+            .ApplyXRequestsPerTimespanRule(ResourceName, UsRegion, 10, TimeSpan.FromSeconds(1))
+            .ApplyTimeSinceLastCallRule(ResourceName, EuRegion, TimeSpan.FromSeconds(2));
 
-        var rateLimitingService = new RateLimitingService(ruleService.GetRulesForResource(ResourceName));
+        var rateLimitingService = new RateLimitingService(ruleService);
 
         // Act & Assert
         for (int i = 0; i < 10; i++)
         {
-            Assert.IsTrue(rateLimitingService.IsRequestAllowed(UsToken));
+            Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
         }
 
-        Assert.IsFalse(rateLimitingService.IsRequestAllowed(UsToken));
+        Assert.IsFalse(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
 
         mockDateTimeWrapper.UtcNow = mockDateTimeWrapper.UtcNow.AddSeconds(2);
-        Assert.IsTrue(rateLimitingService.IsRequestAllowed(UsToken)); 
-        Assert.IsTrue(rateLimitingService.IsRequestAllowed(EuToken)); 
+        Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
+        Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, EuToken));
 
-        Assert.IsFalse(rateLimitingService.IsRequestAllowed(EuToken));
+        Assert.IsFalse(rateLimitingService.IsRequestAllowed(ResourceName, EuToken));
         mockDateTimeWrapper.UtcNow = mockDateTimeWrapper.UtcNow.AddSeconds(3);
-        Assert.IsTrue(rateLimitingService.IsRequestAllowed(EuToken));
+        Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, EuToken));
     }
 }

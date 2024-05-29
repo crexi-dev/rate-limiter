@@ -25,7 +25,7 @@ namespace RateLimiter.Rules
             {
                 if (!_tokenRequests.TryGetValue(token, out var requestInfo))
                 {
-                    requestInfo = (0, DateTime.MinValue); // Set to a time in the past
+                    requestInfo = (0, DateTime.MinValue);
                 }
 
                 var now = _dateTimeWrapper.UtcNow;

@@ -1,53 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using RateLimiter.Helpers;
 using RateLimiter.Interfaces;
 
 namespace RateLimiter.Services
 {
     public class RuleProvider
     {
-        public IDateTimeWrapper _dateTime { get; set; }
-        private readonly Dictionary<string, Dictionary<string, List<IRule>>> _rules = new();
-        private string _currentResource;
-        private string _currentRegion;
+        private readonly Dictionary<Tuple<string, string>, List<IRule>> _rules = new();
+        public readonly IDateTimeWrapper _dateTimeWrapper;
 
         public RuleProvider(IDateTimeWrapper dateTimeWrapper)
-            => _dateTime = dateTimeWrapper;
-
-
-        public RuleProvider ConfigureResource(string resource)
         {
-            _currentResource = resource;
-            _rules[resource] = new Dictionary<string, List<IRule>>();
-            return this;
+            _dateTimeWrapper = dateTimeWrapper;
         }
 
-        public RuleProvider ForRegion(string region)
+        public RuleProvider AddRule(string resource, string region, IRule rule)
         {
-            _currentRegion = region;
-            if (!_rules[_currentResource].ContainsKey(region))
+            var key = Tuple.Create(resource, region);
+            if (!_rules.ContainsKey(key))
             {
-                _rules[_currentResource][region] = new List<IRule>();
+                _rules[key] = new List<IRule>();
             }
+            _rules[key].Add(rule);
             return this;
         }
 
-        public RuleProvider AddRule(IRule rule)
+        public List<IRule> GetRulesForResource(string resource, string region)
         {
-            _rules[_currentResource][_currentRegion].Add(rule);
-            return this;
-        }
-
-        public Dictionary<string, List<IRule>> GetRulesForResource(string resource)
-        {            
-            if (_rules.TryGetValue(resource, out var regions))
-            {
-                return regions;
-            }
-
-            return new Dictionary<string, List<IRule>>();
+            var key = Tuple.Create(resource, region);
+            return _rules.ContainsKey(key) ? _rules[key] : new List<IRule>();
         }
     }
-
 }
