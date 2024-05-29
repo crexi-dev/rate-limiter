@@ -9,12 +9,14 @@ namespace RateLimiter.Rules
         private readonly int _requestLimit;
         private readonly TimeSpan _timeSpan;
         private readonly Dictionary<string, (int Count, DateTime LastRequestTime)> _tokenRequests;
+        private readonly IDateTimeWrapper _dateTimeWrapper;
 
-        public XRequestsPerTimespanRule(int requestLimit, TimeSpan timeSpan)
+        public XRequestsPerTimespanRule(int requestLimit, TimeSpan timeSpan, IDateTimeWrapper dateTimeWrapper)
         {
             _requestLimit = requestLimit;
             _timeSpan = timeSpan;
             _tokenRequests = new Dictionary<string, (int, DateTime)>();
+            _dateTimeWrapper = dateTimeWrapper;
         }
 
         public bool IsAllowed(string token)
@@ -23,10 +25,10 @@ namespace RateLimiter.Rules
             {
                 if (!_tokenRequests.TryGetValue(token, out var requestInfo))
                 {
-                    requestInfo = (0, DateTime.MinValue);
+                    requestInfo = (0, DateTime.MinValue); // Set to a time in the past
                 }
 
-                var now = DateTime.UtcNow;
+                var now = _dateTimeWrapper.UtcNow;
                 if (now - requestInfo.LastRequestTime > _timeSpan)
                 {
                     _tokenRequests[token] = (1, now);

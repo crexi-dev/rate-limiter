@@ -6,24 +6,19 @@ namespace RateLimiter.Extensions
 {
     public static class RuleServiceExtensions
     {
-        public static RuleService ForResource(this RuleService ruleService, string resource)
+        public static RuleProvider ForResource(this RuleProvider ruleService, string resource)
         {
             return ruleService.ConfigureResource(resource);
         }
 
-        public static RuleService ForRegion(this RuleService ruleService, string region)
+        public static RuleProvider ApplyXRequestsPerTimespanRule(this RuleProvider ruleService, int requestLimit, TimeSpan timeSpan)
         {
-            return ruleService.ForRegion(region);
+            return ruleService.AddRule(new XRequestsPerTimespanRule(requestLimit, timeSpan, ruleService._dateTime));
         }
 
-        public static RuleService XRequestsPerTimespan(this RuleService ruleService, int requestLimit, TimeSpan timeSpan)
+        public static RuleProvider ApplyTimeSinceLastCallRule(this RuleProvider ruleService, TimeSpan timeSpan)
         {
-            return ruleService.AddRule(new XRequestsPerTimespanRule(requestLimit, timeSpan));
-        }
-
-        public static RuleService TimeSinceLastCall(this RuleService ruleService, TimeSpan timeSpan)
-        {
-            return ruleService.AddRule(new TimeSinceLastCallRule(timeSpan));
+            return ruleService.AddRule(new TimeSinceLastCallRule(timeSpan, ruleService._dateTime));
         }
     }
 

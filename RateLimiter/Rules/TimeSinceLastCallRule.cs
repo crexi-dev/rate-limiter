@@ -4,16 +4,17 @@ using RateLimiter.Interfaces;
 
 namespace RateLimiter.Rules
 {
-
     public class TimeSinceLastCallRule : IRule
     {
         private readonly TimeSpan _timeSpan;
         private readonly Dictionary<string, DateTime> _tokenLastRequestTimes;
+        private readonly IDateTimeWrapper _dateTimeWrapper;
 
-        public TimeSinceLastCallRule(TimeSpan timeSpan)
+        public TimeSinceLastCallRule(TimeSpan timeSpan, IDateTimeWrapper dateTimeWrapper)
         {
             _timeSpan = timeSpan;
             _tokenLastRequestTimes = new Dictionary<string, DateTime>();
+            _dateTimeWrapper = dateTimeWrapper;
         }
 
         public bool IsAllowed(string token)
@@ -25,7 +26,7 @@ namespace RateLimiter.Rules
                     lastRequestTime = DateTime.MinValue;
                 }
 
-                var now = DateTime.UtcNow;
+                var now = _dateTimeWrapper.UtcNow;
                 if (now - lastRequestTime > _timeSpan)
                 {
                     _tokenLastRequestTimes[token] = now;

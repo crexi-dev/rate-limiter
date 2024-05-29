@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using RateLimiter.Helpers;
 using RateLimiter.Interfaces;
 
 namespace RateLimiter.Services
 {
-    public class RuleService
+    public class RuleProvider
     {
+        public IDateTimeWrapper _dateTime { get; set; }
         private readonly Dictionary<string, Dictionary<string, List<IRule>>> _rules = new();
         private string _currentResource;
         private string _currentRegion;
 
-        public RuleService ConfigureResource(string resource)
+        public RuleProvider(IDateTimeWrapper dateTimeWrapper)
+            => _dateTime = dateTimeWrapper;
+
+
+        public RuleProvider ConfigureResource(string resource)
         {
             _currentResource = resource;
             _rules[resource] = new Dictionary<string, List<IRule>>();
             return this;
         }
 
-        public RuleService ForRegion(string region)
+        public RuleProvider ForRegion(string region)
         {
             _currentRegion = region;
             if (!_rules[_currentResource].ContainsKey(region))
@@ -27,21 +33,20 @@ namespace RateLimiter.Services
             return this;
         }
 
-        public RuleService AddRule(IRule rule)
+        public RuleProvider AddRule(IRule rule)
         {
             _rules[_currentResource][_currentRegion].Add(rule);
             return this;
         }
 
-        public IRule[] GetRulesForResource(string resource, string token)
-        {
-            string regionPrefix = token.Split('-')[0];
+        public Dictionary<string, List<IRule>> GetRulesForResource(string resource)
+        {            
             if (_rules.TryGetValue(resource, out var regions))
             {
-                return regions[regionPrefix].ToArray();
+                return regions;
             }
 
-            return Array.Empty<IRule>();
+            return new Dictionary<string, List<IRule>>();
         }
     }
 

@@ -5,16 +5,18 @@ namespace RateLimiter.Services
 {
     public class RateLimitingService
     {
-        private readonly IEnumerable<IRule> _rules;
+        private readonly Dictionary<string, List<IRule>> _rulesByRegion;
 
-        public RateLimitingService(IEnumerable<IRule> rules)
+        public RateLimitingService(Dictionary<string, List<IRule>> dictionary)
         {
-            _rules = rules;
+            this._rulesByRegion = dictionary;
         }
 
         public bool IsRequestAllowed(string token)
         {
-            foreach (var rule in _rules)
+            string regionPrefix = token.Split('-')[0];
+            var regionRules = _rulesByRegion[regionPrefix];
+            foreach (var rule in regionRules)
             {
                 if (!rule.IsAllowed(token))
                 {
