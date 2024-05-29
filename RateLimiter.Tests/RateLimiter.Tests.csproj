@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RateLimiterRules\RateLimiterRules.csproj" />
     <ProjectReference Include="..\RateLimiter\RateLimiter.csproj" />
   </ItemGroup>
   <ItemGroup>

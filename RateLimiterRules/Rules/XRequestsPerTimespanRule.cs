@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using RateLimiter.Interfaces;
+﻿using RateLimiter.Interfaces;
 using RateLimiter.Models;
 
-namespace RateLimiter.Rules
+namespace RateLimiterRules.Rules
 {
     public class XRequestsPerTimespanRule : IRule
     {

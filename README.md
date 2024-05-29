@@ -1,27 +1,111 @@
-﻿**Rate-limiting pattern**
+﻿## Rate Limiter - A Library for Managing Access Restrictions
 
-Rate limiting involves restricting the number of requests that can be made by a client.
-A client is identified with an access token, which is used for every request to a resource.
-To prevent abuse of the server, APIs enforce rate-limiting techniques.
-Based on the client, the rate-limiting application can decide whether to allow the request to go through or not.
-The client makes an API call to a particular resource; the server checks whether the request for this client is within the limit.
-If the request is within the limit, then the request goes through.
-Otherwise, the API call is restricted.
+**Description:**
 
-Some examples of request-limiting rules (you could imagine any others)
-* X requests per timespan;
-* a certain timespan passed since the last call;
-* for US-based tokens, we use X requests per timespan, for EU-based - certain timespan passed since the last call.
+Rate Limiter is a .NET library that provides functionality for managing access restrictions to resources. The library allows you to configure rate limiting rules and check client access to resources based on these rules.
 
-The goal is to design a class(-es) that manage rate limits for every provided API resource by a set of provided *configurable and extendable* rules. For example, for one resource you could configure the limiter to use Rule A, for another one - Rule B, for a third one - both A + B, etc. Any combinations of rules should be possible, keep this fact in mind when designing the classes.
+**Functionality:**
 
-We're more interested in the design itself than in some smart and tricky rate limiting algorithm. There is no need to use neither database (in-memory storage is fine) nor any web framework. Do not waste time on preparing complex environment, reusable class library covered by a set of tests is more than enough.
+* **Rate limiting rules:** The library supports the following rule types:
+    * **TimeSinceLastCallRule:** Limits the number of requests from a single client within a given time interval.
+    * **XRequestsPerTimespanRule:** Limits the number of requests from a single client within a specified period of time.
+    * **Custom rules:** You can create your own rules by implementing the `IRateLimitingRule` interface.
+* **Access verification:** The library provides an `ValidateRequestAsync` method that checks client access to a resource based on the configured rules.
+* **Logging:** Built-in logging support allows you to track events related to rate limiting for debugging and monitoring purposes.
+* **Testing:** The library comes with unit tests, ensuring the correct operation of Rate Limiter.
 
-There is a Test Project set up for you to use. You are welcome to create your own test project and use whatever test runner you would like.   
+**Usage:**
 
-You are welcome to ask any questions regarding the requirements - treat us as product owners/analysts/whoever who knows the business.
-Should you have any questions or concerns, submit them as a [GitHub issue](https://github.com/crexi-dev/rate-limiter/issues).
+**1. Configuring RuleProvider:**
 
-You should [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the project, and [create a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) once you are finished.
+```C#
+// In Startup.cs or your configuration setup
+public void ConfigureServices(IServiceCollection services)
+{
+    // ... other services
 
-Good luck!
+    services.Configure<RuleProviderOptions>(options =>
+    {
+        options.Rules = new Dictionary<string, List<IRateLimitingRule>>
+        {
+            { "US", new List<IRateLimitingRule>
+                {
+                    new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), new DateTimeWrapper()),
+                    new XRequestsPerTimespanRule(10, TimeSpan.FromMinutes(1), new DateTimeWrapper())
+                }
+            },
+            { "EU", new List<IRateLimitingRule>
+                {
+                    new TimeSinceLastCallRule(TimeSpan.FromSeconds(2), new DateTimeWrapper())
+                }
+            },
+            // ... add rules for other regions
+        };
+    });
+
+    services.AddSingletone<IRateLimitingService, RateLimitingService>();
+    services.AddSingletone<IRuleProvider, RuleProvider>();
+}
+```
+
+**2. Using RateLimitingService for comprehensive validation:**
+
+```C#
+// In your controller
+public class MyController : ControllerBase
+{
+    private readonly IRateLimitingService _rateLimitingService;
+
+    public MyController(IRateLimitingService rateLimitingService)
+    {
+        _rateLimitingService = rateLimitingService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> MyAction()
+    {
+        // Check access using the registered rules
+        var result = await _rateLimitingService.IsRequestAllowedAsync("resource", "US-token"); // or EU-token
+
+        if (result.IsAllowed)
+        {
+            // Allow access to the resource
+            return Ok(); // or other appropriate action
+        }
+        else
+        {
+            // Deny access to the resource, display errors (result.Errors)
+            return StatusCode(429, result.Errors); // or other appropriate error response
+        }
+    }
+}
+```
+
+**3. Using individual rules for validation:**
+
+```C#
+// In your controller or service
+var ruleProvider = container.Resolve<IRuleProvider>();
+var rules = ruleProvider.GetRulesForResource("resource", "US"); // or "EU"
+
+// Iterate through the rules and check access for each
+foreach (var rule in rules)
+{
+    if (!rule.IsRequestAllowed("US-token")) // or "EU-token"
+    {
+        // Block access, handle errors
+        return StatusCode(429, rule.GetError()); // or other appropriate error response
+    }
+}
+
+// Allow access
+return Ok(); // or other appropriate action
+```
+
+**Benefits of Rate Limiter:**
+
+* **Flexibility:**  The ability to use various rate limiting rules to control access to resources.
+* **Extensibility:**  Support for creating custom rate limiting rules.
+* **Testability:**  The presence of unit tests ensures the library's correct operation.
+* **Logging:**  Easy debugging and monitoring through built-in logging.
+
