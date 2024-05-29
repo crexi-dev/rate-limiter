@@ -1,20 +1,21 @@
-﻿using NUnit.Framework;
+﻿using Moq;
+using NUnit.Framework;
 using RateLimiterRules.Rules;
 using RateLimiter.Services;
-using RateLimiter.Tests.Helpers;
 using System;
+using RateLimiter.Interfaces;
 
-namespace RateLimiterRules.Tests;
+namespace RateLimiter.Tests;
 
 [TestFixture]
 public class RuleProviderTest
 {
-    private MockDateTimeWrapper _mockDateTimeWrapper;
+    private Mock<IDateTimeWrapper> _dateTimeWrapperMock;
 
     [SetUp]
     public void SetUp()
     {
-        _mockDateTimeWrapper = new MockDateTimeWrapper();
+        _dateTimeWrapperMock = new Mock<IDateTimeWrapper>();
     }
 
     #region RuleProvider Validation Tests
@@ -24,8 +25,8 @@ public class RuleProviderTest
     [TestCase("  ")]
     public void RuleProvider_AddRule_ThrowsArgumentException_WhenResourceIsInvalid(string resource)
     {
-        var ruleProvider = new RuleProvider(_mockDateTimeWrapper);
-        var rule = new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), _mockDateTimeWrapper);
+        var ruleProvider = new RuleProvider(_dateTimeWrapperMock.Object);
+        var rule = new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), _dateTimeWrapperMock.Object);
 
         Assert.Throws<ArgumentException>(() => ruleProvider.AddRule(resource, "US", rule));
     }
@@ -35,8 +36,8 @@ public class RuleProviderTest
     [TestCase("  ")]
     public void RuleProvider_AddRule_ThrowsArgumentException_WhenRegionIsInvalid(string region)
     {
-        var ruleProvider = new RuleProvider(_mockDateTimeWrapper);
-        var rule = new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), _mockDateTimeWrapper);
+        var ruleProvider = new RuleProvider(_dateTimeWrapperMock.Object);
+        var rule = new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), _dateTimeWrapperMock.Object);
 
         Assert.Throws<ArgumentException>(() => ruleProvider.AddRule("resource", region, rule));
     }
@@ -44,7 +45,7 @@ public class RuleProviderTest
     [Test]
     public void RuleProvider_AddRule_ThrowsArgumentNullException_WhenRuleIsNull()
     {
-        var ruleProvider = new RuleProvider(_mockDateTimeWrapper);
+        var ruleProvider = new RuleProvider(_dateTimeWrapperMock.Object);
 
         Assert.Throws<ArgumentNullException>(() => ruleProvider.AddRule("resource", "US", null!));
     }
@@ -54,7 +55,7 @@ public class RuleProviderTest
     [TestCase("  ")]
     public void RuleProvider_GetRulesForResource_ThrowsArgumentException_WhenResourceIsInvalid(string resource)
     {
-        var ruleProvider = new RuleProvider(_mockDateTimeWrapper);
+        var ruleProvider = new RuleProvider(_dateTimeWrapperMock.Object);
 
         Assert.Throws<ArgumentException>(() => ruleProvider.GetRulesForResource(resource, "US"));
     }
@@ -64,7 +65,7 @@ public class RuleProviderTest
     [TestCase("  ")]
     public void RuleProvider_GetRulesForResource_ThrowsArgumentException_WhenRegionIsInvalid(string region)
     {
-        var ruleProvider = new RuleProvider(_mockDateTimeWrapper);
+        var ruleProvider = new RuleProvider(_dateTimeWrapperMock.Object);
 
         Assert.Throws<ArgumentException>(() => ruleProvider.GetRulesForResource("resource", region));
     }
