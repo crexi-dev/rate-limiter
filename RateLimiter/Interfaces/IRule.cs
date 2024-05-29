@@ -1,7 +1,9 @@
-﻿namespace RateLimiter.Interfaces
+﻿using RateLimiter.Models;
+
+namespace RateLimiter.Interfaces
 {
     public interface IRule
     {
-        bool IsAllowed(string token);
+        RuleCheckResult CheckRule(string token);
     }
 }

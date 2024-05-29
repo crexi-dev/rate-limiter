@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using RateLimiter.Interfaces;
+using RateLimiter.Models;
 
 namespace RateLimiter.Rules
 {
@@ -17,7 +18,7 @@ namespace RateLimiter.Rules
             _dateTimeWrapper = dateTimeWrapper;
         }
 
-        public bool IsAllowed(string token)
+        public RuleCheckResult CheckRule(string token)
         {
             lock (_tokenLastRequestTimes)
             {
@@ -30,10 +31,12 @@ namespace RateLimiter.Rules
                 if (now - lastRequestTime > _timeSpan)
                 {
                     _tokenLastRequestTimes[token] = now;
-                    return true;
+                    return new RuleCheckResult(true);
                 }
 
-                return false;
+                return new RuleCheckResult(false,
+                    "Too many requests. Please try again later.",
+                    "TimeSinceLastCallExceeded");
             }
         }
     }

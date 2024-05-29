@@ -1,9 +1,10 @@
 ﻿using NUnit.Framework;
 using RateLimiter.Rules;
 using RateLimiter.Services;
-using RateLimiter.Extensions;
 using RateLimiter.Tests.Helpers;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RateLimiter.Tests;
 
@@ -16,133 +17,166 @@ public class RateLimiterTest
     private const string EuRegion = "EU";
     private const string EuToken = "EU-token";
 
-    [TestCase(UsToken, ExpectedResult = true)]
-    [TestCase(EuToken, ExpectedResult = true)]
-    public bool IsRequestAllowed_WithinLimit_ReturnsTrue(string token)
+    #region Basic Tests
+
+    [TestCase(UsRegion, UsToken, ExpectedResult = true)]
+    [TestCase(EuRegion, EuToken, ExpectedResult = true)]
+    public async Task<bool> IsRequestAllowedAsync_WithinLimit_ReturnsTrue(string region, string token)
     {
-        // Arrange
         var mockDateTimeWrapper = new MockDateTimeWrapper();
         var ruleService = new RuleProvider(mockDateTimeWrapper)
-            .AddRuleForResource(ResourceName, UsRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), mockDateTimeWrapper))
-            .AddRuleForResource(ResourceName, EuRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(2), mockDateTimeWrapper));
+            .AddRule(ResourceName, UsRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), mockDateTimeWrapper))
+            .AddRule(ResourceName, EuRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(2), mockDateTimeWrapper));
 
         var rateLimitingService = new RateLimitingService(ruleService);
 
-        // Act & Assert
-        return rateLimitingService.IsRequestAllowed(ResourceName, token);
+        return (await rateLimitingService.IsRequestAllowedAsync(ResourceName, token)).IsAllowed;
     }
 
-    [Test]
-    public void IsRequestAllowed_ExceedsLimit_ReturnsFalse()
+    #endregion
+
+    #region TimeSinceLastCallRule Tests
+
+    [TestCase(UsRegion, UsToken, "TimeSinceLastCallExceeded")]
+    [TestCase(EuRegion, EuToken, "TimeSinceLastCallExceeded")]
+    public async Task IsRequestAllowedAsync_TimeSinceLastCallRule_ExceedsLimit_ReturnsFalseWithErrorCode(string region, string token, string expectedErrorCode)
     {
-        // Arrange
         var mockDateTimeWrapper = new MockDateTimeWrapper();
         var ruleService = new RuleProvider(mockDateTimeWrapper)
-            .AddRuleForResource(ResourceName, UsRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), mockDateTimeWrapper))
-            .AddRuleForResource(ResourceName, EuRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(2), mockDateTimeWrapper));
+            .AddRule(ResourceName, region, new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), mockDateTimeWrapper));
 
         var rateLimitingService = new RateLimitingService(ruleService);
 
-        // Act
-        rateLimitingService.IsRequestAllowed(ResourceName, UsToken);
-        mockDateTimeWrapper.UtcNow = mockDateTimeWrapper.UtcNow.AddSeconds(1);
-        var isAllowed = rateLimitingService.IsRequestAllowed(ResourceName, UsToken);
+        await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
+        mockDateTimeWrapper.UtcNow = mockDateTimeWrapper.UtcNow.AddMilliseconds(999);
+        var result = await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
 
-        // Assert
-        Assert.IsFalse(isAllowed);
+        Assert.IsFalse(result.IsAllowed);
+        Assert.IsTrue(result.Errors.Any(e => e.ErrorCode == expectedErrorCode));
     }
 
-    [TestCase(UsToken, ExpectedResult = true)]
-    [TestCase(EuToken, ExpectedResult = true)]
-    public bool IsRequestAllowed_DifferentRegions_ReturnsCorrectResult(string token)
+    [TestCase(UsRegion, UsToken)]
+    [TestCase(EuRegion, EuToken)]
+    public async Task IsRequestAllowedAsync_TimeSinceLastCallRule_WithinLimit_ReturnsTrue(string region, string token)
     {
-        // Arrange
         var mockDateTimeWrapper = new MockDateTimeWrapper();
         var ruleService = new RuleProvider(mockDateTimeWrapper)
-            .AddRuleForResource(ResourceName, UsRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), mockDateTimeWrapper))
-            .AddRuleForResource(ResourceName, EuRegion, new TimeSinceLastCallRule(TimeSpan.FromSeconds(2), mockDateTimeWrapper));
+            .AddRule(ResourceName, region, new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), mockDateTimeWrapper));
 
         var rateLimitingService = new RateLimitingService(ruleService);
 
-        // Act
-        return rateLimitingService.IsRequestAllowed(ResourceName, token);
-    }
-
-    [Test]
-    public void IsRequestAllowed_WithXRequestsPerTimespanRule_ReturnsCorrectResult()
-    {
-        // Arrange
-        var mockDateTimeWrapper = new MockDateTimeWrapper();
-        var ruleService = new RuleProvider(mockDateTimeWrapper)
-            .ApplyXRequestsPerTimespanRule(ResourceName, UsRegion, 10, TimeSpan.FromSeconds(1))
-            .ApplyXRequestsPerTimespanRule(ResourceName, EuRegion, 5, TimeSpan.FromSeconds(2));
-
-        var rateLimitingService = new RateLimitingService(ruleService);
-
-        // Act & Assert
-        for (int i = 0; i < 10; i++)
-        {
-            Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
-        }
-
-        Assert.IsFalse(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
-
+        await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
         mockDateTimeWrapper.UtcNow = mockDateTimeWrapper.UtcNow.AddSeconds(2);
-        Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
+        var result = await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
+
+        Assert.IsTrue(result.IsAllowed);
+        Assert.IsEmpty(result.Errors);
     }
 
-    [Test]
-    public void IsRequestAllowed_WithXRequestsPerTimespanRule_DifferentRegions_ReturnsCorrectResult()
+    #endregion
+
+    #region XRequestsPerTimespanRule Tests
+
+    [TestCase(UsRegion, UsToken, "XRequestsPerTimespanExceeded")]
+    [TestCase(EuRegion, EuToken, "XRequestsPerTimespanExceeded")]
+    public async Task IsRequestAllowedAsync_XRequestsPerTimespanRule_ExceedsLimit_ReturnsFalseWithErrorCode(string region, string token, string expectedErrorCode)
     {
-        // Arrange
         var mockDateTimeWrapper = new MockDateTimeWrapper();
         var ruleService = new RuleProvider(mockDateTimeWrapper)
-            .ApplyXRequestsPerTimespanRule(ResourceName, UsRegion, 10, TimeSpan.FromSeconds(1))
-            .ApplyXRequestsPerTimespanRule(ResourceName, EuRegion, 5, TimeSpan.FromSeconds(2));
+            .AddRule(ResourceName, region, new XRequestsPerTimespanRule(2, TimeSpan.FromSeconds(5), mockDateTimeWrapper));
 
         var rateLimitingService = new RateLimitingService(ruleService);
 
-        // Act & Assert
-        for (int i = 0; i < 10; i++)
-        {
-            Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
-        }
+        await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
+        await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
+        var result = await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
 
-        Assert.IsFalse(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
-
-        for (int i = 0; i < 5; i++)
-        {
-            Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, EuToken));
-        }
-
-        Assert.IsFalse(rateLimitingService.IsRequestAllowed(ResourceName, EuToken));
+        Assert.IsFalse(result.IsAllowed);
+        Assert.IsTrue(result.Errors.Any(e => e.ErrorCode == expectedErrorCode));
     }
 
-    [Test]
-    public void IsRequestAllowed_UsBasedToken_AppliesXRequestsPerTimespanRule()
+    [TestCase(UsRegion, UsToken)]
+    [TestCase(EuRegion, EuToken)]
+    public async Task IsRequestAllowedAsync_XRequestsPerTimespanRule_WithinLimit_ReturnsTrue(string region, string token)
     {
-        // Arrange
         var mockDateTimeWrapper = new MockDateTimeWrapper();
         var ruleService = new RuleProvider(mockDateTimeWrapper)
-            .ApplyXRequestsPerTimespanRule(ResourceName, UsRegion, 10, TimeSpan.FromSeconds(1))
-            .ApplyTimeSinceLastCallRule(ResourceName, EuRegion, TimeSpan.FromSeconds(2));
+            .AddRule(ResourceName, region, new XRequestsPerTimespanRule(2, TimeSpan.FromSeconds(5), mockDateTimeWrapper));
 
         var rateLimitingService = new RateLimitingService(ruleService);
 
-        // Act & Assert
-        for (int i = 0; i < 10; i++)
-        {
-            Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
-        }
+        await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
+        var result = await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
 
-        Assert.IsFalse(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
+        Assert.IsTrue(result.IsAllowed);
+        Assert.IsEmpty(result.Errors);
+    }
 
+    #endregion
+
+    #region Multiple Rules Tests
+
+    [TestCase(UsRegion, UsToken)]
+    [TestCase(EuRegion, EuToken)]
+    public async Task IsRequestAllowedAsync_MultipleRules_AllPassed_ReturnsTrue(string region, string token)
+    {
+        var mockDateTimeWrapper = new MockDateTimeWrapper();
+        var ruleService = new RuleProvider(mockDateTimeWrapper)
+            .AddRule(ResourceName, region, new XRequestsPerTimespanRule(2, TimeSpan.FromSeconds(5), mockDateTimeWrapper))
+            .AddRule(ResourceName, region, new TimeSinceLastCallRule(TimeSpan.FromSeconds(1), mockDateTimeWrapper));
+
+        var rateLimitingService = new RateLimitingService(ruleService);
+
+        await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
         mockDateTimeWrapper.UtcNow = mockDateTimeWrapper.UtcNow.AddSeconds(2);
-        Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, UsToken));
-        Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, EuToken));
+        var result = await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
 
-        Assert.IsFalse(rateLimitingService.IsRequestAllowed(ResourceName, EuToken));
-        mockDateTimeWrapper.UtcNow = mockDateTimeWrapper.UtcNow.AddSeconds(3);
-        Assert.IsTrue(rateLimitingService.IsRequestAllowed(ResourceName, EuToken));
+        Assert.IsTrue(result.IsAllowed);
+        Assert.IsEmpty(result.Errors);
     }
+
+    [TestCase(UsRegion, UsToken, "TimeSinceLastCallExceeded")]
+    [TestCase(EuRegion, EuToken, "TimeSinceLastCallExceeded")]
+    public async Task IsRequestAllowedAsync_MultipleRules_OneError_ReturnsFalseWithErrorCode(string region, string token, string expectedErrorCode)
+    {
+        var mockDateTimeWrapper = new MockDateTimeWrapper();
+        var ruleService = new RuleProvider(mockDateTimeWrapper)
+            .AddRule(ResourceName, region, new XRequestsPerTimespanRule(2, TimeSpan.FromSeconds(5), mockDateTimeWrapper))
+            .AddRule(ResourceName, region, new TimeSinceLastCallRule(TimeSpan.FromMilliseconds(500), mockDateTimeWrapper));
+
+        var rateLimitingService = new RateLimitingService(ruleService);
+
+        await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
+        await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
+        mockDateTimeWrapper.UtcNow = mockDateTimeWrapper.UtcNow.AddMilliseconds(499);
+        var result = await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
+
+        Assert.IsFalse(result.IsAllowed);
+        Assert.IsTrue(result.Errors.Any(e => e.ErrorCode == expectedErrorCode));
+    }
+
+    [TestCase(UsRegion, UsToken, "TimeSinceLastCallExceeded", "XRequestsPerTimespanExceeded")]
+    [TestCase(EuRegion, EuToken, "TimeSinceLastCallExceeded", "XRequestsPerTimespanExceeded")]
+    public async Task IsRequestAllowedAsync_MultipleRules_MultipleErrors_ReturnsFalseWithAllErrorCodes(string region, string token, string expectedErrorCode1, string expectedErrorCode2)
+    {
+        var mockDateTimeWrapper = new MockDateTimeWrapper();
+        var ruleService = new RuleProvider(mockDateTimeWrapper)
+            .AddRule(ResourceName, region, new XRequestsPerTimespanRule(2, TimeSpan.FromSeconds(5), mockDateTimeWrapper))
+            .AddRule(ResourceName, region, new TimeSinceLastCallRule(TimeSpan.FromMilliseconds(500), mockDateTimeWrapper));
+
+        var rateLimitingService = new RateLimitingService(ruleService);
+
+        await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
+        await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
+        mockDateTimeWrapper.UtcNow = mockDateTimeWrapper.UtcNow.AddMilliseconds(499);
+        var result = await rateLimitingService.IsRequestAllowedAsync(ResourceName, token);
+
+        Assert.IsFalse(result.IsAllowed);
+        Assert.AreEqual(2, result.Errors.Length);
+
+        Assert.IsTrue(result.Errors.Any(e => e.ErrorCode == expectedErrorCode1));
+        Assert.IsTrue(result.Errors.Any(e => e.ErrorCode == expectedErrorCode2));
+    }
+
+    #endregion
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using RateLimiter.Interfaces;
+using RateLimiter.Models;
 
 namespace RateLimiter.Rules
 {
@@ -19,7 +20,7 @@ namespace RateLimiter.Rules
             _dateTimeWrapper = dateTimeWrapper;
         }
 
-        public bool IsAllowed(string token)
+        public RuleCheckResult CheckRule(string token)
         {
             lock (_tokenRequests)
             {
@@ -32,16 +33,18 @@ namespace RateLimiter.Rules
                 if (now - requestInfo.LastRequestTime > _timeSpan)
                 {
                     _tokenRequests[token] = (1, now);
-                    return true;
+                    return new RuleCheckResult(true);
                 }
 
                 if (requestInfo.Count < _requestLimit)
                 {
                     _tokenRequests[token] = (requestInfo.Count + 1, now);
-                    return true;
+                    return new RuleCheckResult(true);
                 }
 
-                return false;
+                return new RuleCheckResult(false,
+                    "Request limit exceeded for this time span.",
+                    "XRequestsPerTimespanExceeded");
             }
         }
     }
