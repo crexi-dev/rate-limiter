@@ -1,0 +1,8 @@
+{
+  "Ruleoption": {
+	"Limit": 2,
+	"Period": "0.00:02:00", //2 requests in 2 minutes
+
+	"LastCallPeriod": "0.00:03:00" //once a 3 minuts
+  }
+}
