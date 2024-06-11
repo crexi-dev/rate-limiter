@@ -53,5 +53,14 @@ public class RateLimiterTest
         rateLimiter.IsRequestAllowed("api", "user2").Should().BeFalse();
     }
 
+    [Test]
+    public void RateLimiter_shouldnt_apply_any_rules_to_not_configured_resources()
+    {
+        var fakeTime = new FakeTimeProvider(startDateTime: DateTimeOffset.UtcNow);
+        var rateLimiter = new RateLimiter();
+        rateLimiter.AddRule("api/resource1", new SingleRequestPerWindowLimiterRule(fakeTime).Configure(TimeSpan.FromSeconds(5)));
+
+        rateLimiter.IsRequestAllowed("api/resource2", "user1").Should().BeTrue();
+        rateLimiter.IsRequestAllowed("api/resource2", "user1").Should().BeTrue();
     }
 }

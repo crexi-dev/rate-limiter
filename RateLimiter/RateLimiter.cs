@@ -19,11 +19,14 @@ public class RateLimiter() : IRateLimiter
     }
     public bool IsRequestAllowed(string resource, string token)
     {
-        foreach (var rule in rulesByResource[resource])
+        if (rulesByResource.TryGetValue(resource, out var rules))
         {
-            if (!rule.IsRequestAllowed(token))
+            foreach (var rule in rules)
             {
-                return false;
+                if (!rule.IsRequestAllowed(token))
+                {
+                    return false;
+                }
             }
         }
 
