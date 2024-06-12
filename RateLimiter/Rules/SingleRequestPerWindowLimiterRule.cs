@@ -24,7 +24,7 @@ public class SingleRequestPerWindowLimiterRule(TimeProvider timeProvider): IRule
 
         var currentTime = timeProvider.GetUtcNow();
 
-        if (usersLastCall.TryGetValue(token, out var lastCall) && lastCall + _requestTimeSpanLimit >= currentTime)
+        if (usersLastCall.TryGetValue(token, out var lastCall) && lastCall + _requestTimeSpanLimit > currentTime)
         {
             return false;
         }

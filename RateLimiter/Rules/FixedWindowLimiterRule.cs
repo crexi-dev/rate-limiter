@@ -29,7 +29,7 @@ public class FixedWindowLimiterRule(TimeProvider timeProvider) : IRule
         // If there is a new user OR it is time to start a new window,
         // initialize a new fixed window with the current request time.
         if (currentWindow is null
-        || currentWindow.Start + _configuration.Window < currentTime)
+        || currentWindow.Start + _configuration.Window <= currentTime)
         {
             currentWindow = new FixedWindow(currentTime, 0);
         }
