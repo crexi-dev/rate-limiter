@@ -7,7 +7,7 @@ public class SingleRequestPerWindowLimiterRule(TimeProvider timeProvider): IRule
 {
     internal TimeSpan? _requestTimeSpanLimit;
 
-    private readonly Dictionary<string, DateTimeOffset> usersLastCall = [];
+    private readonly Dictionary<string, DateTimeOffset> _usersLastCall = [];
 
     public SingleRequestPerWindowLimiterRule Configure(TimeSpan requestTimeSpanLimit)
     {
@@ -24,13 +24,13 @@ public class SingleRequestPerWindowLimiterRule(TimeProvider timeProvider): IRule
 
         var currentTime = timeProvider.GetUtcNow();
 
-        if (usersLastCall.TryGetValue(token, out var lastCall) && lastCall + _requestTimeSpanLimit > currentTime)
+        if (_usersLastCall.TryGetValue(token, out var lastCall) && lastCall + _requestTimeSpanLimit > currentTime)
         {
             return false;
         }
         else
         {
-            usersLastCall[token] = currentTime;
+            _usersLastCall[token] = currentTime;
         }
 
         return true;

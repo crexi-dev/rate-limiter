@@ -7,7 +7,7 @@ public class FixedWindowLimiterRule(TimeProvider timeProvider) : IRule
 {
     private FixedWindowLimiterRuleConfiguration? _configuration;
 
-    private readonly Dictionary<string, FixedWindow> windowPerUser = [];
+    private readonly Dictionary<string, FixedWindow> _windowPerUser = [];
 
     public FixedWindowLimiterRule Configure(FixedWindowLimiterRuleConfiguration configuratuion)
     {
@@ -24,7 +24,7 @@ public class FixedWindowLimiterRule(TimeProvider timeProvider) : IRule
 
         var currentTime = timeProvider.GetUtcNow();
 
-        var currentWindow = windowPerUser.GetValueOrDefault(token);
+        var currentWindow = _windowPerUser.GetValueOrDefault(token);
 
         // If there is a new user OR it is time to start a new window,
         // initialize a new fixed window with the current request time.
@@ -45,7 +45,7 @@ public class FixedWindowLimiterRule(TimeProvider timeProvider) : IRule
         else
         {
             var updatedWindow = currentWindow with { Count = currentWindow.Count + 1 };
-            windowPerUser[token] = updatedWindow;
+            _windowPerUser[token] = updatedWindow;
             return true;
         }
     }
