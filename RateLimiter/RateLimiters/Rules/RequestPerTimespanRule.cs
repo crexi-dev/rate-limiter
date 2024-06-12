@@ -28,6 +28,8 @@ public sealed class RequestPerTimespanRule : IRule
 				{
 					_requests.RemoveAt(ind);
 				}
+				else
+					ind++;
 			}
 		}
 
