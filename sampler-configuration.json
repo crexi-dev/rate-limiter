@@ -1,0 +1,44 @@
+{
+  "RateLimiting": {
+    "LogLevel": "Debug",
+    "Endpoints": [
+      {
+        // Pattern allows the user to specifiy a regex pattern to match the HTTP request path to an endpoint
+        // Example:
+        // Raw URL: https://www.acme.com/api.*
+        // Regex escaped URL: https:\/\/www.acme.com\/api.*
+        "Pattern": "https:\/\/www.acme.com\/api.*",
+
+        // Verbs allows the user to specify which verbs the configuration applies to.
+        // It's a bitfield that supports values from the flagged enum HttpVerbFlags (ie: delete=1, get=2, patch=4, post=8, put=16)
+        // Examples: 
+        // 1: Configuration applies to the delete verb only
+        // 6: Configuration applies to get/patch
+        // 31: Configuration applies to all HTTP verbs
+        "Verbs": 31,
+        "Rules": [
+          {
+            // The type name of the rule
+            "Id": "RateLimitRulesEngine",
+            // Key/Value pairs that passed to the concrete rule during instantiation
+            "Configuration": {
+              "WindowMs": 300000,
+              "RequestLimit": 1000
+            }
+          },
+          {
+            "Id": "CadenceRateLimitRule",
+            "Configuration": {
+              "MinimumDelayBetweenRequestsMs": 1000
+            }
+          }
+          // NOTE: Specify custom rule configurations here in the same format as above.
+          // Custom rules can be creation is two-part
+          // 1. Define a type that implements IRateLimitRule and
+          // 2. Call IRateLimitRulesEngine.AddRulesFactory to register a factory that knows how to create
+          // your rule(s)
+        ]
+      }
+    ]
+  }
+}
