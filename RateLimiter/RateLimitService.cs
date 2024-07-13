@@ -66,6 +66,8 @@ namespace RateLimiter
                 return true;
             }
 
+            requests.Append(request);
+
             return rules.All(r => r.CheckRequestAllow(requests));
         }
     }
