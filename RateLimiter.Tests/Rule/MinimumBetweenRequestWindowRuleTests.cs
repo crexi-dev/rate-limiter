@@ -10,22 +10,30 @@ namespace RateLimiter.Tests.Rule
     [TestFixture]
     public class MinimumBetweenRequestWindowRuleTests
     {
+        private readonly List<RateLimitRequest> requestData;
+        
+        private DateTime currentTimestamp;
+
+        public MinimumBetweenRequestWindowRuleTests()
+        {
+            this.requestData = new List<RateLimitRequest>();
+        }
+
         [SetUp]
         public void SetUp()
         {
+            currentTimestamp = DateTime.UtcNow;
         }
 
         [TearDown]
         public void TearDown()
         {
+            requestData.Clear();
         }
 
         [Test]
         public void CheckRequestAllow_WithZeroConstraints_ReturnsTrue()
         {
-            var requestData = new List<RateLimitRequest>();
-            var currentTimestamp = DateTime.UtcNow;
-
             for (int i = 0; i < 1000; i++)
             {
                 requestData.Add(new RateLimitRequest
@@ -47,10 +55,7 @@ namespace RateLimiter.Tests.Rule
         public void CheckRequestAllow_WithSpecificLastRequestGap_ReturnsExcpectedResponse(
             int minimumTimeFromLastRequestInSeconds, int requestGapInSeconds, bool expectedResponse)
         {
-            var requestData = new List<RateLimitRequest>();
-            var currentTimestamp = DateTime.UtcNow;
-
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++)
             {
                 requestData.Add(new RateLimitRequest
                 {

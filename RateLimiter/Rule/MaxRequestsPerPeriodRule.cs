@@ -22,7 +22,7 @@ namespace RateLimiter.Rule
 
             return MaxCount <= 0 
                 || Duration <= TimeSpan.Zero
-                || requestData
+                || (requestData ?? Enumerable.Empty<RateLimitRequest>())
                 .Where(rd => rd.Timestamp >= beginValidationTimestamp)
                 .Count() < this.MaxCount;
         }

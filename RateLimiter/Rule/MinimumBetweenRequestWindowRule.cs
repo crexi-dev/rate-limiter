@@ -16,10 +16,12 @@ namespace RateLimiter.Rule
 
         public override bool CheckRequestAllow(IEnumerable<RateLimitRequest> requestData)
         {
-            var latestAllowTimestamp = DateTime.UtcNow.Add(-this.DurationFromLastCall);
+            var lastTwoRequests = (requestData ?? Enumerable.Empty<RateLimitRequest>()).TakeLast(2).ToList();
 
-            return DurationFromLastCall <= TimeSpan.Zero
-                || (requestData.LastOrDefault()?.Timestamp ?? DateTime.MinValue) <= latestAllowTimestamp;
+            if (DurationFromLastCall <= TimeSpan.Zero || lastTwoRequests.Count < 2)
+                return true;
+
+            return lastTwoRequests[1].Timestamp - lastTwoRequests[0].Timestamp >= this.DurationFromLastCall;
         }
     }
 }
