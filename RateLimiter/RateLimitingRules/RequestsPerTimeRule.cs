@@ -7,10 +7,10 @@ public class RequestsPerTimeRule<TClient, TResource>(TimeProvider timeProvider, 
 {
     private readonly List<DateTimeOffset> _requestTimes = [];
 
-    public bool HasExceededLimit(TClient client, TResource resource)
+    public bool HasReachedLimit(TClient client, TResource resource)
     {
-        _requestTimes.RemoveAll(requestTime => timeProvider.GetUtcNow() - lengthOfTime > requestTime);
-        return _requestTimes.Count > numberOfRequests;
+        _requestTimes.RemoveAll(requestTime => timeProvider.GetUtcNow() - lengthOfTime >= requestTime);
+        return _requestTimes.Count >= numberOfRequests;
     }
 
     public void RegisterRequest(TClient client, TResource resource)

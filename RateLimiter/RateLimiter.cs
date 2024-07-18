@@ -4,9 +4,9 @@ namespace RateLimiter;
 
 public class RateLimiter<TClient, TResource>(DynamicDictionary<(TClient client, TResource resource), IRateLimitingRule<TClient, TResource>> rules) where TClient : notnull
 {
-    public bool HasExceededLimit(TClient client, TResource resource)
+    public bool HasReachedLimit(TClient client, TResource resource)
     {
-        return rules.Get((client, resource)).Any(rateLimitingRule => rateLimitingRule.HasExceededLimit(client, resource));
+        return rules.Get((client, resource)).Any(rateLimitingRule => rateLimitingRule.HasReachedLimit(client, resource));
     }
 
     public void RegisterRequest(TClient client, TResource resource)

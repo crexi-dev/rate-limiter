@@ -10,7 +10,7 @@ public class DynamicDictionary<TKey, TValue>(IEnumerable<(Func<TKey, bool> predi
     public IEnumerable<TValue> Get(TKey key)
     {
         if (!_dictionary.ContainsKey(key))
-            _dictionary.Add(key, predicateDelegatePairs.Where(x => x.predicate(key)).SelectMany(x => x.@delegate(key)).ToList());
+            _dictionary.Add(key, predicateDelegatePairs.Where(predicateDelegatePair => predicateDelegatePair.predicate(key)).SelectMany(x => x.@delegate(key)).ToList());
         return _dictionary[key];
     }
 }

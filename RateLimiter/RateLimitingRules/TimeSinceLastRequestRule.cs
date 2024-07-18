@@ -6,7 +6,7 @@ public class TimeSinceLastRequestRule<TClient, TResource>(TimeProvider timeProvi
 {
     private DateTimeOffset _lastCall = DateTimeOffset.MinValue;
 
-    public bool HasExceededLimit(TClient client, TResource resource)
+    public bool HasReachedLimit(TClient client, TResource resource)
     {
         return _lastCall > timeProvider.GetUtcNow() - lengthOfTime;
     }

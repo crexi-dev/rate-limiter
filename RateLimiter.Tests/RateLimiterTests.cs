@@ -8,7 +8,7 @@ public class RateLimiterTests
     {
         RateLimiter<string, string> rateLimiter = new(new ([]));
 
-        bool hasReachedLimit = rateLimiter.HasExceededLimit("", "");
+        bool hasReachedLimit = rateLimiter.HasReachedLimit("", "");
 
         Assert.IsFalse(hasReachedLimit);
     }
@@ -29,7 +29,7 @@ public class RateLimiterTests
         rateLimiter.RegisterRequest("", "");
         rateLimiter.RegisterRequest("", "");
         rateLimiter.RegisterRequest("", "");
-        bool hasReachedLimit = rateLimiter.HasExceededLimit("", "");
+        bool hasReachedLimit = rateLimiter.HasReachedLimit("", "");
 
         Assert.IsFalse(hasReachedLimit);
     }
