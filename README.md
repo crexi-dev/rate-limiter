@@ -1,4 +1,49 @@
-﻿**Rate-limiting pattern**
+﻿# Rate Limiter
+An implementation of a rules based, configurable, and extendable rate limiter.
+
+## Usage
+Can be ran / tested by cloning the repo and running the Unit Tests project.
+Can be used by "referencing" the Class Library project.
+Built with .NET 8.
+
+## Rate Limiter
+The rate limiter is intended to limit access of a "client" to a "resource". The rate limiting algorithm is completely configurable and extendable:
+
+ - Any logic can be used to implement a rate limiting rule, such as "3 requests per minute".
+ - Rate limiting rules can be applied to any combination of client / resource, such as "clients which are part of the same company share a limit for any paid resources and have their own limits for other resources."
+
+## Example
+
+    [TestMethod]
+    public void RequestsPerTimeMultipleClientsTests()
+    {
+        TimeProvider timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
+    
+        RateLimiterBuilder<string, string> rateLimiterBuilder = new([]);
+    
+        RateLimiter<string, string> rateLimiter =
+            rateLimiterBuilder
+            .For(x => x.client == "1")
+            .Apply(x => [new RequestsPerTimeRule<string, string>(timeProvider, 2, TimeSpan.FromMinutes(1))])
+            .For(x => x.client == "2")
+            .Apply(x => [new RequestsPerTimeRule<string, string>(timeProvider, 3, TimeSpan.FromMinutes(1))])
+            .Build();
+    
+        rateLimiter.RegisterRequest("1", "");
+        rateLimiter.RegisterRequest("1", "");
+        bool hasReachedLimit1 = rateLimiter.HasReachedLimit("1", "");
+    
+        rateLimiter.RegisterRequest("2", "");
+        rateLimiter.RegisterRequest("2", "");
+        bool hasReachedLimit2 = rateLimiter.HasReachedLimit("2", "");
+    
+        Assert.IsTrue(hasReachedLimit1);
+        Assert.IsFalse(hasReachedLimit2);
+    }
+
+## Original Prompt
+
+**Rate-limiting pattern**
 
 Rate limiting involves restricting the number of requests that a client can make.
 A client is identified with an access token, which is used for every request to a resource.
