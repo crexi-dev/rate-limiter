@@ -76,7 +76,7 @@ public class RateLimiterTest
 	}
 	
 	[Test]
-	public void RulesAddition_ShouldFailIfOneFail()
+	public void RulesCombination_ShouldFailIfOneFail()
 	{
 		var token = "123";
 		var resource = Guid.NewGuid();
