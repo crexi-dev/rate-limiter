@@ -6,7 +6,7 @@ namespace RateLimiter.Tests;
 public class RateLimiterTest
 {
 	[Test]
-	public void Example()
+	public void Example()  
 	{
 		Assert.That(true, Is.True);
 	}
