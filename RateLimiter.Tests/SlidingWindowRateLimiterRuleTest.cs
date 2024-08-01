@@ -1,52 +1,41 @@
 ﻿using NUnit.Framework;
 using RateLimiter.Models;
+using RateLimiter.Services;
 using RateLimiter.Rules;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RateLimiter.Enums;
 
 namespace RateLimiter.Tests
 {
     [TestFixture]
     public class SlidingWindowRateLimiterRuleTest
     {
-        private SlidingWindowRateLimiterRule _rateLimiterRule;
+        private RateLimiterService _rateLimiterService;
+        private ConcurrentDictionary<string, List<RuleModel>> _rulesBySource;
 
         [SetUp]
         public void Setup()
         {
-            _rateLimiterRule = new SlidingWindowRateLimiterRule();
+            // Initialize rules and service
+            _rulesBySource = new ConcurrentDictionary<string, List<RuleModel>>();
+            _rateLimiterService = new RateLimiterService(_rulesBySource);
         }
 
         [Test]
-        public void IsRequestAllowed_AllowsRequestsWithinLimit()
+        public void ValidateRequest_AllowsRequestsWithinLimit()
         {
             // Arrange
-            var requests = new List<RequestModel>
-            {
-                new RequestModel
-                {
-                    TimeRequested = DateTime.UtcNow.AddSeconds(-30),
-                    Location = "Location1",
-                    Source = "Source1",
-                    UserID = "User1"
-                },
-                new RequestModel
-                {
-                    TimeRequested = DateTime.UtcNow.AddSeconds(-10),
-                    Location = "Location1",
-                    Source = "Source1",
-                    UserID = "User1"
-                }
-            };
             var rule = new RuleModel
             {
                 Window = TimeSpan.FromSeconds(60),
                 MaxRequests = 5,
-                Locations = new List<string> { "Location1" }
+                Locations = new List<string> { "Location1" },
+                Type = RuleType.SlidingWindow
             };
+            _rulesBySource["Source1"] = new List<RuleModel> { rule };
+
             var currentRequest = new RequestModel
             {
                 TimeRequested = DateTime.UtcNow,
@@ -56,46 +45,37 @@ namespace RateLimiter.Tests
             };
 
             // Act
-            var result = _rateLimiterRule.IsRequestAllowed(currentRequest, requests, rule);
+            var result = _rateLimiterService.ValidateRequest(currentRequest);
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [Test]
-        public void IsRequestAllowed_RejectsRequestsExceedingLimit()
+        public void ValidateRequest_RejectsRequestsExceedingLimit()
         {
             // Arrange
-            var requests = new List<RequestModel>
-            {
-                new RequestModel
-                {
-                    TimeRequested = DateTime.UtcNow.AddSeconds(-10),
-                    Location = "Location1",
-                    Source = "Source1",
-                    UserID = "User1"
-                },
-                new RequestModel
-                {
-                    TimeRequested = DateTime.UtcNow.AddSeconds(-5),
-                    Location = "Location1",
-                    Source = "Source1",
-                    UserID = "User1"
-                },
-                new RequestModel
-                {
-                    TimeRequested = DateTime.UtcNow.AddSeconds(-2),
-                    Location = "Location1",
-                    Source = "Source1",
-                    UserID = "User1"
-                }
-            };
             var rule = new RuleModel
             {
                 Window = TimeSpan.FromSeconds(60),
                 MaxRequests = 3,
-                Locations = new List<string> { "Location1" }
+                Locations = new List<string> { "Location1" },
+                Type = RuleType.SlidingWindow
             };
+            _rulesBySource["Source1"] = new List<RuleModel> { rule };
+
+            // Simulate past requests
+            var requests = new List<RequestModel>
+            {
+                new RequestModel { TimeRequested = DateTime.UtcNow.AddSeconds(-10), Location = "Location1", Source = "Source1", UserID = "User1" },
+                new RequestModel { TimeRequested = DateTime.UtcNow.AddSeconds(-5), Location = "Location1", Source = "Source1", UserID = "User1" },
+                new RequestModel { TimeRequested = DateTime.UtcNow.AddSeconds(-2), Location = "Location1", Source = "Source1", UserID = "User1" }
+            };
+            foreach (var req in requests)
+            {
+                _rateLimiterService.ValidateRequest(req); // Ensure these requests are added
+            }
+
             var currentRequest = new RequestModel
             {
                 TimeRequested = DateTime.UtcNow,
@@ -105,32 +85,34 @@ namespace RateLimiter.Tests
             };
 
             // Act
-            var result = _rateLimiterRule.IsRequestAllowed(currentRequest, requests, rule);
+            var result = _rateLimiterService.ValidateRequest(currentRequest);
 
             // Assert
             Assert.IsFalse(result);
         }
 
         [Test]
-        public void IsRequestAllowed_AllowsRequestsWithDifferentLocation()
+        public void ValidateRequest_AllowsRequestsWithDifferentLocation()
         {
             // Arrange
-            var requests = new List<RequestModel>
-            {
-                new RequestModel
-                {
-                    TimeRequested = DateTime.UtcNow.AddSeconds(-30),
-                    Location = "Location1",
-                    Source = "Source1",
-                    UserID = "User1"
-                }
-            };
             var rule = new RuleModel
             {
                 Window = TimeSpan.FromSeconds(60),
                 MaxRequests = 5,
-                Locations = new List<string> { "Location1" }
+                Locations = new List<string> { "Location1" },
+                Type = RuleType.SlidingWindow
             };
+            _rulesBySource["Source1"] = new List<RuleModel> { rule };
+
+            var pastRequest = new RequestModel
+            {
+                TimeRequested = DateTime.UtcNow.AddSeconds(-30),
+                Location = "Location1",
+                Source = "Source1",
+                UserID = "User1"
+            };
+            _rateLimiterService.ValidateRequest(pastRequest);
+
             var currentRequest = new RequestModel
             {
                 TimeRequested = DateTime.UtcNow,
@@ -140,32 +122,34 @@ namespace RateLimiter.Tests
             };
 
             // Act
-            var result = _rateLimiterRule.IsRequestAllowed(currentRequest, requests, rule);
+            var result = _rateLimiterService.ValidateRequest(currentRequest);
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [Test]
-        public void IsRequestAllowed_WithNullLocationInRule_AllowsRequestsFromAnyLocation()
+        public void ValidateRequest_WithNullLocationInRule_AllowsRequestsFromAnyLocation()
         {
             // Arrange
-            var requests = new List<RequestModel>
-            {
-                new RequestModel
-                {
-                    TimeRequested = DateTime.UtcNow.AddSeconds(-30),
-                    Location = "Location1",
-                    Source = "Source1",
-                    UserID = "User1"
-                }
-            };
             var rule = new RuleModel
             {
                 Window = TimeSpan.FromSeconds(60),
                 MaxRequests = 5,
-                Locations = null
+                Locations = null,
+                Type = RuleType.SlidingWindow
             };
+            _rulesBySource["Source1"] = new List<RuleModel> { rule };
+
+            var pastRequest = new RequestModel
+            {
+                TimeRequested = DateTime.UtcNow.AddSeconds(-30),
+                Location = "Location1",
+                Source = "Source1",
+                UserID = "User1"
+            };
+            _rateLimiterService.ValidateRequest(pastRequest);
+
             var currentRequest = new RequestModel
             {
                 TimeRequested = DateTime.UtcNow,
@@ -175,39 +159,36 @@ namespace RateLimiter.Tests
             };
 
             // Act
-            var result = _rateLimiterRule.IsRequestAllowed(currentRequest, requests, rule);
+            var result = _rateLimiterService.ValidateRequest(currentRequest);
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [Test]
-        public void IsRequestAllowed_WithExpiredRequests_RemovesExpiredRequests()
+        public void ValidateRequest_WithExpiredRequests_RemovesExpiredRequests()
         {
             // Arrange
-            var requests = new List<RequestModel>
-            {
-                new RequestModel
-                {
-                    TimeRequested = DateTime.UtcNow.AddSeconds(-70),
-                    Location = "Location1",
-                    Source = "Source1",
-                    UserID = "User1"
-                }, // Expired request
-                new RequestModel
-                {
-                    TimeRequested = DateTime.UtcNow.AddSeconds(-10),
-                    Location = "Location1",
-                    Source = "Source1",
-                    UserID = "User1"
-                }
-            };
             var rule = new RuleModel
             {
                 Window = TimeSpan.FromSeconds(60),
                 MaxRequests = 5,
-                Locations = new List<string> { "Location1" }
+                Locations = new List<string> { "Location1" },
+                Type = RuleType.SlidingWindow
             };
+            _rulesBySource["Source1"] = new List<RuleModel> { rule };
+
+            // Simulate past requests
+            var requests = new List<RequestModel>
+            {
+                new RequestModel { TimeRequested = DateTime.UtcNow.AddSeconds(-70), Location = "Location1", Source = "Source1", UserID = "User1" }, // Expired request
+                new RequestModel { TimeRequested = DateTime.UtcNow.AddSeconds(-10), Location = "Location1", Source = "Source1", UserID = "User1" }
+            };
+            foreach (var req in requests)
+            {
+                _rateLimiterService.ValidateRequest(req); // Ensure these requests are added
+            }
+
             var currentRequest = new RequestModel
             {
                 TimeRequested = DateTime.UtcNow,
@@ -217,7 +198,7 @@ namespace RateLimiter.Tests
             };
 
             // Act
-            var result = _rateLimiterRule.IsRequestAllowed(currentRequest, requests, rule);
+            var result = _rateLimiterService.ValidateRequest(currentRequest);
 
             // Assert
             Assert.IsTrue(result);

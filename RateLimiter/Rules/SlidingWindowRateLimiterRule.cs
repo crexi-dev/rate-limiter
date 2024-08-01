@@ -13,7 +13,6 @@ namespace RateLimiter.Rules
             DateTime windowEnd = DateTime.UtcNow;
             DateTime windowStart = windowEnd.AddSeconds(-windowInSeconds);
 
-            // Remove expired requests
             requests = requests.Where(r => r.TimeRequested >= windowStart && (rule.Locations == null ? true : rule.Locations.Contains(r.Location))).ToList();
 
             return requests.Count < rule.MaxRequests;

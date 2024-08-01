@@ -62,6 +62,10 @@ namespace RateLimiter.Services
                 case RuleType.SlidingWindow:
                     SlidingWindowRateLimiterRule slidingWindowRateRule = new();
                     return slidingWindowRateRule.IsRequestAllowed(currentRequest, requests, rule);
+
+                case RuleType.GeographicBlock:
+                    GeographicBlockRateLimiterRule geographicBlockRateLimiterRule = new();
+                    return geographicBlockRateLimiterRule.IsRequestAllowed(currentRequest, requests, rule);
                 default:
                     throw new ArgumentException("Invalid rule type");
             };
