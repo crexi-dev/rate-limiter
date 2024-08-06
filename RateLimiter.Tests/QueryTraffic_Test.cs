@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 namespace RateLimiter.Tests;
-
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using RateLimiter.Configs;
@@ -8,35 +7,33 @@ using RateLimiter.Rules;
 using RateLimiter.Storage;
 using RateLimiter.Utilities;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 [TestFixture]
 public class QueryTraffic_Test
 {
+    ///  storage manager
     Storage Store;
 
+    // session = new user
     Guid session1;
 
-    IServiceCollection services = new ServiceCollection();
+    /// mock config and datetime service
     ServiceProvider serviceProvider;
+    IRulesEvaluator limiter;
+    IRateLimiterConfigs configs = Substitute.For<IRateLimiterConfigs>();
+    IDateTimeService time = Substitute.For<IDateTimeService>();
 
     [SetUp]
     public void Init()
     {
+        IServiceCollection services = new ServiceCollection();
         services.AddSingleton<IRateLimiterConfigs, RateLimiterConfigs>();
         serviceProvider = services.BuildServiceProvider();
-        session1 = Guid.NewGuid(); 
-    }
+        session1 = Guid.NewGuid();
+        limiter = serviceProvider?.GetService<IRulesEvaluator>();
 
-
-    [Test]
-    public void Check_Rate_limiter_storage_query()
-    {
-        /// mock config service
-        var configs = Substitute.For<IRateLimiterConfigs>();
-        var time = Substitute.For<IDateTimeService>();
-
+        // mock config service
         configs.BindConfig().Returns(new Models.ConfigValues()
         {
             Enabled = true,
@@ -44,13 +41,17 @@ public class QueryTraffic_Test
             TimeFrame = 5       // each 5 seconds
         });
 
-        var limiter = serviceProvider.GetService<IRulesEvaluator>();
         limiter = new RulesEvaluator(configs);
 
         Store = new Storage(configs, time);
+    }
 
+
+    [Test]
+    public void Check_Rate_limiter_storage_query()
+    {
         Random r = new Random();
-
+        
         // add 100 visits per session into past 1/2 hr 
         for (int i = 0; i < 100; i++)
         {
@@ -65,6 +66,7 @@ public class QueryTraffic_Test
 
         var totalRequests = Store?.Get(session1);
 
+        /// random added dates need to be sorted
         totalRequests?.Sort();
          
         /// since we are injecting random datetime,

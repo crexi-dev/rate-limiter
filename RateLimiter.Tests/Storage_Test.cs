@@ -1,9 +1,7 @@
 ﻿using NUnit.Framework;
 namespace RateLimiter.Tests;
-
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
-using NSubstitute.ReturnsExtensions;
 using RateLimiter.Configs;
 using RateLimiter.Storage;
 using RateLimiter.Utilities;
