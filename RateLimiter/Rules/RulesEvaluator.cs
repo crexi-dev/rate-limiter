@@ -29,22 +29,20 @@ namespace RateLimiter.Rules
             {
                 if (configs.MaxAllowed.HasValue && configs.TimeFrame.HasValue)
                 {
-                    int MaxAllowedCalls = configs.MaxAllowed.Value;
-                    int PerTimeFrame = configs.TimeFrame.Value;
-
-                    // evaluate
-                    var difference = last - start;
-
-                    /// the user timespan was within limit to evaluate
-                    if (difference <= TimeSpan.FromSeconds(PerTimeFrame))
-                    {
-                        // user called the APIs > listed in config
-                        if (totalCalls > MaxAllowedCalls)
-                            return false;
-                    }
-
-                    return true;
-                }
+                     int MaxAllowedCalls = configs.MaxAllowed.Value;
+                     int PerTimeFrame = configs.TimeFrame.Value;
+                
+                     // evaluate
+                     var difference = (last - start).TotalSeconds;
+                
+                     /// the user timespan was within limit to evaluate
+                     if (difference <= PerTimeFrame && totalCalls > MaxAllowedCalls)
+                     {
+                         // user called the APIs > listed in config 
+                         return false;
+                     }
+                     return true;
+                 }
             }
 
             return true;
