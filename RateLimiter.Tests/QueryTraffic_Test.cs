@@ -71,7 +71,7 @@ public class QueryTraffic_Test
          
         /// since we are injecting random datetime,
         /// check before assert, if any datetime was within the limited per mock config range
-        if(totalRequests?.Count > 1)
+        if(totalRequests?.Count > 1 && totalRequests?.Count < configs.BindConfig().MaxAllowed)  //max allowed per config-mock
         {
             bool? canAccess = limiter?.CanAccess(totalRequests.First(), totalRequests.Last(), totalRequests.Count);
             Assert.IsTrue(canAccess.Value == true);
