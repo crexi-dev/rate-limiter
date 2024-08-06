@@ -1,0 +1,11 @@
+{
+  "RateLimiterRules": {
+    "Enabled": "true",
+    "CallsLimiter": {
+      "MaxAllowedCalls": "10"
+    },
+    "TimeLimiter": {
+      "PerTimeFrame": "5"
+    }
+  }
+}
