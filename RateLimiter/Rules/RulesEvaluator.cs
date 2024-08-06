@@ -36,10 +36,10 @@ namespace RateLimiter.Rules
                     var difference = last - start;
 
                     /// the user timespan was within limit to evaluate
-                    if (difference < TimeSpan.FromMilliseconds(PerTimeFrame))
+                    if (difference <= TimeSpan.FromSeconds(PerTimeFrame))
                     {
                         // user called the APIs > listed in config
-                        if (totalCalls >= MaxAllowedCalls)
+                        if (totalCalls > MaxAllowedCalls)
                             return false;
                     }
 

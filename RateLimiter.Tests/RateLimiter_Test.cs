@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualBasic;
 using NSubstitute.Routing.Handlers;
+using System.ComponentModel.DataAnnotations;
 
 [TestFixture]
 public class RateLimiter_Test
@@ -42,10 +43,19 @@ public class RateLimiter_Test
         Assert.IsInstanceOfType<IRulesEvaluator>(Limiter);
     }
 
+    /// <summary>
+    /// test rules evaluator
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="last"></param>
+    /// <param name="callsCount"></param>
+    /// <param name="shouldPass"></param>
 
-
+    [TestCase("8/5/2024 10:25:01 PM", "8/5/2024 10:25:02 PM", 100, false, Description = "100 calls per 1 second")]
     [TestCase("8/5/2024 10:25:01 PM", "8/5/2024 10:25:06 PM", 15, true, Description = "15 calls per 5 seconds")]
     [TestCase("8/5/2024 10:25:01 PM", "8/5/2024 10:25:06 PM", 25, false, Description = "25 call per 5 seconds")]
+    [TestCase("8/5/2024 10:25:01 PM", "8/5/2024 10:25:21 PM", 10, true, Description = "10 call per 20 seconds")]
+    [TestCase("8/5/2024 10:25:01 PM", "8/5/2024 10:25:06 PM", 20, true, Description = "default: 20 call per 5 seconds")]
     public void Check_Can_Access_rules(DateTime start, DateTime last, int callsCount, bool shouldPass)
     {
         var configs = Substitute.For<IRateLimiterConfigs>();
