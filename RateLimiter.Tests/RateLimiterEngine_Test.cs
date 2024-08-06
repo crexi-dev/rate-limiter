@@ -7,12 +7,11 @@ using RateLimiter.Rules;
 using RateLimiter.Configs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VisualBasic;
 using NSubstitute.Routing.Handlers;
 using System.ComponentModel.DataAnnotations;
 
 [TestFixture]
-public class RateLimiter_Test
+public class RateLimiterEngine_Test
 {
 
     IServiceCollection services = new ServiceCollection();

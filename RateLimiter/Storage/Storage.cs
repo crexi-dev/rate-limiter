@@ -1,4 +1,7 @@
-﻿using System;
+﻿using RateLimiter.Configs;
+using RateLimiter.Models;
+using RateLimiter.Utilities;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +10,17 @@ namespace RateLimiter.Storage
 {
     public class Storage : IStorage
     {
+
+        IRateLimiterConfigs config;
+        IDateTimeService dateTime;
+
+        public Storage(IRateLimiterConfigs _config, IDateTimeService _dateTime)
+        {
+            config = _config;
+            dateTime = _dateTime;
+        }
+
+
         /// <summary>
         /// historical logs for user access
         /// </summary>
@@ -20,14 +34,14 @@ namespace RateLimiter.Storage
             {
                 List<DateTime> visit = new List<DateTime>()
                 {
-                    DateTime.Now,
+                    dateTime.GetCurrentTime()
                 };
                 return Visits.TryAdd(SessionID, visit);
             }
             else
             {
                 // add new log to the visits list
-                Visits[SessionID].Add(DateTime.Now);
+                Visits[SessionID].Add(dateTime.GetCurrentTime());
                 return true;
             }
         }
@@ -39,11 +53,16 @@ namespace RateLimiter.Storage
 
 
         /// this should be config driven
-        /// take last available 10 minutes
+        /// ex: take last available logs for the past x seconds (based on the configs)
         public List<DateTime>? Get(Guid SessionID)
         {
             if (Exist(SessionID))
-                return Visits[SessionID].Where(e => e > DateTime.Now.AddMinutes(-5)).ToList();
+            {
+                ConfigValues? conVals = config.BindConfig();
+                int? confiSeconds = int.Parse(conVals?.TimeFrame?.ToString());
+                confiSeconds *= -1; // get negative of that value
+                return Visits[SessionID].Where(e => e > DateTime.Now.AddMinutes(confiSeconds.Value)).ToList();
+            }
             else
                 return null;
         }

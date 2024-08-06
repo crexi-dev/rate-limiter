@@ -1,6 +1,12 @@
 ﻿using NUnit.Framework;
 namespace RateLimiter.Tests;
+
+using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
+using NSubstitute.ReturnsExtensions;
+using RateLimiter.Configs;
 using RateLimiter.Storage;
+using RateLimiter.Utilities;
 using System;
 
 [TestFixture]
@@ -12,21 +18,43 @@ public class Storage_Test
     Guid session2;
     Guid session3;
 
+    IServiceCollection services = new ServiceCollection();
+    ServiceProvider serviceProvider;
+
     [SetUp]
     public void Init()
     {
-        Store = new Storage();
+        services.AddSingleton<IRateLimiterConfigs, RateLimiterConfigs>();
+
+        services.AddSingleton<IDateTimeService, DateTimeService>();
+
+        serviceProvider = services.BuildServiceProvider();
+
         session1 = Guid.NewGuid();
         session2 = Guid.NewGuid();
         session3 = Guid.NewGuid();
+
+
+        /// mock config service
+        var configs = Substitute.For<IRateLimiterConfigs>();
+        var time = Substitute.For<IDateTimeService>();
+
+        configs.BindConfig().Returns(new Models.ConfigValues()
+        {
+            Enabled = true,
+            MaxAllowed = 20,    // 20 calls max
+            TimeFrame = 5       // each 5 seconds
+        });
+
+        time.GetCurrentTime().Returns(DateTime.Now);
+
+        Store = new Storage(configs, time);
     }
 
 
     [Test]
     public void Check_storage_items_consistency()
     {
-        Store = new Storage();
-         
         // add 100 unique visits
         for (int i = 0; i < 100; i++)
         {
@@ -49,8 +77,6 @@ public class Storage_Test
     [Test]
     public void Check_storage_items_Remove()
     {
-        Store = new Storage();
-
         // add 100 unique visits
         for (int i = 0; i < 100; i++)
         {
@@ -60,5 +86,4 @@ public class Storage_Test
         Store.Remove("customPasscode", session1);
         Assert.IsTrue(!Store.Exist(session1));
     }
-
 }
