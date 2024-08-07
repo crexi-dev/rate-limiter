@@ -61,7 +61,7 @@ namespace RateLimiter.Storage
                 ConfigValues? conVals = config.BindConfig();
                 int? confiSeconds = int.Parse(conVals?.TimeFrame?.ToString());
                 confiSeconds *= -1; // get negative of that value
-                return Visits[SessionID].Where(e => e > DateTime.Now.AddMinutes(confiSeconds.Value)).ToList();
+                return Visits[SessionID].Where(e => e > DateTime.Now.AddSeconds(confiSeconds.Value)).ToList();
             }
             else
                 return null;
