@@ -1,0 +1,20 @@
+
+
+Basics:
+1- Algorithms: (Sliding Window) rate-limiter
+2- Config File: rate-limiter-rules-dev.json
+
+Execution:
+User define "Max allowed number of requests" and "Time Frame" in the config.json
+
+Each request is logged into concurrent Dictionary <to allow quick access by index>
+Each unique visit is considered a new key in the dictionary
+Each visit the user make get logged into that "user key/Guid" this GUID can be a token-hash, or an IP
+Each visit logs a "DATETIME" value for that visit
+
+I am not rejecting the call automatically, instead, I have implemented <CAN ACCESS> method which checks on the number
+of calls the user made per his/her visits, and if it exceeds the allowed param per config, the method will return false.
+
+I've made some decisions to inject the config, and the DATETIME values, for UNIT Test purposes 
+
+Also, I've added mocks in the unit test o call <Config> and other dependences.
