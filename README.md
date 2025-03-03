@@ -1,4 +1,58 @@
-﻿**Rate-limiting pattern**
+﻿## Usage
+
+### Register and configure Rate limiting services(rules)
+
+_Example:_
+
+```csharp
+builder.Services.
+    AddFixedWindow(configure =>
+    {
+        configure.RuleConditions = new List<Func<AccessToken, bool>>
+        {
+            token => token.Region == Region.us,
+            token => !string.IsNullOrEmpty(token.UserId)
+        };
+
+        configure.Limit = 10;
+        configure.WindowSize = TimeSpan.FromMinutes(2);
+    }).
+    AddTimeBasedRateLimiting(configure =>
+    {
+        configure.RuleConditions = new List<Func<AccessToken, bool>>
+        {
+            token => token.Region == Region.us || token.Region == Region.eu,
+            token => !string.IsNullOrEmpty(token.UserId)
+        };
+
+        configure.MinTimeBetweenRequests = TimeSpan.FromSeconds(10);
+    });
+```
+
+
+Rules are applied based on conditions. If the condition is not specified then it applies to all requests
+
+```csharp
+    configure.RuleConditions = new List<Func<AccessToken, bool>>
+    {
+        token => token.Region == Region.us,
+        token => !string.IsNullOrEmpty(token.UserId)
+    };
+```
+
+### Set up the RateLimitMiddleware
+
+Add the RateLimit middleware to your `Configure` method in the `Startup` class or directly into your `IWebHostBuilder`.
+
+_Example:_
+
+```csharp
+app.UseRateLimiting();
+```
+
+
+
+**Rate-limiting pattern**
 
 Rate limiting involves restricting the number of requests that a client can make.
 A client is identified with an access token, which is used for every request to a resource.
