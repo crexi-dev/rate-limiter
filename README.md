@@ -25,3 +25,15 @@ If you have any questions or concerns, please submit them as a [GitHub issue](ht
 You should [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the project and [create a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) named as `FirstName LastName` once you are finished.
 
 Good luck!
+
+___________________________
+
+Here is a bried overview of the added classes:
+
+RateLimitingManager helps to configure the set of rules for a given resource.
+
+IRateLimitRule is an interface for all rules which allows flexible control over the set of rules.
+
+CoolingPeriodRule can be used to control if the amount of time passed since the previous request (from the same resource and client) is too small and the request should be blocked.
+
+FixedWindowRule helps to restrict the amount of allowed requests over the selected period of time. 
