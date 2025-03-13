@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
-using RateLimiter;
+using RateLimiter.Models;
 using RateLimiter.Rules;
+using RateLimiter.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,100 +9,224 @@ using System.Threading.Tasks;
 namespace RateLimiter.Tests;
 
 [TestFixture]
-public class RateLimiterTest
+public class RateLimiterTests
 {
     [Test]
-    public async Task AllowRequest_AfterTimeWindow_ShouldResetCounter()
+    public void FixedWindowRule_ShouldLimitRequests()
     {
-        var rateLimiter = new RateLimiter(new List<IRateLimitRule> { new FixedWindowRule(1, TimeSpan.FromMilliseconds(500)) });
+        var rule = new FixedWindowRule(2, TimeSpan.FromSeconds(5));
 
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsFalse(rateLimiter.AllowRequest("client1"));
-
-        await Task.Delay(600);
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+        Assert.IsFalse(rule.IsRequestAllowed("client1").IsAllowed);
     }
 
     [Test]
-    public void AllowRequest_WithinLimit_ShouldReturnTrue()
+    public void SlidingWindowRule_ShouldLimitRequests()
     {
-        var rateLimiter = new RateLimiter(new List<IRateLimitRule> { new FixedWindowRule(3, TimeSpan.FromMinutes(1)) });
+        var rule = new SlidingWindowRule(3, TimeSpan.FromSeconds(5));
 
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+        Assert.IsFalse(rule.IsRequestAllowed("client1").IsAllowed);
     }
 
     [Test]
-    public void AllowRequest_ExceedsLimit_ShouldReturnFalse()
+    public void RateLimiterManager_ShouldApplyMultipleRules()
     {
-        var rateLimiter = new RateLimiter(new List<IRateLimitRule> { new FixedWindowRule(2, TimeSpan.FromMinutes(1)) });
-
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsFalse(rateLimiter.AllowRequest("client1"));
-    }
-
-    [Test]
-    public void AllowRequest_MultipleClients_ShouldBeTrackedIndividually()
-    {
-        var rateLimiter = new RateLimiter(new List<IRateLimitRule> { new FixedWindowRule(2, TimeSpan.FromMinutes(1)) });
-
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsTrue(rateLimiter.AllowRequest("client2"));
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsFalse(rateLimiter.AllowRequest("client1"));
-        Assert.IsTrue(rateLimiter.AllowRequest("client2"));
-    }
-
-    [Test]
-    public void AllowRequest_MultipleRules_AllRulesMustPass()
-    {
-        var rateLimiter = new RateLimiter(new List<IRateLimitRule>
+        var manager = new RateLimiterManager(new List<ResourceRateLimitConfig>
         {
-            new FixedWindowRule(2, TimeSpan.FromMinutes(1)), // Max 2 per minute
-            new FixedWindowRule(1, TimeSpan.FromSeconds(10)) // Max 1 per 10 sec
+            new ResourceRateLimitConfig
+            {
+                Resource = "/api/test",
+                Rules = new List<IRateLimitRule>
+                {
+                    new FixedWindowRule(2, TimeSpan.FromSeconds(5)),
+                    new SlidingWindowRule(1, TimeSpan.FromSeconds(2))
+                }
+            }
         });
 
-        Assert.IsTrue(rateLimiter.AllowRequest("client1")); // First rule allows
-        Assert.IsFalse(rateLimiter.AllowRequest("client1")); // Second rule blocks
+        Assert.IsTrue(manager.IsRequestAllowed("client1", "/api/test").IsAllowed);
+        Assert.IsFalse(manager.IsRequestAllowed("client1", "/api/test").IsAllowed);
     }
 
     [Test]
-    public async Task AllowRequest_BurstRequests_ShouldBeBlocked()
+    public void MultipleClients_ShouldBeTrackedIndependently()
     {
-        var rateLimiter = new RateLimiter(new List<IRateLimitRule> { new FixedWindowRule(3, TimeSpan.FromSeconds(1)) });
+        var rule = new FixedWindowRule(2, TimeSpan.FromSeconds(5));
 
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsFalse(rateLimiter.AllowRequest("client1")); // 4th request should be blocked immediately
-
-        await Task.Delay(1100); // Wait for time window to reset
-        Assert.IsTrue(rateLimiter.AllowRequest("client1")); // Should be allowed after reset
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+        Assert.IsTrue(rule.IsRequestAllowed("client2").IsAllowed);
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+        Assert.IsFalse(rule.IsRequestAllowed("client1").IsAllowed);
+        Assert.IsTrue(rule.IsRequestAllowed("client2").IsAllowed);
     }
 
     [Test]
-    public void AllowRequest_ConcurrentClients_ShouldNotInterfere()
+    public void MultipleResources_ShouldHaveSeparateLimits()
     {
-        var rateLimiter = new RateLimiter(new List<IRateLimitRule> { new FixedWindowRule(2, TimeSpan.FromSeconds(1)) });
+        var manager = new RateLimiterManager(new List<ResourceRateLimitConfig>
+        {
+            new ResourceRateLimitConfig
+            {
+                Resource = "/api/resource1",
+                Rules = new List<IRateLimitRule> { new FixedWindowRule(2, TimeSpan.FromSeconds(5)) }
+            },
+            new ResourceRateLimitConfig
+            {
+                Resource = "/api/resource2",
+                Rules = new List<IRateLimitRule> { new FixedWindowRule(1, TimeSpan.FromSeconds(5)) }
+            }
+        });
 
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsTrue(rateLimiter.AllowRequest("client2"));
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsFalse(rateLimiter.AllowRequest("client1")); // Blocked for client1, still open for client2
-        Assert.IsTrue(rateLimiter.AllowRequest("client2")); // Client2 should still be allowed
+        Assert.IsTrue(manager.IsRequestAllowed("client1", "/api/resource1").IsAllowed);
+        Assert.IsTrue(manager.IsRequestAllowed("client1", "/api/resource1").IsAllowed);
+        Assert.IsFalse(manager.IsRequestAllowed("client1", "/api/resource1").IsAllowed);
+
+        Assert.IsTrue(manager.IsRequestAllowed("client1", "/api/resource2").IsAllowed);
+        Assert.IsFalse(manager.IsRequestAllowed("client1", "/api/resource2").IsAllowed);
     }
 
     [Test]
-    public async Task AllowRequest_ShortTimeWindow_ShouldResetQuickly()
+    public async Task RequestsShouldResetAfterTimeWindow()
     {
-        var rateLimiter = new RateLimiter(new List<IRateLimitRule> { new FixedWindowRule(1, TimeSpan.FromMilliseconds(200)) });
+        var rule = new FixedWindowRule(1, TimeSpan.FromMilliseconds(500));
 
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
-        Assert.IsFalse(rateLimiter.AllowRequest("client1"));
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+        Assert.IsFalse(rule.IsRequestAllowed("client1").IsAllowed);
 
-        await Task.Delay(250); // Wait beyond the reset window
-        Assert.IsTrue(rateLimiter.AllowRequest("client1"));
+        await Task.Delay(600);
+
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+    }
+
+    [Test]
+    public void FixedAndSlidingWindowTogether_ShouldApplyStricterRule()
+    {
+        var manager = new RateLimiterManager(new List<ResourceRateLimitConfig>
+        {
+            new ResourceRateLimitConfig
+            {
+                Resource = "/api/strict",
+                Rules = new List<IRateLimitRule>
+                {
+                    new FixedWindowRule(3, TimeSpan.FromSeconds(10)),
+                    new SlidingWindowRule(1, TimeSpan.FromSeconds(2))
+                }
+            }
+        });
+
+        Assert.IsTrue(manager.IsRequestAllowed("client1", "/api/strict").IsAllowed);
+        Assert.IsFalse(manager.IsRequestAllowed("client1", "/api/strict").IsAllowed);
+    }
+
+    [Test]
+    public async Task SlidingWindowRule_ShouldAllowNewRequestsAfterOldExpire()
+    {
+        var rule = new SlidingWindowRule(3, TimeSpan.FromSeconds(5));
+
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+        Assert.IsFalse(rule.IsRequestAllowed("client1").IsAllowed);
+
+        await Task.Delay(5100);
+
+        Assert.IsTrue(rule.IsRequestAllowed("client1").IsAllowed);
+    }
+
+    [Test]
+    public void InsanelyHighRequestVolume_ShouldFailQuickly()
+    {
+        var rule = new FixedWindowRule(10, TimeSpan.FromSeconds(1));
+
+        for (int i = 0; i < 10; i++)
+        {
+            Assert.IsTrue(rule.IsRequestAllowed("crazy_user_1").IsAllowed);
+        }
+
+        Assert.IsFalse(rule.IsRequestAllowed("crazy_user_1").IsAllowed);
+    }
+
+    [Test]
+    public async Task TimeWindowBoundary_ShouldResetExactlyOnTime()
+    {
+        var rule = new FixedWindowRule(2, TimeSpan.FromMilliseconds(500));
+
+        Assert.IsTrue(rule.IsRequestAllowed("boundary_user").IsAllowed);
+        Assert.IsTrue(rule.IsRequestAllowed("boundary_user").IsAllowed);
+        Assert.IsFalse(rule.IsRequestAllowed("boundary_user").IsAllowed);
+
+        await Task.Delay(500);
+
+        Assert.IsTrue(rule.IsRequestAllowed("boundary_user").IsAllowed);
+    }
+
+    [Test]
+    public void MultipleUsersAndIPs_ShouldNotInterfere()
+    {
+        var rule = new FixedWindowRule(5, TimeSpan.FromSeconds(1));
+
+        var users = new List<string>();
+        for (int i = 0; i < 1000; i++) 
+        {
+            users.Add($"User{i}_IP_192.168.1.{i % 255}");
+        }
+
+        foreach (var user in users)
+        {
+            Assert.IsTrue(rule.IsRequestAllowed(user).IsAllowed);
+        }
+
+        Assert.IsTrue(rule.IsRequestAllowed("User999_IP_192.168.1.1").IsAllowed);
+    }
+
+    [Test]
+    public void MultipleRulesConflict_ShouldEnforceStrictestRule()
+    {
+        var manager = new RateLimiterManager(new List<ResourceRateLimitConfig>
+        {
+            new ResourceRateLimitConfig
+            {
+                Resource = "/api/conflict",
+                Rules = new List<IRateLimitRule>
+                {
+                    new FixedWindowRule(10, TimeSpan.FromSeconds(10)),
+                    new SlidingWindowRule(2, TimeSpan.FromSeconds(5))
+                }
+            }
+        });
+
+        var clientKey = "user1_IP_192.168.1.1:/api/conflict";
+
+        Assert.IsTrue(manager.IsRequestAllowed(clientKey, "/api/conflict").IsAllowed);
+        Assert.IsTrue(manager.IsRequestAllowed(clientKey, "/api/conflict").IsAllowed);
+        
+        Assert.IsFalse(manager.IsRequestAllowed(clientKey, "/api/conflict").IsAllowed);
+    }
+
+    [Test]
+    public void RandomizedClientsAndEndpoints_ShouldAllBeTrackedSeparately()
+    {
+        var rule = new FixedWindowRule(3, TimeSpan.FromSeconds(5));
+
+        var random = new Random();
+        var clients = new HashSet<string>();
+
+        for (int i = 0; i < 500; i++) 
+        {
+            var user = $"User{random.Next(1, 100)}";
+            var ip = $"192.168.{random.Next(1, 255)}.{random.Next(1, 255)}";
+            var endpoint = $"/api/{random.Next(1, 10)}";
+            
+            var clientKey = $"{user}_{ip}:{endpoint}";
+            clients.Add(clientKey);
+
+            Assert.IsTrue(rule.IsRequestAllowed(clientKey).IsAllowed);
+        }
+
+        Assert.AreEqual(500, clients.Count);
     }
 }

@@ -1,20 +1,18 @@
-using System.Collections.Generic;
-using System.Linq;
-using RateLimiter.Rules;
+using RateLimiter.Services;
 
 namespace RateLimiter;
 
 public class RateLimiter
 {
-    private readonly List<IRateLimitRule> _rules;
+    private readonly RateLimiterManager _rateLimiterManager;
 
-    public RateLimiter(IEnumerable<IRateLimitRule> rules)
+    public RateLimiter(RateLimiterManager rateLimiterManager)
     {
-        _rules = rules.ToList();
+        _rateLimiterManager = rateLimiterManager;
     }
 
-    public bool AllowRequest(string clientId)
+    public bool AllowRequest(string clientId, string resource)
     {
-        return _rules.All(rule => rule.AllowRequest(clientId));
+        return _rateLimiterManager.IsRequestAllowed(clientId, resource).IsAllowed;
     }
 }
