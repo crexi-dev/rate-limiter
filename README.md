@@ -1,27 +1,58 @@
-﻿**Rate-limiting pattern**
+# Rate Limiter - Fixed Window Algorithm
 
-Rate limiting involves restricting the number of requests that a client can make.
-A client is identified with an access token, which is used for every request to a resource.
-To prevent abuse of the server, APIs enforce rate-limiting techniques.
-The rate-limiting application can decide whether to allow the request based on the client.
-The client makes an API call to a particular resource; the server checks whether the request for this client is within the limit.
-If the request is within the limit, then the request goes through.
-Otherwise, the API call is restricted.
+## Overview
+This project implements a **Fixed Window Rate Limiter** to control API request rates per client within a given time window. It ensures **clean code, concurrency support, and scalability** while adhering to best coding practices.
 
-Some examples of request-limiting rules (you could imagine any others)
-* X requests per timespan;
-* a certain timespan has passed since the last call;
-* For US-based tokens, we use X requests per timespan; for EU-based tokens, a certain timespan has passed since the last call.
+## Features
+- **Fixed Window Algorithm**: Limits requests within a fixed time window.
+- **Concurrency & Scalability**: Supports multiple clients independently.
+- **Extensibility**: Allows multiple rate-limiting rules.
+- **Thread Safety**: Ensures correct behavior under concurrent requests.
 
-The goal is to design a class(-es) that manages each API resource's rate limits by a set of provided *configurable and extendable* rules. For example, for one resource, you could configure the limiter to use Rule A; for another one - Rule B; for a third one - both A + B, etc. Any combination of rules should be possible; keep this fact in mind when designing the classes.
+## Installation & Usage
+### **Prerequisites**
+- .NET 6.0+
+- NUnit for running tests
 
-We're more interested in the design itself than in some intelligent and tricky rate-limiting algorithm. There is no need to use a database (in-memory storage is fine) or any web framework. Do not waste time on preparing complex environment, reusable class library covered by a set of tests is more than enough.
+### **Running the Application**
+Clone the repository and build the solution:
+```sh
+cd rate-limiter
+dotnet build
+```
 
-There is a Test Project set up for you to use. However, you are welcome to create your own test project and use whatever test runner you like.   
+## Test Cases
+The test suite ensures **correct request blocking, time window resets, and concurrency handling**.
 
-You are welcome to ask any questions regarding the requirements—treat us as product owners, analysts, or whoever knows the business.
-If you have any questions or concerns, please submit them as a [GitHub issue](https://github.com/crexi-dev/rate-limiter/issues).
+### **Test Coverage**
+✔ Validates **request limits** per client  
+✔ Ensures **time window resets correctly**  
+✔ Supports **multiple clients independently**  
+✔ Handles **concurrent and burst requests**  
 
-You should [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the project and [create a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) named as `FirstName LastName` once you are finished.
+### **Test Cases**
+| **Test Name** | **Description** |
+|--------------|----------------|
+| `AllowRequest_AfterTimeWindow_ShouldResetCounter` | Ensures requests are allowed again **after the window resets**. |
+| `AllowRequest_WithinLimit_ShouldReturnTrue` | Validates requests **within the allowed limit**. |
+| `AllowRequest_ExceedsLimit_ShouldReturnFalse` | Ensures **requests beyond the limit** are blocked. |
+| `AllowRequest_MultipleClients_ShouldBeTrackedIndividually` | Confirms **each client has independent rate limits**. |
+| `AllowRequest_MultipleRules_AllRulesMustPass` | Tests **multiple rules running together**. |
+| `AllowRequest_BurstRequests_ShouldBeBlocked` | Blocks **rapid successive requests**. |
+| `AllowRequest_ConcurrentClients_ShouldNotInterfere` | Ensures **one client’s rate limit doesn’t affect another**. |
+| `AllowRequest_ShortTimeWindow_ShouldResetQuickly` | Verifies short **time windows expire correctly**. |
 
-Good luck!
+## Running Tests
+Run all tests:
+```sh
+dotnet test
+```
+Run a specific test:
+```sh
+dotnet test --filter "FullyQualifiedName=RateLimiter.Tests.RateLimiterTest.AllowRequest_AfterTimeWindow_ShouldResetCounter"
+```
+
+## Future Enhancements
+- **Sliding Window Rate Limiter** for smoother rate enforcement.
+- **Distributed rate limiting** using Redis.
+- **Per-endpoint & per-user rules**.
