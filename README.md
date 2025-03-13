@@ -1,4 +1,4 @@
-﻿**Rate-limiting pattern**
+**Rate-limiting pattern**
 
 Rate limiting involves restricting the number of requests that a client can make.
 A client is identified with an access token, which is used for every request to a resource.
