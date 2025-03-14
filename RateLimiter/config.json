@@ -1,0 +1,54 @@
+{
+  "RequestEndpoint1": {
+    "EU": [
+      {
+        "Name": "RequestsLimit",
+        "Variables": {
+          "time": "1000",
+          "requests": "20"
+        }
+      }
+    ],
+    "US": [
+      {
+        "Name": "RequestsLimit",
+        "Variables": {
+          "time": "5000",
+          "requests": "20"
+        }
+      },
+      {
+        "Name": "TimeSinceLastCall",
+        "Variables": {
+          "time": "200"
+        }
+      }
+    ]
+  },
+  "RequestEndpoint2": {
+    "EU": [
+      {
+        "Name": "RequestsLimit",
+        "Variables": {
+          "time": "2000",
+          "requests": "40"
+        }
+      }
+    ],
+    "US": [
+      {
+        "Name": "RequestsLimit",
+        "Variables": {
+          "time": "5000",
+          "requests": "20"
+        }
+      },
+      {
+        "Name": "TimeSinceLastCall",
+        "Variables": {
+          "time": "100"
+        }
+      }
+    ]
+  }
+}
